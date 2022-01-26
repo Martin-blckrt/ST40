@@ -1,0 +1,1509 @@
+
+
+«VAR NEW _Title=WRITEKEY KEYTITLE»
+«VAR NEW day_index = 0»
+«VAR NEW emp_index = 0»
+«VAR NEW hour_index = 0»
+«VAR NEW index = 0»
+«VAR NEW [array]employees»
+«LET employees = @jsonfromstr('["Alan", "Antonio", "Claudio", "Diogo", "Dylan", "Jordan", "Lucas", "Maxime", "Valerio"]')»
+
+«INCLUDE ossbo:Header.phs; _Title=_Title;_Style="print";»
+
+
+<!DOCTYPE html>
+
+<html>
+<body>
+  <style>
+  .body {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 100%;
+      background-color: #fff;
+  }
+
+  #big {
+    	background-color: #eeeeee;
+    	border-radius: 30px;
+      position: absolute;
+      width: 143px;
+      height: 31px;
+      margin-top: 15px;
+      cursor: pointer;
+      right: 0;
+  }
+
+  .medium {
+      position: absolute;
+      margin-top: 2px;
+      height: 26px;
+      text-align: center;
+      width: 70px;
+      padding-top: 6px;
+      font-weight: 900;
+      font-size: 12px;
+      color: #428bca;
+      transition: 0.3s ease-in-out;
+  }
+
+  .selected {
+      background-color: white;
+      border-radius: 30px;
+  }
+
+
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 30px;
+    height: 17px;
+  }
+
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #eeeeee;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 13px;
+    width: 13px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+
+  input:checked + .slider {
+    background-color: #428bca;
+  }
+
+  input:focus + .slider {
+    box-shadow: 0 0 1px #428bca;
+  }
+
+  input:checked + .slider:before {
+    -webkit-transform: translateX(13px);
+    -ms-transform: translateX(13px);
+    transform: translateX(13px);
+  }
+
+  .slider.round {
+    border-radius: 34px;
+  }
+
+  .slider.round:before {
+    border-radius: 50%;
+  }
+
+  #geo_mode {
+    display: inline-block;
+    position: absolute;
+    right: 10px;
+    top: 60px;
+    font-size: 0.9rem;
+    color: #7d7d7d;
+  }
+
+  #date_picker {
+    display: none;
+    margin-bottom: 10px;
+    z-index: 2;
+    position: absolute;
+    top: -40px;
+    left: 215px;
+  }
+  </style>
+
+  <div class="page-header" style="width:1920px">
+    <div class="phone-8 tab-6">
+      <ul class="page-header-breadcrumb">
+        <li><a href="/Scripts/sql.exe?SqlDB=mgbdcdbfjefgekhh&amp;Sql=WelcomeMain.phs&amp;xid=1638774058jflpemhooacijnocpkpjkfgemijkeineigccjbflkkjeeepibfemam" class="link"><span class="fa fa-home"></span></a></li>
+        <li>Agenda</li>
+      </ul>
+    </div>
+    <div class="phone-4 tab-6">
+      <ul class="options-default page-options">
+        <li><a onclick="add_proc_to_user_menu(205,2);" title="Ajouter au menu utilisateur"><span class="fa fa-add-in-usermenu"></span></a></li>
+        <li class="" id="tips-toggle"><a title="Centre d'aide" onclick="window.open('https://doc.bluechameleon.lu/Scripts/sql.exe?SqlDB=shophelp_pub&amp;Sql=ShopDoc_pub:Default.phs&amp;idLanguage=2');"><span class="fa fa-question"></span></a></li>
+        <li><span class="fa fa-print"></span></li>
+        <li><a title="Personnaliser" href="/Scripts/sql.exe?Sql=Agenda:agenda_default.phs&amp;_PageThemeId=802&amp;_PageLibraryId=2&amp;_PageId=4&amp;SqlDB=mgbdcdbfjefgekhh&amp;xid=1638774058jflpemhooacijnocpkpjkfgemijkeineigccjbflkkjeeepibfemam&amp;ContextViewMode=2"><span class="fa fa-gear"></span></a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="row" style="margin-left:10px;margin-right:10px;height:40px">
+    <div class="phone-4">
+      <div class="phone-12 page-title pull-left">
+        <h1>Agenda</h1>
+        <select name="_SearchAgendaId" style="position: absolute;top: 60px;border-radius: 20px;left:0">
+          <option value="1" selected="">Agenda-2</option>
+        </select>
+      </div>
+    </div>
+    <div class="phone-4" style="color:#a8a8a8;margin-top:40px;text-align:center">
+      <span class="fa fa-angle-left" id="prevDay" style="color:#a8a8a8;position:relative"></span>
+      <div id="dateLocator" style="display:inline;font-size:1.4rem">6 - 10 December</div>
+      <div class="datepicker datepicker-dropdown dropdown-menu" style="top: 40px; left: 187px; z-index: 1002; display: none;">
+        <div class="datepicker-days" style="display: block;">
+          <table class=" table-condensed">
+            <thead>
+              <tr>
+                <th class="prev" style="visibility: visible;">&laquo;</th>
+                <th colspan="6" id="month_click" class="datepicker-switch">December 2021</th>
+                <th class="next" style="visibility: visible;">&raquo;</th>
+              </tr>
+              <tr>
+                <th class="cw">&nbsp;</th>
+                <th class="dow">Mo</th>
+                <th class="dow">Tu</th>
+                <th class="dow">We</th>
+                <th class="dow">Th</th>
+                <th class="dow">Fr</th>
+                <th class="dow">Sa</th>
+                <th class="dow">Su</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="cw">48</td>
+                <td class="old day">29</td>
+                <td class="old day">30</td>
+                <td class="day">1</td>
+                <td class="day">2</td>
+                <td class="day">3</td>
+                <td class="day">4</td>
+                <td class="day">5</td>
+              </tr>
+              <tr>
+                <td class="cw">49</td>
+                <td class="day">6</td>
+                <td class="today day">7</td>
+                <td class="day">8</td>
+                <td class="day">9</td>
+                <td class="day">10</td>
+                <td class="day">11</td>
+                <td class="day">12</td>
+              </tr>
+              <tr>
+                <td class="cw">50</td>
+                <td class="day">13</td>
+                <td class="day">14</td>
+                <td class="day">15</td>
+                <td class="day">16</td>
+                <td class="day">17</td>
+                <td class="day">18</td>
+                <td class="day">19</td>
+              </tr>
+              <tr>
+                <td class="cw">51</td>
+                <td class="day">20</td>
+                <td class="day">21</td>
+                <td class="day">22</td>
+                <td class="day">23</td>
+                <td class="day">24</td>
+                <td class="day">25</td>
+                <td class="day">26</td>
+              </tr>
+              <tr>
+                <td class="cw">52</td>
+                <td class="day">27</td>
+                <td class="day">28</td>
+                <td class="day">29</td>
+                <td class="day">30</td>
+                <td class="day">31</td>
+                <td class="new day">1</td>
+                <td class="new day">2</td>
+              </tr>
+              <tr>
+                <td class="cw">1</td>
+                <td class="new day">3</td>
+                <td class="new day">4</td>
+                <td class="new day">5</td>
+                <td class="new day">6</td>
+                <td class="new day">7</td>
+                <td class="new day">8</td>
+                <td class="new day">9</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <th colspan="8" class="today" style="display: table-cell;">Today</th>
+              </tr>
+              <tr>
+                <th colspan="8" class="clear" style="display: table-cell;">Clear</th>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+        <div class="datepicker-months" style="display: none;">
+          <table class="table-condensed">
+            <thead>
+              <tr>
+                <th class="prev" style="visibility: visible;">&laquo;</th>
+                <th colspan="5" class="datepicker-switch">2021</th>
+                <th class="next" style="visibility: visible;">&raquo;</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td colspan="7">
+                  <span class="month">Jan</span>
+                  <span class="month">Feb</span>
+                  <span class="month">Mar</span>
+                  <span class="month">Apr</span>
+                  <span class="month">May</span>
+                  <span class="month">Jun</span>
+                  <span class="month">Jul</span>
+                  <span class="month">Aug</span>
+                  <span class="month">Sep</span>
+                  <span class="month">Oct</span>
+                  <span class="month">Nov</span>
+                  <span class="month">Dec</span>
+                </td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <th colspan="8" class="today" style="display: table-cell;">Today</th>
+              </tr>
+              <tr>
+                <th colspan="8" class="clear" style="display: table-cell;">Clear</th>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+      <span class="fa fa-angle-right" id="nextDay" style="color:#a8a8a8;position:relative;top:2px"></span>
+    </div>
+    <div class="phone-4">
+      <div id="big" style="display:inline">
+        <div class="medium" id="day" style="display:inline;margin-left: 3px;">
+        	DAY
+        </div>
+        <div class="medium selected" id="week" style="display:inline;margin-left: 70px;">
+        	WEEK
+        </div>
+      </div>
+      <div id="geo_mode">
+        Geographic mode
+        <label class="switch">
+          <input id="geo_checkbox" type="checkbox">
+          <span class="slider round"></span>
+        </label>
+      </div>
+        <select name="clients" id="clients" style="display:none;position: absolute;left: 334px;top: 55px;">
+          <option geoLoc="" value="None">Select client</option>
+          <option geoLoc="O" value="Kleinbettingen">Kleinbettingen</option>
+          <option geoLoc="E" value="Luxembourg">Luxembourg</option>
+          <option geoLoc="N" value="Bertrange">Bertrange</option>
+          <option geoLoc="S" value="Dudelange">Dudelange</option>
+          <option geoLoc="O" value="Differdange">Differdange</option>
+          <option geoLoc="S" value="Kayl">Kayl</option>
+          <option geoLoc="N" value="Strassen">Strassen</option>
+          <option geoLoc="S" value="Mondorf">Mondorf</option>
+          <option geoLoc="O" value="Schifflange">Schifflange</option>
+        </select>
+      </div>
+    </div>
+    <br>
+  </div>
+
+
+    <script>
+      var date_picker_active = false;
+      var week_mode = true;
+      var geo_mode = false;
+      var drag_worked = false;
+      var drag = false;
+      var drag_ui = true;
+      var draggingEmptySlot = false;
+      var active_popup = false;
+      var creating_fill_on_drag = false;
+
+      var colors = ["#f6d642", "#ca4247", "#8bca42", "#018ccd", "#ca428b", "#164c7b", "#42cac5", "#7f4f00", "#eb5f0a"];
+      var bg_colors = ["#fef9e4", "#faeeef", "#f5faee", "#dff5ff", "#faeef5", "#eaf3fb", "#eefafa", "#fff5e5", "#feeee5"];
+      var places = ["Kleinbettingen", "Luxembourg", "Bertrange", "Dudelange", "Differdange", "Kayl", "Strassen", "Mondorf", "Schifflange"];
+      var geoLocations = ["O", "E", "N", "S", "O", "S", "N", "S", "O"];
+      var clients = ["LiFE A.S.B.L.", "EICHERODT Jacques", "DONCHOC Paul", "TATIN Carole", "NAOUIKIR Mahmoud", "CONTINI Christine", "SKOL S.A.R.L.", "AKKERMAN Christian", "DA COSTA Ivan"];
+      var daysLabel = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+      var employees = ["Alan", "Antonio", "Claudio", "Diogo", "Dylan", "Jordan", "Lucas", "Maxime", "Valerio"];
+      var daysNumber = ["6", "7", "8", "9", "10"];
+
+      var startHour = 0;
+      var endHour = 0;
+      var nextHour = 0;
+      var rDay = 0;
+      var rHour = 0;
+      var rEmp = 0;
+      var hour = 0;
+      var grayedNodes = [];
+      var dragStartSlot, dragEndSlot, previousTarget;
+
+      function randomIntFromInterval(min, max) {
+        return Math.floor(Math.random() * (max - min + 1) + min)
+      }
+
+      function buildFill(day, hour, emp, i, jsIndex, gridWidth) {
+        if (geo_mode) {
+          var back = 1;
+          while ($('div[day=' + day + '][hour=' + (hour - back) + '][emp=' + emp + ']').children(".fill").length === 0 && back < 23) {
+            back = back + 1;
+          }
+          if (($('div[day=' + day + '][hour=' + (hour - back) + '][emp=' + emp + ']').children(".fill").children(".preview:contains('" + places[jsIndex].toUpperCase() + "')").length === 0 && (back - $('div[day=' + day + '][hour=' + (hour - back) + '][emp=' + emp + ']').children(".fill").attr("duration")) < 4) || $(".name[day=" + day + "][emp=" + emp + "]").attr("overloaded")) {
+            alert("Too far !");
+            return 0;
+          }
+        }
+        var fill = document.createElement("div");
+        var preview = document.createElement("div");
+        var rdvInfo = document.createElement("div");
+        var clientInfo = document.createElement("div");
+        var location = document.createElement("div");
+        var icon = document.createElement("div");
+
+        var slot = $('div[day=' + day + '][hour=' + hour + '][emp=' + emp + ']')[0];
+        fill.classList.add("fill");
+        $(fill).attr("id", $(slot).attr("id") + "_fill");
+        preview.classList.add("preview");
+        rdvInfo.classList.add("rdv_info");
+        clientInfo.classList.add("client_info");
+        location.classList.add("location");
+        icon.classList.add("fa-custom-points");
+        icon.innerHTML = "<div>&bull;</div><div>&bull;</div><div>&bull;</div>";
+        fill.appendChild(preview);
+        fill.appendChild(rdvInfo);
+        slot.appendChild(fill);
+        rdvInfo.appendChild(clientInfo);
+        rdvInfo.appendChild(location);
+        rdvInfo.appendChild(icon);
+
+        if ((parseInt(hour) + 2) > 23) {
+          $(fill).attr("duration", (24-hour));
+        } else {
+          if (i > 15) {
+            $(fill).attr("duration", 4);
+          } else if (i > 10) {
+            $(fill).attr("duration", 3);
+          } else if (i > 0) {
+            $(fill).attr("duration", 2);
+          } else {
+            $(fill).attr("duration", -i);
+          }
+        }
+
+        $(fill).attr("geo", geoLocations[jsIndex]);
+        $(fill).css("background-color", bg_colors[jsIndex]);
+        $(fill).css("box-shadow", "5px 0px 0px inset " + colors[jsIndex]);
+        $(fill).css("height", parseInt($(fill).attr("duration"))*25-1 + "px");
+        $(preview).css("max-height", $(fill).css("height"));
+        $(fill).children(".preview").text(places[jsIndex].toUpperCase());
+        $(fill).children(".rdv_info").children(".fa-custom-points").css("display", "block");
+        $(fill).children(".rdv_info").children(".client_info").text(clients[jsIndex]);
+        $(fill).children(".rdv_info").children(".location").text(places[jsIndex]);
+        addUIStuff(fill, gridWidth);
+
+        if (i < 0) {
+          $(fill).css("display", "none");
+          $(fill).toggle("blind");
+        }
+      }
+
+      function addUIStuff(fill, gridWidth) {
+        fill.addEventListener("click", (e) => {
+          $(fill).css("width", "");
+          $('.name[day=' + $(fill.parentElement).attr("day") + '][emp=' + $(fill.parentElement).attr("emp") + ']').click();
+          e.stopPropagation();
+        });
+
+        fill.addEventListener("contextmenu", (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          active_popup = true;
+          var popup = document.getElementById("modifyRdv");
+          $(popup).attr("slot", $(fill.parentElement).attr("id"));
+          $(popup).css ({
+            "left": e.pageX,
+            "top": e.pageY,
+            "display": "flex",
+          });
+          return false;
+        });
+
+        $(fill).draggable ({
+          scroll: true,
+          containment: "#grid",
+          cursor: "move",
+          delay: 100,
+          iframeFix: true,
+          revert: function (valid) {
+            if (valid) {
+              drag_worked = true;
+              return false;
+            } else {
+              return true;
+            }
+          },
+          grid: [gridWidth, 25],
+          opacity: 0.7,
+          start: function (event, ui) {
+            parent_element = event.target.parentElement;
+          },
+          drag: function (event, ui) {
+          },
+          stop: function (event, ui) {
+            if (!drag_worked)
+              $(fill).effect("shake", {direction: "left", distance: 5, times: 3});
+            drag_worked = false;
+          }
+        });
+
+        $(fill).resizable ({
+          animate:  true,
+          helper: "ui-resizable-helper",
+          grid: [gridWidth, 25],
+          ghost: true,
+          maxWidth: 25,
+          minWidth: 25,
+          start: function (event, ui) {
+            $(".slot").css("pointer-events", "none");
+          },
+          stop: function (event, ui) {
+            event.stopPropagation();
+            $(".slot").css("pointer-events", "");
+          }
+        });
+
+        $(".ui-resizable-e").css("display", "none");
+        $(".ui-icon-gripsmall-diagonal-se").css("display", "none");
+
+        $(".fa-custom-points").each(function (i) {
+          this.addEventListener("click", (e) => {
+            active_popup = true;
+            var popup = document.getElementById("modifyRdv");
+            $(popup).attr("slot", $(fill.parentElement).attr("id"));
+            $(popup).css ({
+              "left": e.pageX,
+              "top": e.pageY,
+              "display": "flex",
+            });
+            e.stopPropagation();
+          });
+        });
+
+        for (var t=0;t<$(fill).attr("duration");t++) {
+          $('div[day=' + $(fill.parentElement).attr("day") + '][hour=' + (parseInt($(fill.parentElement).attr("hour"))+t) + '][emp=' + $(fill.parentElement).attr("emp") + ']').droppable('disable');
+        }
+      }
+
+      function dayFillChanges(slots) {
+        $(slots).each(function () {
+          $(this).children(".preview").css("display", "none");
+          $(this).children(".rdv_info").css("display", "flex");
+        });
+      }
+
+      function weekFillChanges(slots) {
+        $(slots).each(function () {
+          $(this).children(".preview").css("display", "block");
+          $(this).children(".rdv_info").css("display", "none");
+        });
+      }
+
+      function expandColumn(column) {
+        column.setAttribute("large", "true");
+        dayFillChanges($('.slot[day=' + $(column).attr("day") + '][emp=' + $(column).attr("emp") + ']').children(".fill"));
+      }
+
+      function retractColumn(column) {
+        column.removeAttribute("large");
+        weekFillChanges($('.slot[day=' + $(column).attr("day") + '][emp=' + $(column).attr("emp") + ']').children(".fill"));
+      }
+
+      document.getElementById("month_click").addEventListener("click", (e) => {
+        $(".datepicker-days").css("display", "none");
+        $(".datepicker-months").css("display", "block");
+      });
+
+      document.getElementById("big").addEventListener("click", (e) => {
+        if ($(".selected").attr("id") == "week") {
+          goToDay(1);
+        } else {
+          goToWeek();
+        }
+      });
+
+      document.getElementById("prevDay").addEventListener("click", (e) => {
+          if ($(".selected").attr("id") == "day" && $("#dateLocator").attr("day") > 0) {
+            goToDay(parseInt($("#dateLocator").attr("day")) - 1);
+          }
+      });
+
+      document.getElementById("nextDay").addEventListener("click", (e) => {
+          if ($(".selected").attr("id") == "day" && $("#dateLocator").attr("day") < 4) {
+            goToDay(parseInt($("#dateLocator").attr("day")) + 1);
+          }
+      });
+
+      document.getElementById("dateLocator").addEventListener("click", (e) => {
+        if (!date_picker_active) {
+          $(".datepicker").css("display", "block");
+          date_picker_active = true;
+        } else {
+          $(".datepicker").css("display", "none");
+          date_picker_active = false;
+        }
+      });
+
+      function goToDay(n) {
+        week_mode = false;
+
+        document.querySelectorAll(".name").forEach((col, i) => {
+          expandColumn(col);
+        });
+
+        $("#dateLocator").text($("#day" + n).children(".day_nmb").text() + " December");
+        $("#dateLocator").attr("day", n);
+
+        if (document.getElementById("week").classList.contains("selected")) {
+          document.getElementById('day'+n).scrollIntoView({behavior: "instant", inline: "center"});
+          document.querySelectorAll(".fill").forEach((fill, i) => {
+            $(fill).draggable("option", "grid", [150, 25]);
+            $(fill).resizable("option", "grid", [150, 25]);
+          });
+        }
+        else
+          document.getElementById('day'+n).scrollIntoView({behavior: "smooth", inline: "center"});
+
+        document.getElementById("week").classList.remove("selected");
+        document.getElementById("day").classList.add("selected");
+      }
+
+      function goToWeek() {
+        week_mode = true;
+        document.querySelectorAll(".fill").forEach((fill, i) => {
+          $(fill).draggable("option", "grid", [70, 25]);
+          $(fill).resizable("option", "grid", [70, 25]);
+        });
+
+        document.getElementById("day").classList.remove("selected");
+        document.getElementById("week").classList.add("selected");
+
+        document.querySelectorAll(".name").forEach((col, i) => {
+          retractColumn(col);
+        });
+
+        $("#dateLocator").text("6 - 10 December");
+        $("#dateLocator").attr("day", "");
+      }
+
+      document.getElementById("geo_checkbox").addEventListener("change", (e) => {
+        if (geo_mode) {
+          removeGeo();
+          geo_mode = false;
+        } else {
+          goToGeo();
+          geo_mode = true;
+        }
+      });
+
+      function goToGeo() {
+        document.getElementById("clients").style.display = "block";
+        document.querySelectorAll(".fill").forEach((fill, i) => {
+          if ($(fill).attr("geo") === "N") {
+            $(fill).css("background-color", "#e3d6ef");
+            $(fill).css("box-shadow", "#b999d7 5px 0px 0px inset");
+          } else if ($(fill).attr("geo") === "S") {
+            $(fill).css("background-color", "#c9e8cb");
+            $(fill).css("box-shadow", "#8dcf91 5px 0px 0px inset");
+          } else if ($(fill).attr("geo") === "E") {
+            $(fill).css("background-color", "#b6ecfe");
+            $(fill).css("box-shadow", "#52d1fb 5px 0px 0px inset");
+          } else if ($(fill).attr("geo") === "O") {
+            $(fill).css("background-color", "#fed9c6");
+            $(fill).css("box-shadow", "#fda173 5px 0px 0px inset");
+          }
+        });
+
+        for (var i=0; i<45; i++) {
+          if (empGeoVisited(i).length > 2) {
+            $('.name[day=' + Math.floor(i/9) + '][emp=' + (i%9) + ']').css({
+              "background-color" : "#ca4247",
+              "color" : "white",
+              "font-weight" : 700
+            });
+            $('.name[day=' + Math.floor(i/9) + '][emp=' + (i%9) + ']').attr("overloaded", "true");
+          }
+        }
+      }
+
+      function removeGeo() {
+        $(".slot").css("border", "");
+        document.getElementById("clients").value = "None";
+        document.getElementById("clients").style.display = "none";
+        places.forEach((place, i) => {
+          $(".preview:contains('" + place.toUpperCase() + "')").parent(".fill").css("background-color", bg_colors[i]);
+          $(".preview:contains('" + place.toUpperCase() + "')").parent(".fill").css("box-shadow", colors[i] + " 5px 0px 0px inset");
+          $('.name').css({
+            "background-color" : "",
+            "color" : "",
+            "font-weight" : ""
+          });
+        });
+      }
+
+      document.getElementById("clients").addEventListener("change", (e) => {
+        $(".slot").css("border", "");
+        var client = document.getElementById("clients").value;
+        if (client !== "None") {
+          var geoLoc = $('#clients option:selected').attr("geoLoc");
+          document.querySelectorAll(".name").forEach((name, i) => {
+            var geoVisited = empGeoVisited(i);
+            if ((geoVisited.length < 2) || (geoVisited.length === 2 && geoVisited.includes(geoLoc))) {
+              $('.slot[day=' + $(name).attr("day") + '][emp=' + $(name).attr("emp") + ']').css("border", "1px dashed #86c296");
+              $('.slot[day=' + $(name).attr("day") + '][emp=' + $(name).attr("emp") + ']').children(".fill").each(function (index, fill) {
+                if ($(fill).attr("geo") !== geoLoc) {
+                  for (var j=1;j<4;j++) {
+                    $('.slot[day=' + $(fill.parentElement).attr("day") + '][emp=' + $(fill.parentElement).attr("emp") + '][hour=' + (parseInt($(fill.parentElement).attr("hour"))-j) + ']').css("border", "");
+                  }
+                  for (var j=0;j<4+parseInt($(fill).attr("duration"));j++) {
+                    $('.slot[day=' + $(fill.parentElement).attr("day") + '][emp=' + $(fill.parentElement).attr("emp") + '][hour=' + (parseInt($(fill.parentElement).attr("hour"))+j) + ']').css("border", "");
+                  }
+                }
+              });
+            }
+          });
+        }
+      });
+
+      function empGeoVisited(emp) {
+        var geoVisited = [];
+        $('div[day=' + Math.floor(emp/9) + '][emp=' + (emp%9) + ']').children(".fill").each(function (index, fill) {
+          if (!geoVisited.includes($(fill).attr("geo")))
+            geoVisited.push($(fill).attr("geo"));
+        });
+        return geoVisited;
+      }
+    </script>
+  <hr style="margin-top:60px">
+
+  <div id="grid">
+
+    <div id="time">Time</div>
+    <div class="day_cont" day="0" id="day0" style="grid-area: day1" onclick="goToDay(0)" deletable>
+      <div class="day_txt">Monday</div>
+      <div class="day_nmb">6</div>
+    </div>
+    <div class="day_cont" day="1" id="day1" style="grid-area: day2;font-weight: 700;" onclick="goToDay(1)" deletable>
+      <div class="day_txt">Tuesday</div>
+      <div class="day_nmb" style="color:white;height:25px;width:25px;border-radius:50%;padding-top:4px;padding-left:1px;background-color:#428bca">7</div>
+    </div>
+    <div class="day_cont" day="2" id="day2" style="grid-area: day3" onclick="goToDay(2)" deletable>
+      <div class="day_txt">Wednesday</div>
+      <div class="day_nmb">8</div>
+    </div>
+    <div class="day_cont" day="3" id="day3" style="grid-area: day4" onclick="goToDay(3)" deletable>
+      <div class="day_txt">Thursday</div>
+      <div class="day_nmb">9</div>
+    </div>
+    <div class="day_cont" day="4" id="day4" style="grid-area: day5" onclick="goToDay(4)" deletable>
+      <div class="day_txt">Friday</div>
+      <div class="day_nmb">10</div>
+    </div>
+    <div id="blank" style="grid-area: 2 / 1 / 2 / 1;border: 1px solid #eeeeee;border-right: 1px solid #7d7d7d;"></div>
+
+    «SQLREPEAT»
+      «SQLREPEAT»
+        «LET index = 9 * «day_index» + «emp_index» + 2»
+        <div class="name" id="name_««day_index»*9+«emp_index»»" emp="«emp_index»" day="«day_index»" style="grid-area: 2 / «index» / 2 / «index+1»" deletable>
+          «employees[emp_index]»
+        </div>
+        «LET emp_index = emp_index + 1»
+      «/SQLREPEAT 0; 8»
+      «LET emp_index = 0»
+      «LET day_index = day_index + 1»
+    «/SQLREPEAT 0; 4»
+
+    «LET emp_index = 0»
+    «LET day_index = 0»
+    «LET hour_index = 0»
+    «LET index = 0»
+
+    «SQLREPEAT»
+        «IF «hour_index%2» == 0»
+          <div class="hour" id="hour_«hour_index»" style="grid-area: «hour_index+3» / 1 / «hour_index+4» / 1;border-bottom:0">
+            <div class="hour_txt">«hour_index/2+8»:00</div>
+        «ELSE»
+          <div class="hour" id="hour_«hour_index»" style="grid-area: «hour_index+3» / 1 / «hour_index+4» / 1;border-top:0">
+        «ENDIF»
+      </div>
+      «SQLREPEAT»
+        «SQLREPEAT»
+          «LET index = 9 * «day_index» + «emp_index» + 2»
+          <div class="slot" id="slot_««day_index»*9+«emp_index»+45*«hour_index»+1»" hour="«hour_index»" index="«index»" emp="«emp_index»" day="«day_index»" style="grid-area: «hour_index+3» / «index» / «hour_index+4» / «index+1»" deletable></div>
+          «LET emp_index = emp_index + 1»
+        «/SQLREPEAT 0; 8»
+        «LET emp_index = 0»
+        «LET day_index = day_index + 1»
+      «/SQLREPEAT 0; 4»
+      «LET day_index = 0»
+      «LET hour_index = hour_index + 1»
+    «/SQLREPEAT 0; 23»
+  </div>
+
+  <style>
+    #grid {
+      position: relative;
+      display: grid;
+      grid-template-columns: none;
+      grid-auto-columns: min-content;
+      grid-template-rows: 69px 30px repeat(24 ,25px);
+      grid-template-areas:
+      "time day1 day1 day1 day1 day1 day1 day1 day1 day1 day2 day2 day2 day2 day2 day2 day2 day2 day2 day3 day3 day3 day3 day3 day3 day3 day3 day3 day4 day4 day4 day4 day4 day4 day4 day4 day4 day5 day5 day5 day5 day5 day5 day5 day5 day5"
+      ". name name name name name name name name name name name name name name name name name name name name name name name name name name name name name name name name name name name name name name name name name name name name name"
+      "hour slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot"
+      "hour slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot"
+      "hour slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot"
+      "hour slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot"
+      "hour slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot"
+      "hour slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot"
+      "hour slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot"
+      "hour slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot"
+      "hour slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot"
+      "hour slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot"
+      "hour slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot"
+      "hour slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot"
+      "hour slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot"
+      "hour slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot"
+      "hour slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot"
+      "hour slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot"
+      "hour slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot"
+      "hour slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot"
+      "hour slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot"
+      "hour slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot"
+      "hour slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot"
+      "hour slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot"
+      "hour slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot"
+      "hour slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot slot";
+      gap: 0px;
+      place-items: stretch;
+      place-content: stretch;
+      overflow-y: hidden;
+      overflow-x: auto;
+      scrollbar-gutter: stable;
+      border: 1px solid #eeeeee;
+      color:#7d7d7d;
+    }
+
+    #time {
+      grid-area: time;
+      font-size:0.725rem;
+      text-align: center;
+      padding-top: 50px;
+      height: 100%;
+      width: 100%;
+      border-right: 1px solid #7d7d7d;
+    }
+
+    .day_cont {
+      color: #7d7d7d;
+      text-align: center;
+      border-left: 1px solid #7d7d7d;
+      border-right: 1px solid #7d7d7d;
+      padding-top: 15px;
+      cursor: pointer;
+    }
+
+    .day_txt {
+    }
+
+    .day_nmb {
+      font-weight: 700;
+      font-size: 1rem;
+      margin: 5px auto;
+      width: fit-content;
+    }
+
+    .hour {
+      height: 100%;
+      width: 100%;
+      border: 1px solid #eeeeee;
+      border-right: 1px solid #7d7d7d;
+    }
+    .hour_txt {
+      font-size: 0.65rem;
+      z-index: 1;
+      position: relative;
+      background-color: white;
+      width: fit-content;
+      margin: auto;
+      padding: 0px 3px;
+      top: -7px;
+    }
+
+    .time_start_preview {
+      position: relative;
+      text-align: start;
+      margin: 0;
+      cursor: default;
+    }
+
+    .time_end_preview {
+      position: relative;
+      text-align: end;
+      margin: 0;
+      cursor: default;
+    }
+
+    .fa-custom-points {
+      display: none;
+      position: absolute;
+      top: 2px;
+      right: 2px;
+      color:#7d7d7d;
+      line-height: 6px;
+    }
+
+    .name {
+      width: 70px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      padding: 8px 3px;
+      text-align: center;
+      border: 1px solid #eeeeee;
+      color:#7d7d7d;
+      font-size: 0.775rem;
+      cursor: pointer;
+    }
+    .name[emp="0"] {
+      border-left: 1px solid #7d7d7d;
+    }
+    .name[emp="8"] {
+      border-right: 1px solid #7d7d7d;
+    }
+    .name[large] {
+      width: 150px;
+    }
+
+    .slot {
+      border: 1px solid #eeeeee;
+      border-bottom: 0;
+      position: relative;
+      cursor: pointer;
+      max-width: 150px;
+    }
+    .slot[emp="0"] {
+      border-left: 1px solid #7d7d7d;
+    }
+    .slot[emp="8"] {
+      border-right: 1px solid #7d7d7d;
+    }
+    .slot[hour="23"] {
+      border-bottom: 2px solid #7d7d7d;
+    }
+
+    .fill {
+      position: absolute;
+      z-index: 99;
+      cursor: pointer;
+      overflow: hidden;
+      color: #7d7d7d;
+      width: -webkit-fill-available;
+    }
+
+    .preview {
+      color: #555555;
+      cursor: pointer;
+      text-align:center;
+      font-weight: 600;
+      font-size: 0.65rem;
+      padding: 3px 3px 3px 7px;
+      overflow-wrap: anywhere;
+    }
+
+    .rdv_info {
+      display:none;
+      flex-direction: column;
+      font-weight: 500;
+      height: 100%;
+      line-height: 20px;
+      padding: 4px 8px 4px 4px;
+    }
+
+    .client_info {
+      font-size: 0.8rem;
+      margin: auto;
+    }
+
+    .location {
+      font-weight: 600;
+      font-size: 0.8rem;
+      margin: auto;
+    }
+
+    .popup {
+      padding-top: 10px;
+      width: fit-content;
+      position: absolute;
+      border-radius: 4px;
+      background-color: #fff;
+      white-space: nowrap;
+      font-size: .875rem;
+      color: #7d7d7d;
+      box-shadow: 0 3px 12px rgba(180,180,180,.23),0 3px 12px rgba(180,180,180,.16);
+      z-index: 100;
+      line-height: 30px;
+      display: flex;
+      flex-direction: column;
+      align-content: flex-start;
+      justify-content: space-evenly;
+      align-items: flex-start;
+    }
+
+    #modifyRdv {
+      padding: 0;
+      width: 75px;
+    }
+
+    .modify_option {
+      width: 100%;
+      transition: 0.3s;
+      padding-left: 10px;
+    }
+
+    .modify_option:hover {
+      background-color: #428bca;
+      color: white;
+      cursor: pointer;
+    }
+
+    #newRdv {
+      width: 250px;
+      height: 300px;
+    }
+
+    .rdv_line_info {
+      padding-left: 10px;
+      width: 100%;
+      transition: 0.3s;
+      cursor: pointer;
+    }
+
+    .rdv_line_info:hover {
+      background-color: #eeeeee;
+    }
+
+    .clicked_option {
+      cursor: text;
+      background-color: #eeeeee;
+      border-bottom: 2px solid #428bca;
+      padding-left: 10px;
+      width: 100%;
+    }
+
+    #options_line_info {
+      padding-left: 10px;
+      width: 100%;
+      transition: 0.3s;
+      cursor: pointer;
+    }
+
+    #options_rdv {
+      width: fit-content;
+      position: absolute;
+      background-color: #fff;
+      white-space: nowrap;
+      font-size: .875rem;
+      color: #7d7d7d;
+      z-index: 100;
+    }
+
+    #buttons_line_info {
+      display: flex;
+      gap: 15px;
+      margin-left: 90px;
+    }
+
+    .ui-resizable-helper {
+      border-bottom: 2px dashed #428bca;
+    }
+
+    #recapPopup {
+      display: flex;
+      flex-direction: row;
+      top: 250px;
+      left: 40%;
+      padding:15px;
+    }
+
+    td {
+      border: 1px solid #7d7d7d;
+      text-align: center;
+    }
+
+    caption {
+      font-weight: bold;
+    }
+
+  </style>
+
+  <script>
+  document.querySelectorAll(".slot").forEach((slot, i) => {
+    if ($(slot).children().length === 0) {
+      $(slot).droppable ({
+        accept: ".fill",
+        tolerance: "pointer",
+        drop: function (event, ui) {
+          $(event.target).append(ui.draggable[0]);
+          ui.draggable[0].style.removeProperty("opacity");
+          ui.draggable[0].style.removeProperty("inset");
+          ui.draggable[0].style.removeProperty("width");
+          $(ui.draggable[0]).attr("id", $(event.target).attr("id") + "_filler");
+        },
+      });
+
+      var overlay = document.createElement("div");
+      overlay.classList.add("overlay");
+      $(slot).hover(function () {
+        slot.appendChild(overlay);
+        $(overlay).css("pointer-events", "none");
+        $(overlay).css("border-top", "1.1px dashed #7d7d7d");
+        $(overlay).css("border-bottom", "1.1px dashed #7d7d7d");
+        hour = 8 + Math.floor($(slot).attr("hour")/2);
+        if (Number.isInteger($(slot).attr("hour")/2)) {
+          $(overlay).html("<p style='font-size:0.6rem' class='time_start_preview'>" + hour + ":00</p>" + "<p style='font-size:0.6rem' class='time_end_preview'>" + hour + ":30</p>");
+        } else {
+          $(overlay).html("<p style='font-size:0.6rem' class='time_start_preview'>" + hour + ":30</p>" + "<p style='font-size:0.6rem' class='time_end_preview'>" + (hour + 1) + ":00</p>");
+        }
+      }, function () {
+          $(overlay).remove();
+      });
+    }
+
+    slot.addEventListener("mousedown", (e) => {
+      drag = false;
+      draggingEmptySlot = true;
+      dragStartSlot = e.target;
+      if ($(dragStartSlot).hasClass("preview")) {
+        dragStartSlot = dragStartSlot.parentElement.parentElement;
+      } else if ($(dragStartSlot).hasClass("ui-resizable-handle")) {
+        drag_ui = false;
+      }
+    });
+
+    slot.addEventListener("mousemove", (e) => {
+      drag = true;
+      e.preventDefault();
+      if ($(dragStartSlot).children().length === 0 && draggingEmptySlot && drag_ui) {
+        grayedNodes.push(dragStartSlot);
+        if (e.target !== previousTarget) {
+          $(dragStartSlot).css("border", "2px dashed #428bca");
+          $(dragStartSlot).css("border-bottom", "0");
+          $(previousTarget).css("border-bottom", "0");
+          previousTarget = e.target;
+          $(e.target).css("border", "2px dashed #428bca");
+          $(e.target).css("border-top", "0");
+          grayedNodes.push(e.target);
+        }
+      }
+      e.preventDefault();
+    });
+
+    slot.addEventListener("mouseup", (e) => {
+      if ($(dragStartSlot).children().length === 0 && drag && !dragStartSlot.classList.contains("ui-resizable-handle")) {
+        if (dragStartSlot !== dragEndSlot) {
+          dragEndSlot = e.target;
+          if (($(dragStartSlot).attr("emp") !== $(dragEndSlot).attr("emp")) || ($(dragStartSlot).attr("day") !== $(dragEndSlot).attr("day"))) {
+            alert("not possible !");
+            grayedNodes.forEach((node, i) => {
+              $(node).css("border", "");
+            });
+            grayedNodes= [];
+          } else {
+            active_popup = true;
+            creating_fill_on_drag = true;
+            createNewRdvPopup(e.pageX, e.pageY, $(dragStartSlot).attr("day"), $(dragStartSlot).attr("hour"), $(dragEndSlot).attr("hour"), $(dragStartSlot).attr("emp"), 1, $(dragStartSlot).attr("id"));
+          }
+        } else {
+          dragStartSlot.click();
+        }
+      }
+      draggingEmptySlot = false;
+      drag_ui = true;
+    });
+
+    slot.addEventListener("click", (e) => {
+      active_popup = true;
+      grayedNodes.push(slot);
+      $(slot).css("border", "2px dashed #428bca");
+      createNewRdvPopup(e.pageX, e.pageY, $(slot).attr("day"), $(slot).attr("hour"), 0, $(slot).attr("emp"), 1, $(slot).attr("id"));
+      e.stopPropagation();
+    });
+  });
+
+    colors.forEach((color, index) => {
+      for (var i = 1; i < 21; i++) {
+        rDay = randomIntFromInterval(0, 4);
+        rHour = randomIntFromInterval(0, 23);
+        rEmp = randomIntFromInterval(0, 8);
+        if ($('div[day=' + rDay + '][hour=' + rHour + '][emp=' + rEmp + ']').children().length === 0 && $('div[day=' + rDay + '][hour=' + (rHour+1) + '][emp=' + rEmp + ']').children().length === 0) {
+          buildFill(rDay, rHour, rEmp, i, index, 70);
+        }
+      }
+    });
+
+    document.body.addEventListener("click", (e) => {
+      if (active_popup && !creating_fill_on_drag) {
+        $("#newRdv").css("display", "none");
+        $("#modifyRdv").css("display", "none");
+        $("#recapPopup").css("display", "none");
+        active_popup = false;
+        grayedNodes.forEach((node, i) => {
+          $(node).css("border", "");
+        });
+        grayedNodes= [];
+        e.stopPropagation();
+      }
+      creating_fill_on_drag = false;
+    });
+
+    document.querySelectorAll(".name").forEach((col, i) => {
+      col.addEventListener("click", (e) => {
+        if (col.hasAttribute("large"))
+          retractColumn(col);
+        else
+          expandColumn(col);
+      });
+
+      col.addEventListener("contextmenu", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        $(col).css("display", "none");
+        $('.slot[day=' + $(col).attr("day") + '][emp=' + $(col).attr("emp") + ']').css("pointer-events", "none");
+      });
+    });
+
+  </script>
+
+  <div class="popup" id="modifyRdv" style="display:none">
+     <div class="modify_option" id="modify_rdv">
+       Modify
+     </div>
+     <div class="modify_option" id="duplicate_rdv">
+       Duplicate
+     </div>
+     <div class="modify_option" id="delete_rdv">
+       Delete
+     </div>
+  </div>
+
+  <div class="popup" id="newRdv" slot="" style="display:none">
+    <div class="rdv_line_info" id="time_info">
+      <span style="color:#7d7d7d;position:relative;top:2px;margin-right:3px" class="fa fa-clock"></span>
+      <div id="date_label" style="display:inline"> dd Mmm YYYY </div>&nbsp;&nbsp;&nbsp;<div id="time_label" style="display:inline">hh:mm - hh:mm</div>
+    </div>
+    <div class="rdv_line_info" id="emp_info">
+      <span style="color:#7d7d7d;position:relative;top:2px;margin-right:3px" class="fa fa-user"></span>
+      <div id="emp_label" style="display:inline"> Employee</div>
+    </div>
+    <hr style="margin:10px 0;width:100%">
+    <div class="rdv_line_info" id="location_info">
+      <span style="color:#7d7d7d;position:relative;top:2px;margin-right:3px" class="fa fa-home"></span>
+      <div id="location_label" style="display:inline">Luxembourg</div>
+    </div>
+    <div class="rdv_line_info" id="client_info">
+      <span style="color:#7d7d7d;position:relative;top:2px;margin-right:3px" class="fa fa-users"></span>
+      <div id="client_label" style="display:inline">EICHERODT Jacques</div>
+    </div>
+    <div id="options_line_info">
+      <input type="checkbox" id="recurrent_check" name="recurrent_check">
+      <label for="recurrent_check">Recurrent</label>
+    </div>
+    <div id="options_line_info">
+      <input type="checkbox" id="notification_check" name="notification_check">
+      <label for="notification_check">Notification</label>
+    </div>
+    <div id="options_line_info">
+      <input type="checkbox" id="flexible_check" name="flexible_check">
+      <label for="flexible_check">Flexible</label>
+    </div>
+    <div id="buttons_line_info">
+      <div id="advanced_button" style="">
+        <div class="btn-default" id="advanced_rdv" style="">Advanced</div>
+      </div>
+      <div id="new_rdv_button" style="">
+        <div class="btn-primary" id="create_rdv" style="">Save</div>
+      </div>
+    </div>
+  </div>
+
+  <button type="button" class="btn-primary" id="recapBtn">Recap</button>
+
+  <div class="popup" id="recapPopup" style="display:none">
+    <table>
+      <caption>Weekly hours</caption>
+      <thead>
+        <td>Employees</td>
+        <td style="line-height: 20px;">Hours<br>worked</td>
+      </thead>
+      <tr>
+        <td>Alan</td>
+        <td id="emp_recap0"></td>
+      </tr>
+      <tr>
+        <td>Antonio</td>
+        <td class="employee_recap" id="emp_recap1"></td>
+      </tr>
+      <tr>
+        <td>Claudio</td>
+        <td class="employee_recap" id="emp_recap2"></td>
+      </tr>
+      <tr>
+        <td>Diogo</td>
+        <td class="employee_recap" id="emp_recap3"></td>
+      </tr>
+      <tr>
+        <td>Dylan</td>
+        <td class="employee_recap" id="emp_recap4"></td>
+      </tr>
+      <tr>
+        <td>Jordan</td>
+        <td class="employee_recap" id="emp_recap5"></td>
+      </tr>
+      <tr>
+        <td>Lucas</td>
+        <td class="employee_recap" id="emp_recap6"></td>
+      </tr>
+      <tr>
+        <td>Maxime</td>
+        <td class="employee_recap" id="emp_recap7"></td>
+      </tr>
+      <tr>
+        <td>Valerio</td>
+        <td class="employee_recap" id="emp_recap8"></td>
+      </tr>
+    </table>
+    <table style="margin-left:30px">
+      <caption>Detail</caption>
+      <thead style="height:45px">
+        <td>Mo</td>
+        <td>Tu</td>
+        <td>We</td>
+        <td>Th</td>
+        <td>Fr</td>
+      </thead>
+      <tr>
+        <td id="emp_recap00"></td>
+        <td id="emp_recap01"></td>
+        <td id="emp_recap02"></td>
+        <td id="emp_recap03"></td>
+        <td id="emp_recap04"></td>
+      </tr>
+      <tr>
+        <td id="emp_recap10"></td>
+        <td id="emp_recap11"></td>
+        <td id="emp_recap12"></td>
+        <td id="emp_recap13"></td>
+        <td id="emp_recap14"></td>
+      </tr>
+      <tr>
+        <td id="emp_recap20"></td>
+        <td id="emp_recap21"></td>
+        <td id="emp_recap22"></td>
+        <td id="emp_recap23"></td>
+        <td id="emp_recap24"></td>
+      </tr>
+      <tr>
+        <td id="emp_recap30"></td>
+        <td id="emp_recap31"></td>
+        <td id="emp_recap32"></td>
+        <td id="emp_recap33"></td>
+        <td id="emp_recap34"></td>
+      </tr>
+      <tr>
+        <td id="emp_recap40"></td>
+        <td id="emp_recap41"></td>
+        <td id="emp_recap42"></td>
+        <td id="emp_recap43"></td>
+        <td id="emp_recap44"></td>
+      </tr>
+      <tr>
+        <td id="emp_recap50"></td>
+        <td id="emp_recap51"></td>
+        <td id="emp_recap52"></td>
+        <td id="emp_recap53"></td>
+        <td id="emp_recap54"></td>
+      </tr>
+      <tr>
+        <td id="emp_recap60"></td>
+        <td id="emp_recap61"></td>
+        <td id="emp_recap62"></td>
+        <td id="emp_recap63"></td>
+        <td id="emp_recap64"></td>
+      </tr>
+      <tr>
+        <td id="emp_recap70"></td>
+        <td id="emp_recap71"</td>
+        <td id="emp_recap72"></td>
+        <td id="emp_recap73"></td>
+        <td id="emp_recap74"></td>
+      </tr>
+      <tr>
+        <td id="emp_recap80"></td>
+        <td id="emp_recap81"></td>
+        <td id="emp_recap82"></td>
+        <td id="emp_recap83"></td>
+        <td id="emp_recap84"></td>
+      </tr>
+    </table>
+  </div>
+
+</body>
+
+<script>
+  function createNewRdvPopup (x, y, day, startHour, endHour, emp, client, id) {
+    var popup = document.getElementById("newRdv");
+    $(popup).attr("day", day);
+    $(popup).attr("startHour", startHour);
+    if (endHour === 0)
+      $(popup).attr("duration", 1);
+    else
+      $(popup).attr("duration", endHour-startHour+1);
+    $(popup).attr("emp", emp);
+    $(popup).attr("client", client);
+    $(popup).attr("slot", id);
+    $(popup).css ({
+      "left": x,
+      "top": y,
+      "display": "flex",
+    });
+    $("#date_label").text(daysNumber[day] + " Dec 2021");
+    $("#location_label").text(places[client]);
+    $("#client_label").text(clients[client]);
+
+    var realStartHour = 8 + Math.floor(startHour/2);
+    if ($(popup).attr("duration") > 1) {
+      var realEndHour = 8 + Math.floor(endHour/2);
+      if (Number.isInteger(startHour/2)) {
+        if (Number.isInteger(endHour/2)) {
+          $("#time_label").text(realStartHour + ":00 - " + realEndHour + ":30");
+        } else {
+          $("#time_label").text(realStartHour + ":00 - " + (realEndHour+1) + ":00");
+        }
+      } else {
+        if (Number.isInteger($(dragEndSlot).attr("hour")/2)) {
+          $("#time_label").text(realStartHour + ":30 - " + realEndHour + ":30");
+        } else {
+          $("#time_label").text(realStartHour + ":30 - " + (realEndHour+1) + ":00");
+        }
+      }
+    } else {
+      if (Number.isInteger(startHour/2)) {
+        $("#time_label").text(realStartHour + ":00 - " + realStartHour + ":30");
+      } else {
+        $("#time_label").text(realStartHour + ":30 - " + (realStartHour + 1) + ":00");
+      }
+    }
+    $("#emp_label").text(employees[emp]);
+  }
+
+  document.getElementById("create_rdv").addEventListener("click", (e) => {
+    var popupInfos = e.target.parentElement.parentElement.parentElement;
+    var gridWidth = 70;
+    if ($(".name[day=" + $(popupInfos).attr("day") + "][emp=" + $(popupInfos).attr("emp") + "]").attr("large"))
+      gridWidth = 150;
+    buildFill($(popupInfos).attr("day"), $(popupInfos).attr("startHour"), $(popupInfos).attr("emp"), -parseInt($(popupInfos).attr("duration")), $(popupInfos).attr("client"), gridWidth);
+    e.stopPropagation();
+    document.body.click();
+  });
+
+  $("#newRdv").draggable({
+    cursor: "move",
+  });
+
+  $(".rdv_line_info").on("click", function(e) {
+    $(".clicked_option").switchClass("clicked_option", "rdv_line_info", 50);
+    $(this).switchClass("rdv_line_info", "clicked_option", 50);
+    e.stopPropagation();
+  });
+
+  document.getElementById("delete_rdv").addEventListener("click", (e) => {
+    $("#" + $(e.target.parentElement).attr("slot")).remove();
+    document.body.click();
+  });
+
+  document.getElementById("modify_rdv").addEventListener("click", (e) => {
+    var actualSlot = document.getElementById($(e.target.parentElement).attr("slot"));
+    $(e.target.parentElement).css("display", "none");
+    createNewRdvPopup(e.pageX, e.pageY, $(actualSlot).attr("day"), $(actualSlot).attr("hour"), parseInt($(actualSlot).attr("hour")) + parseInt($(actualSlot).children(".fill").attr("duration")) - 1, $(actualSlot).attr("emp"), places.indexOf($(actualSlot).children(".fill").children(".rdv_info").children(".location").text()), $(actualSlot).attr("id"));
+    e.stopPropagation();
+  });
+
+  document.getElementById("duplicate_rdv").addEventListener("click", (e) => {
+    var actualSlot = document.getElementById($(e.target.parentElement).attr("slot"));
+    $(e.target.parentElement).css("display", "none");
+    createNewRdvPopup(e.pageX, e.pageY, $(actualSlot).attr("day"), $(actualSlot).attr("hour"), parseInt($(actualSlot).attr("hour")) + parseInt($(actualSlot).children(".fill").attr("duration")) - 1, parseInt($(actualSlot).attr("emp")) + 1, places.indexOf($(actualSlot).children(".fill").children(".rdv_info").children(".location").text()), $(actualSlot).attr("id"));
+    e.stopPropagation();
+  });
+
+  document.getElementById("newRdv").addEventListener("click", (e) => {
+    e.stopPropagation();
+  });
+
+  document.getElementById("recapBtn").addEventListener("click", (e) => {
+    generateRecap();
+    e.stopPropagation();
+  });
+
+  function generateRecap() {
+    var hourArray = countHours();
+    var totalHours = [];
+    for (var i=0;i<9;i++) {
+      totalHours.push(hourArray[i].reduce((a, b) => a + b, 0));
+      for (var j=0;j<5;j++) {
+        $("#emp_recap" + i + j).text(hourArray[i][j]);
+      }
+    }
+    totalHours.forEach((hours, i) => {
+      $("#emp_recap" + i).text(hours);
+    });
+    $(".employee_recap").css("background-color", "");
+    $("#emp_recap" + totalHours.indexOf(Math.max(...totalHours))).css("background-color", "#e8acae");
+    $("#emp_recap" + totalHours.indexOf(Math.min(...totalHours))).css("background-color", "#c4e49f");
+
+    active_popup = true;
+    $("#recapPopup").css("display", "flex");
+  }
+
+  function countHours() {
+    var empHours = [];
+    var empTotal = [];
+    for (var i=0;i<9;i++) {
+      var empHoursWeekly = [];
+      for (var j=0;j<5;j++) {
+        var total = 0;
+        $('.slot[day=' + j + '][emp=' + i + ']').children(".fill").each(function (index, fill) {
+          total = total + parseInt($(fill).attr("duration"));
+        });
+        empHoursWeekly.push(total/2);
+      }
+      empHours.push(empHoursWeekly);
+    }
+    return empHours;
+  }
+</script>
