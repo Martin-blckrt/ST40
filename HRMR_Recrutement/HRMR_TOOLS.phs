@@ -1,0 +1,767 @@
+«PROC Misc»
+	«IF redirect == "del_doc"»
+
+		«INCLUDE Mail:MailDelMail.phs;_MailId=«docId»»
+		<script>
+			alert("«WRITEKEY HRMR_DELFILE»");
+			«IF «parent» == 0»
+				window.location.href = '/Scripts/sql.exe?SqlDB=«SqlDB»&Sql=HRMR:HRMR_CANDIDATE_view.phs&xid=«xid»&_MerchantId=«idMerchant»&id=«id»&ContextNavigation=«ContextNavigation»&mod=toModify';
+			«ELSE»
+				parent.window.location.href = '/Scripts/sql.exe?SqlDB=«SqlDB»&Sql=HRMR:HRMR_DEFAULT_view.phs&xid=«xid»&_MerchantId=«idMerchant»&ContextNavigation=«ContextNavigation»';
+			«ENDIF»
+		</script>
+
+	«ELSEIF redirect == "supplier_info"»
+
+		«VAR NEW [object]_oSupplier»
+		«VAR NEW platformName = ""»
+		«VAR NEW platformEMail = ""»
+		«SQLEXEC OBJECT _oSupplier = select * from HRMR_SUPPLIERS where idSupplier = «platformId»»
+		«SQLEXEC STRING platformName = select azCompany from OSSCLIENT where idClient = «_oSupplier.idSupplier»»
+		«SQLEXEC STRING platformEMail = select azEMail from OSSCLIENT where idClient = «_oSupplier.idSupplier»»
+
+		<div>
+		  <div id="big_container">
+		    <div id="medium_container">
+		      <div id="contact_container" class="layer2">
+		       <div id="contact" class="layer2_title">
+		         «WRITEKEY HRMR_CONTACT»
+		       </div>
+		       <div id="name">
+		         Eric Ferguson
+		       </div>
+					 <span class="fa fa-paper-plane-o" style="position:absolute;top: 76px;left:8px;color:#7d7d7d;pointer-events:none"></span>
+					 <div id="contact" style="margin-left:20px">
+			       <div id="contact_mail" class="layer3_text">
+			        	«platformEMail»
+			       </div>
+			       <div id="contact_tel" class="layer3_text">
+				        +846541949685
+			       </div>
+					 </div>
+		      </div>
+		      <div id=line>
+		      </div>
+		      <div id="cred_container" class="layer2">
+		        <div id="cred" class="layer2_title">
+		           «WRITEKEY HRMR_CRED»
+		         </div>
+						 <div id="contact_usname" class="layer3_text">
+							 <span class="fa fa-info" style="color:#7d7d7d;margin-top:5px;padding-left:15px;position:relative;top:2px;pointer-events:none"></span> «_oSupplier.azUsername»
+						</div>
+						<div id="contact_pw" class="layer3_text">
+							 <span class="fa fa-lock" style="color:#7d7d7d;padding-left:15px;position:relative;top:2px;pointer-events:none"></span> «_oSupplier.azPassword»
+						</div>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+
+	<style>
+		#medium_container {
+		  margin-top: 20px;
+		  display: flex;
+		  justify-content: space-around;
+		  align-items: flex-start;
+			height: 130px;
+		}
+		.layer2 {
+		  width: fit-content;
+			padding-left: 10px;
+		}
+		#line {
+		  border-left: 1px solid #8e8e8e;
+		  height: 120px;
+			position: relative;
+			left: 15px;
+		}
+		.layer2_title {
+		  color: #7d7d7d;
+		  margin: auto;
+		  width: fit-content;
+		}
+		#name {
+		  color: #7d7d7d;
+		  font-weight: bold;
+		  margin-top: 10px;
+		}
+		.layer3_text {
+		  margin-top:15px
+		}
+	</style>
+
+	«ELSEIF redirect == "del_job_cand"»
+
+		«SQL delete from HRMR_CANDIDATES_JOBS where id=«delId»»
+
+	«ELSEIF redirect == "del_collab"»
+
+		«SQL delete from HRMR_EVENTS where idCandidate = «id» and idUser = «delId»»
+
+	«ELSEIF redirect == "new_itw"»
+
+		«VAR NEW _myId = -1»
+		«VAR NEW _RVId = 0»
+
+		«VAR NEW candFirstName = ""»
+		«VAR NEW candName = ""»
+		«SQLEXEC STRING candFirstName = select azFirstName from HRMR_CANDIDATES where idCandidate = «id»»
+		«SQLEXEC STRING candName = select azName from HRMR_CANDIDATES where idCandidate = «id»»
+
+		«VAR NEW jobName = ""»
+		«SQLEXEC STRING jobName = select J.azJobName from HRMR_JOBS J inner join HRMR_CANDIDATES_JOBS CJ on J.idJob=CJ.idJob
+										inner join HRMR_CANDIDATES C on C.idCandidate=CJ.idCandidate where C.idCandidate = «id»»
+
+		«VAR NEW [array]users»
+		«LET users=@jsonfromstr('[«User»]')»
+
+		«IF «itwId» == 200 || «itwId» == 210»
+			«LET itwId = «iStatus» + 1»
+		«ENDIF»
+
+		«IF «users.iSize» == 0»
+			«INCLUDE _myId = HRMR_TOOLS.phs#GetTableIdentifier;_Table='HRMR_EVENTS'»
+			«SQL insert into HRMR_EVENTS values («_myId», «id», "", "", «itwId», «CTimeItwDate», "")»
+		«ELSE»
+			«SQLREPEAT»
+				«INCLUDE _myId = HRMR_TOOLS.phs#GetTableIdentifier;_Table='HRMR_EVENTS'»
+				«SQL insert into HRMR_EVENTS values («_myId», «id», «users[#SQLREPEAT#]», "", «itwId», «CTimeItwDate», "")»
+			«/SQLREPEAT 0; ««users.iSize»-1»»
+		«ENDIF»
+		«IF #SQLSTATUS# == 1»
+			«VAR NEW com="«WRITEKEY HRMR_ITW_PLANNED» «@timestr(«CTimeItwDate»; 4)»"»
+			«INCLUDE _TicketId = HD:HDNewTicket.phs;_ObjectId=«id»;_ObjectTypeId=HRMR_CANDIDATE_ID;_ObjectLibraryId=HRMR_LIBRARY_ID;_MerchantId=«idMerchant»;_TicketId=«ticketId»;_UserId=«#SQLUSERID#»;_iStatus=1;_azComments=com;_iType=HRMR_LIBRARY_ID»
+			«SQL update HRMR_CANDIDATES set iStatus=«itwId» where idCandidate=«id»»
+
+			«VAR NEW RVCom = "«candFirstName» «candName» - «jobName»"»
+			«IF @atoi(@strrnext("«itwDate»"; 58)) > 29»
+				«VAR NEW halfhour = 30»
+			«ELSE»
+				«VAR NEW halfhour = 0»
+			«ENDIF»
+
+			«INCLUDE _RVId = Agenda:agenda_create_external_rv.phs;_LibraryId=HRMR_LIBRARY_ID;_ObjectLibraryId=HRMR_LIBRARY_ID;_ObjectTypeId=HRMR_CANDIDATE_ID;_ObjectId=«id»;_AgendaRVDay=«=@timetodaytime(«CTimeItwDate»)»;_AgendaRVHour=«=@timehour(«CTimeItwDate»)*60+«halfhour»»;_AgendaRVDuration=60;_AgendaComment="«RVCom»"»
+			«IF _RVId > 0»
+				<script>
+					alert("«WRITEKEY HRMR_ITW_ADD»");
+				</script>
+			«ELSE»
+				<script>
+					alert("«WRITEKEY HRMR_ITW_AGENDA_FAIL»");
+				</script>
+			«ENDIF»
+		«ELSE»
+			<script>
+				alert("«WRITEKEY HRMR_ERROR»");
+			</script>
+		«ENDIF»
+		<script>
+			parent.window.location.href = "/Scripts/sql.exe?SqlDB=«SqlDB»&Sql=HRMR:HRMR_CANDIDATE_view.phs&xid=«xid»&_MerchantId=«idMerchant»&id=«id»&ContextNavigation=«ContextNavigation»";
+		</script>
+
+	«ELSEIF redirect == "mod_itw"»
+
+		«VAR NEW eventExists = 0»
+		«VAR NEW _myId = -1»
+
+		«VAR NEW [array]checkedUsers»
+		«LET checkedUsers=@jsonfromstr('[«User»]')»
+		«VAR NEW [array]uncheckedUsers»
+		«LET uncheckedUsers=@jsonfromstr('[«nonUser»]')»
+
+		«VAR NEW getDate = 0»
+		«SQLEXEC INT getDate = select iCTimeInterview from HRMR_EVENTS where iStatus = «itwId» and idCandidate = «id»»
+		«IF «CTimeItwDate» <> «getDate»»
+			«VAR NEW com="«WRITEKEY HRMR_ITW_MOVED» «@timestr(«CTimeItwDate»; 4)»"»
+			«INCLUDE _TicketId = HD:HDNewTicket.phs;_ObjectId=«id»;_ObjectTypeId=HRMR_CANDIDATE_ID;_ObjectLibraryId=HRMR_LIBRARY_ID;_MerchantId=«idMerchant»;_TicketId=«ticketId»;_UserId=«#SQLUSERID#»;_iStatus=1;_azComments=com;_iType=HRMR_LIBRARY_ID»
+		«ENDIF»
+
+		«SQLSTATUS TRANSACTION BEGIN»
+			«IF checkedUsers.iSize == 0»
+				«SQLEXEC INT eventExists = select idEvent from HRMR_EVENTS where idCandidate = «id» and iStatus = «itwId»»
+				«IF eventExists == 0»
+					«INCLUDE _myId = HRMR_TOOLS.phs#GetTableIdentifier;_Table='HRMR_EVENTS'»
+					«SQL insert into HRMR_EVENTS values («_myId», «id», "", "", «itwId», «CTimeItwDate», "")»
+				«ELSE»
+					«SQL update HRMR_EVENTS set iCTimeInterview = «CTimeItwDate» where idCandidate = «id» and iStatus = «itwId»»
+				«ENDIF»
+			«ELSE»
+				«SQLREPEAT»
+					«SQLEXEC INT eventExists = select idEvent from HRMR_EVENTS where idCandidate = «id» and idUser = «checkedUsers[#SQLREPEAT#]» and iStatus = «itwId»»
+					«IF eventExists == 0»
+						«INCLUDE _myId = HRMR_TOOLS.phs#GetTableIdentifier;_Table='HRMR_EVENTS'»
+						«SQL insert into HRMR_EVENTS values («_myId», «id», «checkedUsers[#SQLREPEAT#]», "", «itwId», «CTimeItwDate», "")»
+					«ELSE»
+						«SQL update HRMR_EVENTS set iCTimeInterview = «CTimeItwDate» where idCandidate = «id» and idUser = «checkedUsers[#SQLREPEAT#]» and iStatus = «itwId»»
+					«ENDIF»
+				«/SQLREPEAT 0; ««checkedUsers.iSize» - 1»»
+			«ENDIF»
+
+
+			«SQLREPEAT»
+				«SQL delete from HRMR_EVENTS where idCandidate = «id» and idUser = «uncheckedUsers[#SQLREPEAT#]» and iStatus = «itwId»»
+			«/SQLREPEAT 0; ««uncheckedUsers.iSize» - 1»»
+		«SQLSTATUS TRANSACTION END»
+
+		«VAR NEW candFirstName = ""»
+		«VAR NEW candName = ""»
+		«SQLEXEC STRING candFirstName = select azFirstName from HRMR_CANDIDATES where idCandidate = «id»»
+		«SQLEXEC STRING candName = select azName from HRMR_CANDIDATES where idCandidate = «id»»
+
+		«VAR NEW jobName = ""»
+		«SQLEXEC STRING jobName = select J.azJobName from HRMR_JOBS J inner join HRMR_CANDIDATES_JOBS CJ on J.idJob=CJ.idJob
+										inner join HRMR_CANDIDATES C on C.idCandidate=CJ.idCandidate where C.idCandidate = «id»»
+
+		«VAR NEW RVCom = "«candFirstName» «candName» - «jobName»"»
+		«VAR NEW deleteRVControl = 0»
+		«INCLUDE deleteRVControl = Agenda:ProcRV.phs#DeleteExternalRV;_LibraryId=HRMR_LIBRARY_ID;_ObjectLibraryId=HRMR_LIBRARY_ID;_ObjectTypeId=HRMR_CANDIDATE_ID;_ObjectId=«id»;_AgendaRVDay=«=@timetodaytime(«getDate»)»;_AgendaRVHour=«=@timehour(«getDate»)*60»;_AgendaRVDuration=60»
+		«IF deleteRVControl == 0»
+			«INCLUDE Agenda:ProcRV.phs#DeleteExternalRV;_LibraryId=HRMR_LIBRARY_ID;_ObjectLibraryId=HRMR_LIBRARY_ID;_ObjectTypeId=HRMR_CANDIDATE_ID;_ObjectId=«id»;_AgendaRVDay=«=@timetodaytime(«getDate»)»;_AgendaRVHour=«=@timehour(«getDate»)*60+30»;_AgendaRVDuration=60»
+		«ENDIF»
+
+		«IF @atoi(@strrnext("«itwDate»"; 58)) > 29»
+			«VAR NEW halfhour = 30»
+		«ELSE»
+			«VAR NEW halfhour = 0»
+		«ENDIF»
+
+		«INCLUDE _RVId = Agenda:agenda_create_external_rv.phs;_LibraryId=HRMR_LIBRARY_ID;_ObjectLibraryId=HRMR_LIBRARY_ID;_ObjectTypeId=HRMR_CANDIDATE_ID;_ObjectId=«id»;_AgendaRVDay=«=@timetodaytime(«CTimeItwDate»)»;_AgendaRVHour=«=@timehour(«CTimeItwDate»)*60+«halfhour»»;_AgendaRVDuration=60;_AgendaComment="«RVCom»"»
+
+		«IF «#SQLSTATUS#» == 1»
+			<script>
+				alert("«WRITEKEY HRMR_ITW_MOD»")
+			</script>
+		«ELSE»
+			<script>
+				alert("«WRITEKEY HRMR_ERROR»")
+			</script>
+		«ENDIF»
+
+		<script>
+			parent.window.location.href = "/Scripts/sql.exe?SqlDB=«SqlDB»&Sql=HRMR:HRMR_CANDIDATE_view.phs&xid=«xid»&_MerchantId=«idMerchant»&id=«id»&ContextNavigation=«ContextNavigation»";
+		</script>
+
+	«ELSEIF redirect == "del_itw"»
+
+		«VAR NEW getDate = 0»
+		«SQLEXEC INT getDate = select iCTimeInterview from HRMR_EVENTS where iStatus = «itwId» and idCandidate = «id»»
+		«SQL delete from HRMR_EVENTS where idCandidate = «id» and iStatus = «itwId»»
+		«VAR NEW com="«WRITEKEY HRMR_ITW_PLANNED» «@timestr(«getDate»; 4)» «WRITEKEY HRMR_DELETED»"»
+		«INCLUDE _TicketId = HD:HDNewTicket.phs;_ObjectId=«id»;_ObjectTypeId=HRMR_CANDIDATE_ID;_ObjectLibraryId=HRMR_LIBRARY_ID;_MerchantId=«idMerchant»;_TicketId=«ticketId»;_UserId=«#SQLUSERID#»;_iStatus=1;_azComments=com;_iType=HRMR_LIBRARY_ID»
+
+		«VAR NEW deleteRVControl = 0»
+		«INCLUDE deleteRVControl = Agenda:ProcRV.phs#DeleteExternalRV;_LibraryId=HRMR_LIBRARY_ID;_ObjectLibraryId=HRMR_LIBRARY_ID;_ObjectTypeId=HRMR_CANDIDATE_ID;_ObjectId=«id»;_AgendaRVDay=«=@timetodaytime(«getDate»)»;_AgendaRVHour=«=@timehour(«getDate»)*60»;_AgendaRVDuration=60»
+		«IF deleteRVControl == 0»
+			«INCLUDE Agenda:ProcRV.phs#DeleteExternalRV;_LibraryId=HRMR_LIBRARY_ID;_ObjectLibraryId=HRMR_LIBRARY_ID;_ObjectTypeId=HRMR_CANDIDATE_ID;_ObjectId=«id»;_AgendaRVDay=«=@timetodaytime(«getDate»)»;_AgendaRVHour=«=@timehour(«getDate»)*60+30»;_AgendaRVDuration=60»
+		«ENDIF»
+
+		«IF «#SQLSTATUS#» == 1»
+			<script>
+				alert("«WRITEKEY HRMR_ITW_DEL»")
+			</script>
+		«ELSE»
+			<script>
+				alert("«WRITEKEY HRMR_ERROR»")
+			</script>
+		«ENDIF»
+
+		<script>
+			parent.window.location.href = "/Scripts/sql.exe?SqlDB=«SqlDB»&Sql=HRMR:HRMR_CANDIDATE_view.phs&xid=«xid»&_MerchantId=«idMerchant»&id=«id»&ContextNavigation=«ContextNavigation»";
+		</script>
+
+	«ELSEIF redirect == "grade"»
+
+		«SQL update HRMR_EVENTS set iGrade = «grade», iCTimeGrade=«@time()» where idEvent = «itwId»»
+
+		«IF «#SQLSTATUS#» == 1»
+			<script>
+				alert("«WRITEKEY HRMR_GRADE_VALID»")
+			</script>
+		«ELSE»
+			<script>
+				alert("«WRITEKEY HRMR_ERROR»")
+			</script>
+		«ENDIF»
+
+		<script>
+			parent.window.location.href = "/Scripts/sql.exe?SqlDB=«SqlDB»&Sql=HRMR:HRMR_CANDIDATE_view.phs&xid=«xid»&_MerchantId=«idMerchant»&id=«id»&ContextNavigation=«ContextNavigation»";
+		</script>
+
+	«ELSEIF redirect == "new_job"»
+
+		«SQL insert into HRMR_JOBS values («id», '«@atosql(jobName)»', «jobStatus», «jobType»)»
+		«IF #SQLSTATUS# == 1»
+			<script>
+				alert("«WRITEKEY HRMR_JOB_ADD»");
+			</script>
+		«ELSE»
+			<script>
+				alert("«WRITEKEY HRMR_ERROR»");
+			</script>
+		«ENDIF»
+
+		<script>
+			parent.window.location.href = "/Scripts/sql.exe?SqlDB=«SqlDB»&Sql=HRMR:HRMR_JOB_view.phs&xid=«xid»&_MerchantId=«idMerchant»&ContextNavigation=«_NavLevel»+1";
+		</script>
+
+	«ELSEIF redirect == "mod_job"»
+
+		«SQL update HRMR_JOBS set azJobName='«@atosql(jobName)»', iStatus=«jobStatus», iType=«jobType» where idJob = «id»»
+		«IF #SQLSTATUS# == 1»
+			<script>
+				alert("«WRITEKEY HRMR_JOB_MOD»");
+			</script>
+		«ELSE»
+			<script>
+				alert("«WRITEKEY HRMR_ERROR»");
+			</script>
+		«ENDIF»
+		<script>
+			parent.window.location.href = "/Scripts/sql.exe?SqlDB=«SqlDB»&Sql=HRMR:HRMR_JOB_view.phs&xid=«xid»&_MerchantId=«idMerchant»&ContextNavigation=«_NavLevel»+1";
+		</script>
+
+	«ELSEIF redirect == "del_job"»
+
+		«SQLSTATUS TRANSACTION BEGIN»
+			«SQL delete from HRMR_CANDIDATES_JOBS where idJob=«id»»
+			«SQL delete from HRMR_JOBS where idJob=«id»»
+			«VAR NEW _TransacSuccess=#TRANSACTIONSTATUS#»
+		«SQLSTATUS TRANSACTION END»
+		«IF _TransacSuccess == 1»
+			<script>
+				alert("«WRITEKEY HRMR_JOB_DEL»");
+			</script>
+		«ELSE»
+			<script>
+				alert("«WRITEKEY HRMR_ERROR»");
+			</script>
+		«ENDIF»
+
+		<script>
+			parent.window.location.href = "/Scripts/sql.exe?SqlDB=«SqlDB»&Sql=HRMR:HRMR_JOB_view.phs&xid=«xid»&_MerchantId=«idMerchant»&ContextNavigation=«_NavLevel»+1";
+		</script>
+
+	«ELSEIF redirect == "new_ad"»
+
+		«VAR NEW _addDate = 0»
+		«VAR NEW _expDate = 0»
+		«INCLUDE _addDate = «#SQLLIBRARY#»:ProcDates.phs#ScanTimeDate;_DateString="«addDate»"»
+		«INCLUDE _expDate = «#SQLLIBRARY#»:ProcDates.phs#ScanTimeDate;_DateString="«expDate»"»
+
+		«SQL insert into HRMR_ADS values («id», «jobSelect», «_addDate», «_expDate», «platformSelect»)»
+
+		«IF «#SQLSTATUS#» == 1»
+			<script>
+				alert("«WRITEKEY HRMR_AD_ADD»")
+			</script>
+		«ELSE»
+			<script>
+				alert("«WRITEKEY HRMR_ERROR»")
+			</script>
+		«ENDIF»
+
+		<script>
+			parent.window.location.href = "/Scripts/sql.exe?SqlDB=«SqlDB»&Sql=HRMR:HRMR_AD_view.phs&xid=«xid»&_MerchantId=«idMerchant»&ContextNavigation=«_NavLevel»+1";
+		</script>
+
+	«ELSEIF redirect == "mod_ad"»
+
+		«VAR NEW _addDate = 0»
+		«VAR NEW _expDate = 0»
+		«INCLUDE _addDate = «#SQLLIBRARY#»:ProcDates.phs#ScanTimeDate;_DateString="«addDate»"»
+		«INCLUDE _expDate = «#SQLLIBRARY#»:ProcDates.phs#ScanTimeDate;_DateString="«expDate»"»
+
+		«SQL update HRMR_ADS set idJob = «jobSelect», iCTimeCreate = «_addDate», iCTimeExpire = «_expDate», idSupplier = «platformSelect» where idAd = «id»»
+
+		«IF «#SQLSTATUS#» == 1»
+			<script>
+				alert("«WRITEKEY HRMR_AD_MOD»")
+			</script>
+		«ELSE»
+			<script>
+				alert("«WRITEKEY HRMR_ERROR»")
+			</script>
+		«ENDIF»
+
+		<script>
+			parent.window.location.href = "/Scripts/sql.exe?SqlDB=«SqlDB»&Sql=HRMR:HRMR_AD_view.phs&xid=«xid»&_MerchantId=«idMerchant»&ContextNavigation=«_NavLevel»+1";
+		</script>
+
+	«ELSEIF redirect == "del_ad"»
+
+		«SQL delete from HRMR_ADS where idAd = «id»»
+
+		«IF «#SQLSTATUS#» == 1»
+			<script>
+				alert("«WRITEKEY HRMR_AD_DEL»")
+			</script>
+		«ELSE»
+			<script>
+				alert("«WRITEKEY HRMR_ERROR»")
+			</script>
+		«ENDIF»
+
+		<script>
+			parent.window.location.href = "/Scripts/sql.exe?SqlDB=«SqlDB»&Sql=HRMR:HRMR_AD_view.phs&xid=«xid»&_MerchantId=«idMerchant»&ContextNavigation=«_NavLevel»+1";
+		</script>
+
+	«ELSEIF redirect == "new_sup"»
+
+		«SQL insert into HRMR_SUPPLIERS values («idsupplier», «libsupplier», «typesupplier», "«username»", "«password»", "«link»")»
+
+		«IF «#SQLSTATUS#» == 1»
+			<script>
+				alert("«WRITEKEY HRMR_PLAT_ADD»")
+			</script>
+		«ELSE»
+			<script>
+				alert("«WRITEKEY HRMR_ERROR»")
+			</script>
+		«ENDIF»
+
+		<script>
+			parent.window.location.href = "/Scripts/sql.exe?SqlDB=«SqlDB»&Sql=HRMR:HRMR_DEFAULT_view.phs&xid=«xid»&_MerchantId=«idMerchant»&ContextNavigation=«ContextNavigation»";
+		</script>
+
+	«ELSEIF redirect == "mod_sup"»
+
+		«SQL update HRMR_SUPPLIERS set  idSupplier=«_ObjectId», idSupplierLibrary=«_ObjectLibraryId», idSupplierLibraryObjectType=«_ObjectTypeId», azUsername="«username»", azPassword="«password»", azLink="«link»" where idSupplier=«id»»
+
+		«IF «#SQLSTATUS#» == 1»
+			<script>
+				alert("«WRITEKEY HRMR_PLAT_MOD»")
+			</script>
+		«ELSE»
+			<script>
+				alert("«WRITEKEY HRMR_ERROR»")
+			</script>
+		«ENDIF»
+
+		<script>
+			parent.window.location.href = "/Scripts/sql.exe?SqlDB=«SqlDB»&Sql=HRMR:HRMR_DEFAULT_view.phs&xid=«xid»&_MerchantId=«idMerchant»&ContextNavigation=«ContextNavigation»";
+		</script>
+
+	«ELSEIF redirect == "del_sup"»
+
+		«SQL delete from HRMR_SUPPLIERS where idSupplier=«id»»
+
+		«IF «#SQLSTATUS#» == 1»
+			<script>
+				alert("«WRITEKEY HRMR_PLAT_DEL»")
+			</script>
+		«ELSE»
+			<script>
+				alert("«WRITEKEY HRMR_ERROR»")
+			</script>
+		«ENDIF»
+
+		<script>
+			parent.window.location.href = "/Scripts/sql.exe?SqlDB=«SqlDB»&Sql=HRMR:HRMR_DEFAULT_view.phs&xid=«xid»&_MerchantId=«idMerchant»&ContextNavigation=«ContextNavigation»";
+		</script>
+
+	«ELSEIF redirect == "ad_document_exists"»
+
+		«VAR NEW docExist = 0»
+		«SQLEXEC INT docExist = select idAd from HRMR_ADS where idJob = «jobId» order by idAd asc limit 1»
+		«VAR NEW listId = 0»
+		«IF docExist > 0»
+			«INCLUDE listId=Mail:MailDocumentList.phs;_MerchantId=«idMerchant»;_CallLibraryId=HRMR_LIBRARY_ID;_RefLibraryId=HRMR_LIBRARY_ID;_RefObjectTypeId=HRMR_AD_ID;_RefObjectId=«docExist»»
+		«ENDIF»
+
+		«IF «listId» > 0»
+			<div class="container">
+				«VAR NEW _MailName=""»
+				«VAR NEW _CreateDate=0»
+				«INCLUDE Mail:MailMailInfo.phs;_MerchantId=«idMerchant»;_MailId=«listId»»
+				«IF @strrnext("«_MailName»", 46) == "png" || @strrnext("«_MailName»", 46) == "jpg"»
+					<img style="vertical-align:unset" height="258px" width="183px" src="/Scripts/sql.exe?SqlDB=«SqlDB»&Sql=Mail:downloadMail.phs&xid=«xid»&_MerchantId=«idMerchant»&_MailId=«listId»&mode=2"></img>
+				«ELSE»
+					<iframe style="border: 1px solid #7d7d7d;border-bottom:0" id="«#SQLREPEAT#»" type="application/pdf" frameborder="0" height="258px" width="183px" src="/Scripts/sql.exe?SqlDB=«SqlDB»&Sql=Mail:downloadMail.phs&xid=«xid»&_MerchantId=«idMerchant»&_MailId=«listId»&mode=2&embedded=true"></iframe>
+				«ENDIF»
+
+				<div class="preview_title" style="padding-left:30px;cursor:pointer">
+					«_MailName»
+				</div>
+				<span id="download" class="fa fa-download" onclick="downloadDoc(«listId»)"></span>
+				«VAR NEW bEnabled = 1»
+				«INCLUDE bEnabled=Mail:MailCheckDelRights.phs»
+				«IF bEnabled == 0»
+					<span id="remove" class="fa fa-remove" existing="yes" idDoc="«listId»" style="margin-left:162px;top:-43px" onclick="deleteDocument(«listId»)"></span>
+				«ENDIF»
+			</div>
+		«ELSE»
+
+			<div style="max-width:600px;margin-top:10px;margin-left:10px">
+				<div class="drop_zone" id="dropzone">
+					<span class="fa fa-folder-add fa-3x"></span>
+					<span id="prompt" style="vertical-align:sub;text-align:center;font-weight:600" class="drop_zone__prompt">«WRITEKEY HRMR_DRAGNDROP»</span>
+					<div id="horizontal_drag">
+						<div class="line"></div><div style="font-weight:600;color:#b6b6b6">«WRITEKEY HRMR_OR»</div><div class="line"></div>
+					</div>
+					<button type="button" id="file_add_btn" style="font-weight:600;height:40px" class="btn-primary">«WRITEKEY HRMR_BROWSE»</button>
+					<input type="file" class="upload" style="display:none" name="uploadFile1" id="uploadFile1" multiple>
+					<input type="hidden" name="FileName" value="" id="FileName">
+				</div>
+				<div id="file_zone"></div>
+			</div>
+
+		«ENDIF»
+			<script>
+					document.querySelectorAll(".upload").forEach((inputElement) => {
+						const dropZoneElement = inputElement.closest(".drop_zone");
+
+						dropZoneElement.addEventListener("click", (e) => {
+							inputElement.click();
+						});
+
+						inputElement.addEventListener("change", (e) => {
+								uploadDocs(inputElement.files);
+								prevFile(inputElement.files);
+						});
+
+						document.body.addEventListener("dragover", (e) => {
+							e.preventDefault();
+							if (navigator.userAgent.search("Firefox") > 0) {
+								document.body.classList.add("overlay");
+							}
+						});
+
+						document.body.addEventListener("dragleave", (e) => {
+							if (navigator.userAgent.search("Firefox") > 0) {
+								document.body.classList.remove("overlay");
+							}
+						});
+
+						document.body.addEventListener("drop", (e) => {
+							e.preventDefault();
+							if (navigator.userAgent.search("Firefox") > 0) {
+								document.body.classList.remove("overlay");
+							}
+							uploadDocs(e.dataTransfer.files);
+							prevFile(e.dataTransfer.files);
+						});
+					});
+
+
+					  var i = 0;
+					  var title;
+					  var clone;
+					  document.querySelectorAll(".preview_title").forEach((doc) => {
+					    doc.addEventListener("click", (e) => {
+					      i = 1;
+					      title = e.target;
+					      clone = e.target.parentElement.cloneNode(true);
+					      window.parent.document.body.appendChild(clone);
+					      $(clone).css({
+					        top: 0,
+					        left: 0,
+					        position: "fixed",
+					        width: "fit-content",
+					        height: "fit-content",
+					        "margin-left": "30%",
+					        "margin-top": "5%",
+					        "z-index": 10000
+					      });
+					      $(clone.children[1]).css("display", "none");
+					      $(clone.children[2]).css("display", "none");
+					      $(clone.children[0]).css({
+					        width: "fit-content",
+					        height: "fit-content"
+					      });
+					      if (navigator.userAgent.search("Firefox") > 0) {
+					        $(clone.children[0]).css("height", "775px");
+					        $(clone.children[0]).css("width", "630px");
+					      } else {
+					        $(clone.children[0]).css("height", "405px");
+					      }
+
+					      if (title.innerText.split(".").pop() === "png" || title.innerText.split(".").pop() === "jpg")
+					      {
+					        $(clone.children[0]).css("zoom", "1.7");
+					      } else {
+					        $(clone.children[0]).css("zoom", "2");
+					      }
+					      window.parent.document.getElementById("modCont").style.display="revert";
+					    });
+					  });
+
+					  $(document).ready(function () {
+					    $(window.parent.document.getElementsByClassName("backModAdmin")[0]).click(function (event) {
+					      if (event.target !== title && i == 1) {
+					        $("#modCont").css("display", "none");
+					        $(clone).css("display", "none");
+					        i = 0;
+					      }
+					    });
+					  });
+			</script>
+
+	«ELSEIF redirect == "check_itw_date"»
+
+		«VAR NEW valid=0»
+		«INCLUDE valid = Agenda:ProcRV.phs#ExternalRVAvailable;_LibraryId=HRMR_LIBRARY_ID;_AgendaRVDay=«=@timetodaytime(«date»)»;_AgendaRVHour=«=@timehour(«date»)*60»;_AgendaRVDuration=60»
+		«IF valid <= 0»
+			«valid»
+		«ENDIF»
+
+	«ELSE»
+
+		«INCLUDE _TicketId = HD:HDNewTicket.phs;_ObjectId=«id»;_ObjectTypeId=HRMR_CANDIDATE_ID;_ObjectLibraryId=HRMR_LIBRARY_ID;_MerchantId=«idMerchant»;_TicketId=«ticketId»;_UserId=«#SQLUSERID#»;_iStatus=1;_azComments="«Note»";_iType=HRMR_LIBRARY_ID»
+
+		<script>
+			alert("«WRITEKEY HRMR_ADDEDMSG»");
+			parent.window.location.href = "/Scripts/sql.exe?SqlDB=«SqlDB»&Sql=HRMR:HRMR_CANDIDATE_view.phs&xid=«xid»&_MerchantId=«idMerchant»&id=«id»&ContextNavigation=«ContextNavigation»";
+		</script>
+	«ENDIF»
+«/PROC»
+
+«PROC GetStatus»
+	«VAR NEW s = ""»
+	«VAR NEW n = "#"»
+	«IF «i» == 1»
+		«LET s="«WRITEKEY HRMR_NEW»"»
+		«IF «label» == 1»
+			<span class="label-default">«s»</span>
+		«ELSEIF «pdf» == 1»
+			«LET s="«WRITEKEY HRMR_PDF_NEW»"»
+		«ENDIF»
+
+	«ELSEIF «i» == 100»
+		«LET s="«WRITEKEY HRMR_PROGRESS»"»
+		«IF «label» == 1»
+			<span class="label-warning">«s»</span>
+		«ELSEIF «pdf» == 1»
+			«LET s="«WRITEKEY HRMR_PDF_PROGRESS»"»
+		«ENDIF»
+
+	«ELSEIF «i» == 110»
+		«LET s="«WRITEKEY HRMR_WAIT»"»
+		«IF «label» == 1»
+			<span class="label-warning">«s»</span>
+		«ELSEIF «pdf» == 1»
+			«LET s="«WRITEKEY HRMR_PDF_WAIT»"»
+		«ENDIF»
+
+	«ELSEIF «i» > 200 && «i» < 210»
+		«LET n = n + @strrnext(@toa(«i»);48)»
+		«LET s="«WRITEKEY HRMR_PHY_INTERVIEW» «n»"»
+		«IF «label» == 1»
+			<span class="label-valid">«s»</span>
+		«ELSEIF «pdf» == 1»
+			«LET s="«WRITEKEY HRMR_PDF_PHY_INTERVIEW»"»
+		«ELSEIF «query» == 1»
+			«LET s="«WRITEKEY HRMR_INTERVIEW»"»
+		«ENDIF»
+
+	«ELSEIF «i» > 210 && «i» < 220»
+		«IF «i» == 211»
+			«LET n = "#1"»
+		«ELSE»
+			«LET n = n + @strrnext(@toa(«i»);49)»
+		«ENDIF»
+		«LET s="«WRITEKEY HRMR_DIST_INTERVIEW» «n»"»
+		«IF «label» == 1»
+			<span class="label-valid">«s»</span>
+		«ELSEIF «pdf» == 1»
+			«LET s="«WRITEKEY HRMR_PDF_DIST_INTERVIEW»"»
+		«ENDIF»
+
+	«ELSEIF «i» == 500»
+		«LET s="«WRITEKEY HRMR_OFFER»"»
+		«IF «label» == 1»
+			<span class="label-alert">«s»</span>
+		«ELSEIF «pdf» == 1»
+			«LET s="«WRITEKEY HRMR_PDF_OFFER»"»
+		«ENDIF»
+
+	«ELSEIF «i» == 600»
+		«LET s="«WRITEKEY HRMR_ACCEPTED»"»
+		«IF «label» == 1»
+			<span>«s»</span>
+		«ELSEIF «pdf» == 1»
+			«LET s="«WRITEKEY HRMR_PDF_ACCEPTED»"»
+		«ENDIF»
+
+	«ELSEIF «i» == 700»
+		«LET s="«WRITEKEY HRMR_REFUSED»"»
+		«IF «label» == 1»
+			<span>«s»</span>
+		«ELSEIF «pdf» == 1»
+			«LET s="«WRITEKEY HRMR_PDF_REFUSED»"»
+		«ENDIF»
+
+	«ELSEIF «i» == 999»
+		«LET s="«WRITEKEY HRMR_ARCHIVED»"»
+		«IF «label» == 1»
+			<span>«s»</span>
+		«ELSEIF «pdf» == 1»
+			«LET s="«WRITEKEY HRMR_PDF_ARCHIVED»"»
+		«ENDIF»
+
+	«ENDIF»
+	«RETURN s»
+«/PROC»
+
+«PROC GetTableIdentifier»
+
+	«SQLSTATUS TRANSACTION BEGIN»
+	«* search new identifier *»
+	«SQL update «#SQLWPA#»OSLIDENTIFIER set iOSLMax=iOSLMax+1 where azOSLTable='«%sql;_Table»'»
+	«IF #SQLSTATUS#==0»
+		«LET _IdTable=-1»
+	«ELSE»
+		«SQLEXEC INT _IdTable=select iOSLMax from «#SQLWPA#»OSLIDENTIFIER  where azOSLTable='«%sql;_Table»'»
+	  «IF #SQLSTATUS#==0»
+		 	«LET _IdTable=-1»
+	  «ENDIF»
+	«ENDIF»
+	«SQLSTATUS TRANSACTION END»
+	«RETURN _IdTable»
+«/PROC»
+
+«PROC ClearDocuments»
+
+	«SQLOUTPUT»
+		«SQL delete from LOL_MAIL where idMail=«idMail»»
+	«/SQLOUTPUT select idMail from LOL_MAIL where idRefLibrary=HRMR_LIBRARY_ID and idRefObjectType=HRMR_CANDIDATE_ID and idRefObject not in (select idCandidate from HRMR_CANDIDATES)»
+
+	«SQLOUTPUT»
+		«SQL delete from LOL_MAIL where idMail=«idMail»»
+	«/SQLOUTPUT select idMail from LOL_MAIL where idRefLibrary=HRMR_LIBRARY_ID and idRefObjectType=HRMR_JOB_ID and idRefObject not in (select idJob from HRMR_JOBS)»
+
+	«SQLOUTPUT»
+		«SQL delete from LOL_MAIL where idMail=«idMail»»
+	«/SQLOUTPUT select idMail from LOL_MAIL where idRefLibrary=HRMR_LIBRARY_ID and idRefObjectType=HRMR_AD_ID and idRefObject not in (select idAd from HRMR_ADS)»
+
+«/PROC»
+
+«PROC AvgGrade»
+
+	«SYSTEM DECIMALPRECISION 1»
+	«VAR NEW N=0.0»
+	«VAR NEW i=0»
+	«VAR NEW ex = 1»
+	«SQLOUTPUT»
+		«IF iGrade > 0»
+			«LET N = N + iGrade»
+			«LET i = i + 1»
+		«ENDIF»
+	«/SQLOUTPUT select iGrade from HRMR_EVENTS where idCandidate=«id» and iStatus=1»
+	«IF N == 0»
+		-
+	«ELSEIF «star» == 1»
+		«IF «@strrnext("«N/i»"; 46)» == 0»
+			<div style="display:inline;padding-right:3px">«=@int(N/i)»</div>
+		«ELSE»
+			<div style="display:inline;padding-right:3px">«N/i»</div>
+		«ENDIF»
+		<span class="fa fa-star" style="pointer-events:none;color:#626262;vertical-align:inherit"></span>
+	«ELSE»
+		«IF «@strrnext("«N/i»"; 46)» == 0»
+			«=@int(N/i)»
+		«ELSE»
+			«N/i»
+		«ENDIF»
+	«ENDIF»
+
+«/PROC»

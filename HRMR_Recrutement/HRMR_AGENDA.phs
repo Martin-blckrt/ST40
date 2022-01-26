@@ -1,0 +1,6 @@
+
+«INCLUDE Agenda:agenda_view_external_agenda.phs;_LibraryId=HRMR_LIBRARY_ID;_iCDay=«@daytime()»»
+<script>
+  if (parent.window.document.getElementById("extend_1").children[0].classList.contains("fa-expand"))
+    parent.window.document.getElementById("extend_1").click();
+</script>

@@ -1,0 +1,94 @@
+«VAR NEW _SqlStatus = 1»
+
+«VAR NEW  _OwnerUserRights="00000000000000000000000000000000"»
+«VAR NEW _GroupUserRights="00000000000000000000000000000000"»
+«VAR NEW _OtherGroupUserRights="00000000000000000000000000000000"»
+«VAR NEW _OtherUserRights="00000000000000000000000000000000"»
+
+«VAR NEW _FromOwnerUserRights="00000000000000000000000000000000"»
+«VAR NEW _FromGroupUserRights="00000000000000000000000000000000"»
+«VAR NEW _FromOtherGroupUserRights="00000000000000000000000000000000"»
+«VAR NEW _FromOtherUserRights="00000000000000000000000000000000"»
+
+«* test if user rights should be taken over from other user *»
+«IF @exists("_FromUserId")==1»
+	«INCLUDE _SqlStatus=«#SQLLIBRARY#»:OSSLibraryUserRight.phs;_UserId=«_FromUserId» »
+	«LET _FromOwnerUserRights=_OwnerUserRights»
+	«LET _FromGroupUserRights=_GroupUserRights»
+	«LET _FromOtherGroupUserRights=_OtherGroupUserRights»
+	«LET _FromOtherUserRights=_OtherUserRights»
+«ENDIF»
+«LET  _OwnerUserRights="00000000000000000000000000000000"»
+«LET _GroupUserRights="00000000000000000000000000000000"»
+«LET _OtherGroupUserRights="00000000000000000000000000000000"»
+«LET _OtherUserRights="00000000000000000000000000000000"»
+«IF _UserId <> -1»
+	«INCLUDE _SqlStatus=«#SQLLIBRARY#»:OSSLibraryUserRight.phs»
+«ENDIF»
+«IF @exists("_FromUserId")==1»
+	«IF @exists("_CopyRights")==1»
+		«LET _OwnerUserRights = _FromOwnerUserRights»
+		«LET _GroupUserRights=_FromGroupUserRights  »
+		«LET _OtherGroupUserRights=_FromOtherGroupUserRights »
+		«LET _OtherUserRights=_FromOtherUserRights»
+	«ELSEIF @exists("_MergeRights")»
+
+		«SQLREPEAT»
+
+			«IF _OwnerUserRights[#SQLREPEAT#] < _FromOwnerUserRights[#SQLREPEAT#]»
+				«LET _OwnerUserRights[#SQLREPEAT#] =   _FromOwnerUserRights[#SQLREPEAT#] »
+			«ENDIF»
+
+			«IF _GroupUserRights[#SQLREPEAT#] < _FromGroupUserRights[#SQLREPEAT#]»
+				«LET _GroupUserRights[#SQLREPEAT#] =   _FromGroupUserRights[#SQLREPEAT#] »
+			«ENDIF»
+
+			«IF _OtherGroupUserRights[#SQLREPEAT#] < _FromOtherGroupUserRights[#SQLREPEAT#]»
+				«LET _OtherGroupUserRights[#SQLREPEAT#] =   _FromOtherGroupUserRights[#SQLREPEAT#] »
+			«ENDIF»
+
+			«IF _OtherUserRights[#SQLREPEAT#] < _FromOtherUserRights[#SQLREPEAT#]»
+				«LET _OtherUserRights[#SQLREPEAT#] =   _FromOtherUserRights[#SQLREPEAT#] »
+			«ENDIF»
+
+		«/SQLREPEAT 0;«=@strlen(_OwnerUserRights)-1» »
+
+	«ENDIF»
+
+«ENDIF»
+	<tr>
+		<td colspan=3>&nbsp;</td>
+	</tr>
+	<tr>
+		<td colspan=3><i><b>«WRITEKEY %html;HRMR_DEFAULT_Title»</b></i></td>
+	</tr>
+
+	<tr>
+		<td>«WRITEKEY %html;HRMR_DEFAULT_Title»</td>
+		<td>
+			<select name="_OwnerUserRight«_LibraryId»_0">
+				<option value="0" «IF _OwnerUserRights[0]==48»selected«ENDIF»>«WRITEKEY %html;HRMR_NONE»</option>
+				<option value="1" «IF _OwnerUserRights[0]==49»selected«ENDIF»>«WRITEKEY %html;HRMR_VIEW»</option>
+				<option value="2" «IF _OwnerUserRights[0]==50»selected«ENDIF»>«WRITEKEY %html;HRMR_MODIFY»</option>
+				<option value="3" «IF _OwnerUserRights[0]==51»selected«ENDIF»>«WRITEKEY %html;HRMR_MODIFY_CREATE»</option>
+				<option value="4" «IF _OwnerUserRights[0]==52»selected«ENDIF»>«WRITEKEY %html;HRMR_MODIFY_CREATE_DELETE»</option>
+				<option value="5" «IF _OwnerUserRights[0]==53»selected«ENDIF»>«WRITEKEY %html;HRMR_ILLIMITED»</option>
+				<option value="X" «IF _OwnerUserRights[0]==88»selected«ENDIF»>«WRITEKEY %html;HRMR_DEVELOPER»</option>
+			</select>
+		</td>
+		<td>
+			<select name="_OtherUserRight«_LibraryId»_0">
+				<option value="0" «IF _OtherUserRights[0]==48»selected«ENDIF»>«WRITEKEY %html;HRMR_NONE»</option>
+				<option value="1" «IF _OtherUserRights[0]==49»selected«ENDIF»>«WRITEKEY %html;HRMR_VIEW»</option>
+				<option value="2" «IF _OtherUserRights[0]==50»selected«ENDIF»>«WRITEKEY %html;HRMR_MODIFY»</option>
+				<option value="3" «IF _OtherUserRights[0]==51»selected«ENDIF»>«WRITEKEY %html;HRMR_MODIFY_CREATE»</option>
+				<option value="4" «IF _OtherUserRights[0]==52»selected«ENDIF»>«WRITEKEY %html;HRMR_MODIFY_CREATE_DELETE»</option>
+				<option value="5" «IF _OtherUserRights[0]==53»selected«ENDIF»>«WRITEKEY %html;HRMR_ILLIMITED»</option>
+				<option value="X" «IF _OtherUserRights[0]==88»selected«ENDIF»>«WRITEKEY %html;HRMR_DEVELOPER»</option>
+			</select>
+		</td>
+	</tr>
+
+	<tr>
+		<td colspan=3>&nbsp;</td>
+	</tr>

@@ -1,0 +1,71 @@
+«VAR NEW _err_file="HRMR_PDF_view.phs"»
+«VAR NEW _err_b_force = 1 »
+«IF @exists("_idDocument") == 0 »
+    «VAR NEW _idDocument = 1 »
+«ENDIF»
+
+«IF @exists("ContextViewMode")==0»
+    «VAR NEW ContextViewMode=OSS_PAGE_VIEW_MODE_PDF»
+«ENDIF»
+
+«IF @exists("_MerchantId") == 0 »
+    «VAR NEW _MerchantId = «idMerchant» »
+«ENDIF»
+«IF @exists("_bSaveDocument") == 0 »
+    «VAR NEW _bSaveDocument = 1»
+«ENDIF»
+«VAR NEW _b_status = 1 »
+«VAR NEW _az_error = "" »
+«VAR NEW _PrintFileDirectory = "/documents/" »
+«VAR NEW _PrintFile = "" »
+«VAR NEW _PageViewMode = «ContextViewMode» »
+«VAR NEW _PageLibraryId = HRMR_LIBRARY_ID»
+«VAR NEW _PageId = HRMR_PDF_PAGE_ID»
+«VAR NEW _PageThemeId = -1»
+«VAR NEW _ClientLanguageId = «#SQLLANGUAGE#»»
+«VAR NEW _PageModelId_Template = -1 »
+«VAR NEW _PageThemeId_Template = -1 »
+«INCLUDE _b_status = «#SQLLIBRARY#»:PROC_OSSLIBRARYOBJECTDELIVERYLOG.phs#get_main_directory;_p_az_dir=&(_PrintFileDirectory)»
+«IF @toi(_idDocument) <= 0 »
+    «LET _b_status = 0 »
+    «INCLUDE «#SQLLIBRARY#»:ProcDebug.phs#ErrorLog;_err_message="_idDocument = «_idDocument»";_err_number="0x0001"»
+«ELSEIF _b_status == 0 »
+     «INCLUDE «#SQLLIBRARY#»:ProcDebug.phs#ErrorLog;_err_message="PROC_OSSLIBRARYOBJECTDELIVERYLOG.phs#get_main_directory return false";_err_number="0x0002"»
+«ELSE»
+
+    «INCLUDE _PageThemeId=«#SQLLIBRARY#»:ProcPageTheme.phs#QueryUserPageTheme»
+
+    «* GET default print template *»
+    «INCLUDE _PageThemeId_Template=ossbo:ProcPageTheme.phs#QueryUserPageTheme;_MerchantId=«_MerchantId»;_PageLibraryId=0;_PageId=1001;_PageModelId=101»
+
+    «VAR NEW _PrintPartType = "" »
+    «VAR NEW _pPrintFile = "_PrintFile" »
+    «VAR NEW _pPrintPartType = "_PrintPartType" »
+    «VAR NEW [object]_PrintDocumentData»
+    «VAR NEW _PrintDocumentData.idLanguage = «#SQLLANGUAGE#»»
+
+    «IF _b_status == 1 »
+      «VAR NEW [object]_mon_objet»
+
+      «INCLUDE _mon_objet = ossbo:ProcTemplate.phs#CREATE_OBJECT_HEADER_FOOTER»
+      «LET _mon_objet.azHeader_Right = "«=@timestr(@time();6)»" »
+      «LET _mon_objet.azFooter_Left = "Luxembourg Online" »
+
+      «INCLUDE «#SQLLIBRARY#»:ProcPageTheme.phs#ViewPageOpen;_LanguageId=«_PrintDocumentData.idLanguage»;_TemplateThemeId=«_PageThemeId_Template»;_pHeaderFooter=&(_mon_objet) »
+
+      «INCLUDE «#SQLLIBRARY#»:OSSThemePageView.phs;_PrintFile="««_pPrintFile»»";_PrintPage=1;_pObjectData=&_PrintDocumentData;_LanguageId=«_PrintDocumentData.idLanguage»»
+
+      «INCLUDE «#SQLLIBRARY#»:ProcPageTheme.phs#ViewPageClose;_PrintFile="««_pPrintFile»»"»
+    «ENDIF»
+
+    «IF _b_status == 1 && @toi(_bSaveDocument) == 1 »
+
+      «INCLUDE _b_Status = «#SQLLIBRARY#»:OSSLIBRARYOBJECTDELIVERYLOG_PDF_INSERT.phs;_idLibrary=HRMR_LIBRARY_ID;_iObjectType=OSS_OBJECT_TYPE_DOCUMENT_CLIENT;_idObject=«_idDocument»;_idObjectSet=-1;_iDelivery=1;_idUser=«#SQLUSERID#»;_azFile=_PrintFile »
+
+    «ENDIF»
+«ENDIF»
+{
+    "_b_status":"«_b_status»",
+    "_az_error":"«%js;_az_error»",
+    "_az_secure_file":"«_PrintFile»"
+}

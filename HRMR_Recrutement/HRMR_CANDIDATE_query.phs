@@ -1,0 +1,147 @@
+«PROC Main»
+  «IF @exists("_MerchantId") == 0 »
+      «VAR NEW _MerchantId = «idMerchant»»
+  «ENDIF»
+
+  «*RIGHTS*»
+  «VAR NEW _OwnerUserRights = '00000000000000000000000000000000'»
+  «VAR NEW _OtherUserRights = '00000000000000000000000000000000'»
+  «VAR NEW _OwnerUserRight = 0»
+  «VAR NEW _OtherUserRight = 0»
+  «INCLUDE _SqlStatus=HRMR:ossUserRights.phs»
+  «INCLUDE _SqlStatus=HRMR:ossUserRights.phs;_iUserRight=0»
+  «IF «@strlen(FirstName)» > 80 || «@strlen(Name)» > 255»
+    <script>
+      alert("«WRITEKEY HRMR_TOOLONG»")
+    </script>
+  «ENDIF»
+
+  «IF mod == "submitCreate"»
+
+    «VAR NEW _myTransId = -1 »
+    «VAR NEW _myEventId = -1 »
+    «VAR NEW com = "«WRITEKEY HRMR_CAND_CREATE»"»
+    «INCLUDE _myTransId = HRMR_TOOLS.phs#GetTableIdentifier;_Table='HRMR_CANDIDATES_JOBS'»
+    «INCLUDE _TicketId = HD:HDNewTicket.phs;_ObjectId=«id»;_ObjectTypeId=HRMR_CANDIDATE_ID;_ObjectLibraryId=HRMR_LIBRARY_ID;_MerchantId=«idMerchant»;_TicketId=-1;_UserId=«#SQLUSERID#»;_iStatus=1;_azComments=com;_iType=HRMR_LIBRARY_ID»
+
+    «SQLSTATUS TRANSACTION BEGIN»
+      «VAR NEW _NewStringId = @osl_varstring_set(0;Remark)»
+      «SQL insert into HRMR_CANDIDATES values («id», '«@atosql(FirstName)»', '«@atosql(Name)»', '«@atosql(EMail)»', '«@atosql(Tel)»', '«@atosql(Address)»',«@time()», «@time()», «idStatus», «_NewStringId», «_TicketId»)»
+
+      «IF @exists(«idJob») > 0»
+        «SQL insert into HRMR_CANDIDATES_JOBS values («_myTransId», «id», «idJob»)»
+      «ENDIF»
+
+      «IF @exists(«collaborators») > 0»
+        «VAR NEW [array]collabs»
+        «LET collabs=@jsonfromstr("[«collaborators»]")»
+        «VAR NEW rep = «collabs.iSize» - 1»
+        «SQLREPEAT»
+          «INCLUDE _myEventId = HRMR_TOOLS.phs#GetTableIdentifier;_Table='HRMR_EVENTS'»
+          «SQL insert into HRMR_EVENTS values («_myEventId», «id», «collabs[#SQLREPEAT#]», "", 1, "", "")»
+        «/SQLREPEAT 0; «rep»»
+      «ENDIF»
+
+      «VAR NEW _TransacSuccess=#TRANSACTIONSTATUS#»
+    «SQLSTATUS TRANSACTION END»
+
+    «IF _TransacSuccess == 1»
+      <script>
+        alert("«WRITEKEY HRMR_CAND_ADD»");
+        window.location.href = "/Scripts/sql.exe?SqlDB=«SqlDB»&Sql=HRMR:HRMR_CANDIDATE_view.phs&xid=«xid»&_MerchantId=«idMerchant»&id=«id»&ContextNavigation=«ContextNavigation»";
+      </script>
+    «ELSE»
+      <script>
+        alert("«WRITEKEY HRMR_ERROR»");
+        window.location.href = "/Scripts/sql.exe?SqlDB=«SqlDB»&Sql=HRMR:HRMR_CANDIDATE_view.phs&xid=«xid»&_MerchantId=«idMerchant»&id=«id»&ContextNavigation=«ContextNavigation»";
+      </script>
+    «ENDIF»
+
+
+  «ELSEIF mod == "submitModify"»
+
+    «VAR NEW _StringId»
+    «SQLEXEC INT _StringId = select idRemark from HRMR_CANDIDATES where idCandidate=«id»»
+
+    «VAR NEW _myTransId = -1 »
+    «INCLUDE _myTransId = HRMR_TOOLS.phs#GetTableIdentifier;_Table='HRMR_CANDIDATES_JOBS'»
+
+    «VAR NEW _myEventId = -1 »
+
+    «VAR NEW s»
+    «SQLEXEC INT s = select iStatus from HRMR_CANDIDATES where idCandidate=«id»»
+    «IF «idStatus» <> «s»»
+      «VAR NEW exStatus=""»
+      «VAR NEW newStatus=""»
+      «INCLUDE exStatus = HRMR:HRMR_TOOLS.phs#GetStatus;i=«s»»
+      «INCLUDE newStatus = HRMR:HRMR_TOOLS.phs#GetStatus;i=«idStatus»»
+      «VAR NEW com = '«WRITEKEY HRMR_STATUS_MOD» "«exStatus»" «WRITEKEY HRMR_TO» "«newStatus»".'»
+      «INCLUDE _TicketId = HD:HDNewTicket.phs;_ObjectId=«id»;_ObjectTypeId=HRMR_CANDIDATE_ID;_ObjectLibraryId=HRMR_LIBRARY_ID;_MerchantId=«idMerchant»;_TicketId=«ticketId»;_UserId=«#SQLUSERID#»;_iStatus=1;_azComments=com;_iType=HRMR_LIBRARY_ID»
+    «ENDIF»
+
+    «SQLSTATUS TRANSACTION BEGIN»
+      «@osl_varstring_set(«_StringId»;Remark)»
+      «SQL update HRMR_CANDIDATES set azFirstName='«@atosql(FirstName)»', azName='«@atosql(Name)»', azEMail='«@atosql(EMail)»', azTel='«@atosql(Tel)»', azAddress='«@atosql(Address)»', iCTimeModify=«@time()», iStatus=«idStatus» where idCandidate=«id»»
+
+      «IF @exists(«idJob») > 0»
+        «SQL insert into HRMR_CANDIDATES_JOBS values («_myTransId», «id», «idJob»)»
+      «ENDIF»
+
+      «IF @exists(«collaborators») > 0»
+        «VAR NEW [array]collabs»
+        «VAR NEW oldCollab = 0»
+        «LET collabs=@jsonfromstr("[«collaborators»]")»
+        «VAR NEW rep = «collabs.iSize» - 1»
+        «SQLREPEAT»
+          «INCLUDE _myEventId = HRMR_TOOLS.phs#GetTableIdentifier;_Table='HRMR_EVENTS'»
+          «SQLEXEC INT oldCollab = select idEvent from HRMR_EVENTS where idCandidate = «id» and idUser = «collabs[#SQLREPEAT#]» and iStatus = 1»
+          «IF oldCollab == 0»
+            «SQL insert into HRMR_EVENTS values («_myEventId», «id», «collabs[#SQLREPEAT#]», "", 1, "", "")»
+          «ENDIF»
+        «/SQLREPEAT 0; «rep»»
+      «ENDIF»
+
+      «VAR NEW _TransacSuccess=#TRANSACTIONSTATUS#»
+    «SQLSTATUS TRANSACTION END»
+
+    «IF _TransacSuccess == 1»
+      <script>
+        alert("«WRITEKEY HRMR_CAND_MOD»");
+        window.location.href = '/Scripts/sql.exe?SqlDB=«SqlDB»&Sql=HRMR:HRMR_CANDIDATE_view.phs&xid=«xid»&_MerchantId=«idMerchant»&id=«id»&ContextNavigation=«ContextNavigation»';
+      </script>
+    «ELSE»
+      <script>
+        alert("«WRITEKEY HRMR_ERROR»");
+        window.location.href = '/Scripts/sql.exe?SqlDB=«SqlDB»&Sql=HRMR:HRMR_CANDIDATE_view.phs&xid=«xid»&_MerchantId=«idMerchant»&id=«id»&ContextNavigation=«ContextNavigation»';
+      </script>
+    «ENDIF»
+
+
+  «ELSEIF mod == "submitDelete"»
+
+
+    «SQLSTATUS TRANSACTION BEGIN»
+      «SQL delete from HRMR_CANDIDATES_JOBS where idCandidate=«id»»
+      «SQL delete from HRMR_EVENTS where idCandidate=«id»»
+      «SQL delete from HRMR_CANDIDATES where idCandidate=«id»»
+
+      «VAR NEW _StringId»
+      «SQLEXEC INT _StringId = select idRemark from HRMR_CANDIDATES where idCandidate=«id»»
+      «@osl_varstring_delete(«_StringId»)»
+
+      «VAR NEW _TransacSuccess=#TRANSACTIONSTATUS#»
+    «SQLSTATUS TRANSACTION END»
+
+    «IF _TransacSuccess == 1»
+      <script>
+        alert("«WRITEKEY HRMR_CAND_DEL»");
+        window.location.href = '/Scripts/sql.exe?SqlDB=«SqlDB»&Sql=HRMR:HRMR_DEFAULT_view.phs&xid=«xid»&_MerchantId=«idMerchant»&ContextNavigation=0';
+      </script>
+    «ELSE»
+      <script>
+        alert("«WRITEKEY HRMR_ERROR»");
+        window.location.href = '/Scripts/sql.exe?SqlDB=«SqlDB»&Sql=HRMR:HRMR_DEFAULT_view.phs&xid=«xid»&_MerchantId=«idMerchant»&ContextNavigation=0';
+      </script>
+    «ENDIF»
+  «ENDIF»
+«/PROC»

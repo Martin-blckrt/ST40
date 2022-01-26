@@ -1,0 +1,15 @@
+
+
+
+«LET _azName="Recrutement"»
+«VAR NEW _Visible=0»
+
+«INCLUDE _Visible=«#SQLLIBRARY#»:OSSMenuProcInsert.phs;_MerchantId=«idMerchant»;_LibraryId=HRMR_LIBRARY_ID;_iUserRight=RIGHT_CLIENT_MANAGEMENT;_iMinXRightLevel=0;_iMinOwnerRightLevel=RIGHT_OWNER;_azScript="HRMR_DEFAULT_view.phs";_MerchantProcPageId=HRMR_DEFAULT_PAGE_ID»
+
+«*REGISTER PAGES*»
+«INCLUDE _Visible=HRMR:HRMR_DEFAULT_model.phs#RegisterSystemPage»
+«INCLUDE _Visible=HRMR:HRMR_CANDIDATE_model.phs#RegisterSystemPage»
+«INCLUDE _Visible=HRMR:HRMR_JOB_model.phs#RegisterSystemPage»
+«INCLUDE _Visible=HRMR:HRMR_PDF_model.phs#RegisterSystemPage»
+«INCLUDE _Visible=HRMR:HRMR_AD_model.phs#RegisterSystemPage»
+«RETURN _Visible»

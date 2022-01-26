@@ -1,0 +1,301 @@
+«*Secure Var *»
+«IF @exists("ContextViewMode") == 0»
+    «VAR NEW ContextViewMode = 0»
+«ENDIF»
+«IF @exists("_MerchantId") == 0 »
+    «VAR NEW _MerchantId = «idMerchant»»
+«ENDIF»
+«* VAR *»
+«VAR NEW _b_status = 1 »
+«VAR NEW _b_session_status = 1 »
+
+«VAR NEW _NavLink = ""»
+«VAR NEW _NavLevel = 0»
+
+«INCLUDE HRMR:HRMR_TOOLS.phs#ClearDocuments»
+
+«VAR NEW _PageId = HRMR_DEFAULT_PAGE_ID»
+«VAR NEW _PageLibraryId = HRMR_LIBRARY_ID»
+«VAR NEW _PageThemeId = -1 »
+«VAR NEW _PageViewMode = «ContextViewMode»»
+«VAR NEW _PageTitle = "Recrutement page principale"»
+«VAR NEW _ZoneFieldLibraryId = HRMR_LIBRARY_ID »
+«VAR NEW _FieldCallbackScript= "HRMR_DEFAULT_model.phs#CallbackField"»
+«VAR NEW _ZoneCallbackScript= "HRMR_DEFAULT_model.phs#CallbackZone"»
+«VAR NEW [object]_ZoneInfo»
+«VAR NEW _ZoneInfoStatus=0»
+«VAR NEW _ZoneCallbackLibrary = "HRMR" »
+«VAR NEW _FieldCallbackLibrary = "HRMR" »
+
+«*RIGHTS*»
+«VAR NEW _OwnerUserRights = '00000000000000000000000000000000'»
+«VAR NEW _OtherUserRights = '00000000000000000000000000000000'»
+«VAR NEW _OwnerUserRight = 0»
+«VAR NEW _OtherUserRight = 0»
+«INCLUDE _SqlStatus=HRMR:ossUserRights.phs»
+«INCLUDE _SqlStatus=HRMR:ossUserRights.phs;_iUserRight=0»
+
+«IF _OwnerUserRight < 49»
+  «LET _b_status = 0»
+«ENDIF»
+
+«* get theme *»
+«INCLUDE _PageThemeId=«#SQLLIBRARY#»:ProcPageTheme.phs#QueryUserPageTheme»
+
+«* get page title *»
+«LET _PageTitle = "«WRITEKEY HRMR_DEFAULT_Title»"»
+
+«* get merchant preferences *»
+«SQLEXEC STRING _MerchantPrefs = select azCustomPrefs from «#SQLWPA#»OSSMERCHANT where idMerchant=«%d;idMerchant»»
+«* context navigation*»
+«IF @toi(ContextViewMode) == 0 »
+    «INCLUDE _NavLevel=«#SQLLIBRARY#»:ProcNavigation.phs#SecureNavigationLevel»
+    «LET _NavLink="&Sql=HRMR:HRMR_DEFAULT_view.phs"»
+«ENDIF»
+
+«INCLUDE «#SQLLIBRARY#»:ProcNavigation.phs#PushNavigationLevel;_NavTitle=_PageTitle»
+«* start view*»
+«INCLUDE «#SQLLIBRARY#»:Header.phs;»
+«*Mode HTML*»
+«IF @toi(ContextViewMode) == OSS_PAGE_VIEW_MODE_HTML»
+
+    <link rel="stylesheet" href="«#SQLWWWHOME#»/css/popup/popupMain.css" type="text/css" media="screen" />
+    <script type="text/javascript" src="«#SQLWWWHOME#»/js/popup/popup.js"></script>
+
+    <FORM id="MyForm" name="MyForm" method="post" action="/Scripts/sql.exe" ENCTYPE="multipart/form-data">
+              <input type="hidden" name="SqlDB" value=«SqlDB»>
+              <input type="hidden" name="Sql" value="">
+              <input type="hidden" name="xid" value=«xid»>
+              <input type="hidden" name="ContextNavigation" value=«=_NavLevel»>
+              <input type="hidden" name="jobId" value="">
+              <input type="hidden" name="fct" value="">
+              <input type="hidden" name="id" value="">
+              <input type="hidden" name="mod" value="">
+
+    <script>
+
+    «INCLUDE «#SQLLIBRARY#»:JSProcSecureFile.phs»
+
+    var iAgendaPopup = PopupCreate(1200,800,"«WRITEKEY HRMR_AGENDA»","");
+    AddQuitButtonFooterElementFocus(iAgendaPopup,"«WRITEKEY HRMR_BACK»","«_FocusElement»");
+
+    var iAddJobPopup = PopupCreate(1200,600,"«WRITEKEY HRMR_ADD_JOB»","");
+    AddButtonFooter(iAddJobPopup, "«WRITEKEY HRMR_ADD»", "submitNewJob()");
+    AddQuitButtonFooterElementFocus(iAddJobPopup,"«WRITEKEY HRMR_CANCEL»","«_FocusElement»");
+
+    var iModifyJobPopup = PopupCreate(1200,600,"«WRITEKEY HRMR_MODIFY_JOB»","");
+    AddButtonFooter(iModifyJobPopup, "«WRITEKEY HRMR_DELETE»", "submitDeleteJob()");
+    AddButtonFooter(iModifyJobPopup, "«WRITEKEY HRMR_MODIFY»", "submitModifyJob()");
+    AddQuitButtonFooterElementFocus(iModifyJobPopup,"«WRITEKEY HRMR_CANCEL»","«_FocusElement»");
+
+    var iAddAdPopup = PopupCreate(1200,600,"«WRITEKEY HRMR_ADD_AD»","");
+    AddButtonFooter(iAddAdPopup, "«WRITEKEY HRMR_ADD»", "submitNewAd()");
+    AddQuitButtonFooterElementFocus(iAddAdPopup,"«WRITEKEY HRMR_CANCEL»","«_FocusElement»");
+
+    var iModifyAdPopup = PopupCreate(1200,600,"«WRITEKEY HRMR_MODIFY_AD»","");
+    AddButtonFooter(iModifyAdPopup, "«WRITEKEY HRMR_DELETE»", "submitDeleteAd()");
+    AddButtonFooter(iModifyAdPopup, "«WRITEKEY HRMR_MODIFY»", "submitModifyAd()");
+    AddQuitButtonFooterElementFocus(iModifyAdPopup,"«WRITEKEY HRMR_CANCEL»","«_FocusElement»");
+
+    var iAddPlatformPopup = PopupCreate(1200,600,"«WRITEKEY HRMR_ADD_PLATFORM»","");
+    AddButtonFooter(iAddPlatformPopup, "«WRITEKEY HRMR_ADD»", "submitNewPlatform()");
+    AddQuitButtonFooterElementFocus(iAddPlatformPopup,"«WRITEKEY HRMR_CANCEL»","«_FocusElement»");
+
+    var iModifyPlatformPopup = PopupCreate(1200,600,"«WRITEKEY HRMR_MODIFY_PLATFORM»","");
+    AddButtonFooter(iModifyPlatformPopup, "«WRITEKEY HRMR_DELETE»", "submitDeletePlatform()");
+    AddButtonFooter(iModifyPlatformPopup, "«WRITEKEY HRMR_MODIFY»", "submitModifyPlatform()");
+    AddQuitButtonFooterElementFocus(iModifyPlatformPopup,"«WRITEKEY HRMR_CANCEL»","«_FocusElement»");
+
+    var typeFilter;
+
+    window.onload = function() {
+      typeChange(0);
+      «IF @exists(«customFilter») > 0»
+        «VAR NEW jobName = ""»
+        «SQLEXEC STRING jobName = select azJobName from HRMR_JOBS where idJob = «customFilter»»
+        $("#jobSelect").val("«customFilter»");
+        $("#jobData").val("«jobName»");
+        $("#jobData").attr("data-value","«customFilter»");
+      «ENDIF»
+      search();
+      addAdminButton();
+    }
+
+    function onExportToPDF(n){
+      document.getElementById("loaderPrint").style.display = "block";
+      $.ajax({
+          type:"POST",
+          url: "/Scripts/sql.exe",
+          data: 	'SqlDB=«SqlDB»'
+                  +'&Sql=HRMR:HRMR_PDF_view.phs'
+                  +'&xid=«xid»'
+                  +'&_bSaveDocument=1'
+                  +'&_idCandidate=' + n
+                  +'&ContextViewMode=«OSS_PAGE_VIEW_MODE_PDF»',
+          dataType: "json",
+          cache: false,
+          async: true,
+
+          error: function(msg){
+
+            alert("Error: "+msg);
+            document.getElementById("loaderPrint").style.display = "none";
+          },
+      success: function(data){
+
+            if(parseInt(data._b_status,10) == 1 )
+            {
+              DownloadSecureFile(data._az_secure_file);
+              document.getElementById("loaderPrint").style.display = "none";
+            }
+          }
+      });
+    }
+
+    function resetFilters() {
+      $("#jobSelect").val("");
+      $("#jobData").val("");
+      $("#jobData").attr("data-value","");
+      $("#statusSelect").val("");
+      $("#statusData").val("");
+      $("#statusData").attr("data-value","");
+      typeChange(0);
+    }
+
+    function search() {
+      var jobFilter, statusFilter;
+      jobFilter = document.getElementById("jobSelect").value;
+      statusFilter = document.getElementById("statusSelect").value;
+      $.ajax({
+            type: "POST",
+            url: "/Scripts/sql.exe",
+            dataType: "html",
+            data: 'SqlDB=«SqlDB»'
+                  +'&xid=«xid»'
+                  +'&_iPageThemeId=«_PageThemeId»'
+                  +'&Sql=HRMR:HRMR_DEFAULT_query.phs'
+                  +'&_MonPageViewMode=«=@toi(_PageViewMode)»'
+                  +'&job=' + jobFilter
+                  +'&status=' + statusFilter
+                  +'&type=' + typeFilter,
+            success: function(data){
+              $("#CandidateList").html(data);
+              }
+        });
+    }
+
+    function typeChange(n) {
+      if (n < 3) {
+        if (n==0) {
+          $('#type2').removeClass('is-active');
+          $('#type3').removeClass('is-active');
+          $('#type1').addClass('is-active');
+          typeFilter = "";
+        }
+        else if (n==1) {
+          $('#type2').addClass('is-active');
+          $('#type3').removeClass('is-active');
+          $('#type1').removeClass('is-active');
+          typeFilter = 0;
+        }
+        else if (n==2) {
+          $('#type1').removeClass('is-active');
+          $('#type3').addClass('is-active');
+          $('#type2').removeClass('is-active');
+          typeFilter = 1;
+        }
+      }
+    }
+
+    function addAdminButton() {
+      document.getElementsByClassName("page-title")[0].appendChild(document.getElementById("adminBtn"));
+      document.body.appendChild(document.getElementById("modCont"));
+      document.getElementById("modCont").appendChild(document.getElementById("modifyJobAdmin"));
+      document.getElementById("modCont").appendChild(document.getElementById("modifyAdAdmin"));
+      document.getElementById("modCont").appendChild(document.getElementById("modifyPlatformAdmin"));
+    }
+
+    function modJob() {
+      document.getElementById("modCont").style.display="initial";
+      document.getElementById("modifyJobAdmin").style.display="initial";
+    }
+
+    function modAd() {
+      document.getElementById("modCont").style.display="initial";
+      document.getElementById("modifyAdAdmin").style.display="initial";
+    }
+
+    function modPlatform() {
+      document.getElementById("modCont").style.display="initial";
+      document.getElementById("modifyPlatformAdmin").style.display="initial";
+    }
+
+    function adminBack() {
+      document.getElementById('modCont').style.display='none';
+      document.getElementById("modifyJobAdmin").style.display="none";
+      document.getElementById("modifyAdAdmin").style.display="none";
+      document.getElementById("modifyPlatformAdmin").style.display="none";
+
+      $("#platformManageSelect").val("");
+      $("#platformManage").val("");
+      $("#platformManage").attr("data-value","");
+      $("#adManageSelect").val("");
+      $("#adManage").val("");
+      $("#adManage").attr("data-value","");
+      $("#jobManageSelect").val("");
+      $("#jobManage").val("");
+      $("#jobManage").attr("data-value","");
+    }
+
+    function newAd() {
+      url="/Scripts/sql.exe?SqlDB=«SqlDB»&Sql=HRMR:HRMR_ADDAD.phs&xid=«xid»&_Popup=0&_MerchantId=«idMerchant»&id=0";
+      ViewPopup(iAddAdPopup,url,'');
+    }
+
+    function modifyAd() {
+      url="/Scripts/sql.exe?SqlDB=«SqlDB»&Sql=HRMR:HRMR_ADDAD.phs&xid=«xid»&_Popup=0&_MerchantId=«idMerchant»&fct=modify&id=" + $("#adManage").attr("data-value");
+      ViewPopup(iModifyAdPopup,url,'');
+      adminBack();
+    }
+
+    function newPlatform() {
+      url="/Scripts/sql.exe?SqlDB=«SqlDB»&Sql=HRMR:HRMR_ADDPLATFORM.phs&xid=«xid»&_Popup=0&_MerchantId=«idMerchant»&id=0";
+      ViewPopup(iAddPlatformPopup,url,'');
+    }
+
+    function modifyPlatform() {
+      url="/Scripts/sql.exe?SqlDB=«SqlDB»&Sql=HRMR:HRMR_ADDPLATFORM.phs&xid=«xid»&_Popup=0&_MerchantId=«idMerchant»&id=" + $("#platformManage").attr("data-value");
+      ViewPopup(iModifyPlatformPopup,url,'');
+      adminBack();
+    }
+
+    function newJob() {
+      url="/Scripts/sql.exe?SqlDB=«SqlDB»&Sql=HRMR:HRMR_ADDJOB.phs&xid=«xid»&_Popup=0&_MerchantId=«idMerchant»&id=0";
+      ViewPopup(iAddJobPopup,url,'');
+    }
+
+    function modifyJob() {
+      url="/Scripts/sql.exe?SqlDB=«SqlDB»&Sql=HRMR:HRMR_ADDJOB.phs&xid=«xid»&_Popup=0&_MerchantId=«idMerchant»&fct=modify&id=" + $("#jobManage").attr("data-value");
+      ViewPopup(iModifyJobPopup,url,'');
+      adminBack();
+    }
+
+    function viewAgenda() {
+      url="/Scripts/sql.exe?SqlDB=«SqlDB»&Sql=HRMR:HRMR_AGENDA.phs&xid=«xid»&_Popup=0&_MerchantId=«idMerchant»&id=0";
+      ViewPopup(iAgendaPopup,url,'');
+    }
+  </script>
+
+«ENDIF»
+«INCLUDE «#SQLLIBRARY#»:ProcPageTheme.phs#ViewPageOpen»
+«* User allowed to do this ? *»
+
+«IF _b_status <> 1»
+  «INCLUDE «#SQLLIBRARY#»:MessageAccessDenied.phs#MessageSystemError»
+«ELSE»
+  «INCLUDE «#SQLLIBRARY#»:OSSThemePageView.phs;»
+«ENDIF»
+
+«INCLUDE «#SQLLIBRARY#»:ProcPageTheme.phs#ViewPageClose»
+
+«INCLUDE «#SQLLIBRARY#»:Footer.phs;»

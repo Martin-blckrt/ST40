@@ -1,0 +1,127 @@
+«CGI VAR %d;ContextNavigation»
+«CGI VAR %d;ContextViewMode»
+«CGI VAR %d;_MerchantId»
+«CGI VAR %d;_Popup»
+
+«INCLUDE «#SQLLIBRARY#»:Header.phs»
+
+<script type="text/javascript" src="«#SQLWWWHOME#»/js/popup/popup.js"></script>
+<link rel="stylesheet" href="«#SQLWWWHOME#»/css/popup/popupMain.css" type="text/css" media="screen" />
+
+<form id="MyPlatForm" name="MyPlatForm" method="post" action="/Scripts/sql.exe" ENCTYPE="multipart/form-data">
+  <input type="hidden" name="SqlDB" value=«SqlDB»>
+  <input type="hidden" name="Sql" value="HRMR:HRMR_ADDPLATFORM.phs">
+  <input type="hidden" name="xid" value=«xid»>
+  <input type="hidden" name="ContextNavigation" value=«=_NavLevel»>
+  <input type="hidden" name="id" value="«id»">
+  <input type="hidden" name="redirect" value="">
+  <input type="hidden" name="username" value="">
+  <input type="hidden" name="password" value="">
+  <input type="hidden" name="link" value="">
+  <input type="hidden" name="idsupplier" value="">
+  <input type="hidden" name="typesupplier" value="">
+  <input type="hidden" name="libsupplier" value="">
+</form>
+
+«IF «id» > 0»
+  «VAR NEW [object]_oSupplier»
+  «SQLEXEC OBJECT _oSupplier = select * from HRMR_SUPPLIERS where idSupplier=«id»»
+  «SQLEXEC STRING _oSupplier.azName = select azCompany from OSSCLIENT where idClient = «id»»
+«ENDIF»
+<table>
+  <tr>
+    <td>
+      <div style="margin-top:10px">«WRITEKEY HRMR_SELECTED_PLATFORM»:</div>
+    </td>
+    <td>
+      «IF «id» > 0 || @exists(«_ObjectId») > 0»
+        «IF @exists(«_ObjectId») > 0»
+          «SQLEXEC STRING _oSupplier.azName = select azCompany from OSSCLIENT where idClient = «_ObjectId»»
+        «ELSE»
+          «SQLEXEC STRING _oSupplier.azName = select azCompany from OSSCLIENT where idClient = «id»»
+        «ENDIF»
+        <div style="margin-top:10px"><div style="margin-top:12px;float:left;">«_oSupplier.azName»</div><button style="float:right" type="button" class="btn-default" onclick="modifySelected()">«WRITEKEY HRMR_MODIFY»</button></div>
+      «ELSE»
+        <div style="margin-top:10px">«WRITEKEY HRMR_NONE»</div>
+      «ENDIF»
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <div style="margin-top:15px;font-size:medium;font-weight:500">«WRITEKEY HRMR_CRED»</div>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <div style="margin-top:10px">«WRITEKEY HRMR_USERNAME»:</div>
+    </td>
+    <td>
+      <input style="margin-top:10px" type="text" id="_username">
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <div style="margin-top:10px">«WRITEKEY HRMR_PASSWORD»:</div>
+    </td>
+    <td>
+      <input style="margin-top:10px" type="text" id="_password">
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <div style="margin-top:10px">«WRITEKEY HRMR_LINK»:</div>
+    </td>
+    <td>
+      <input style="margin-top:10px" type="text" id="_link">
+    </td>
+  </tr>
+</table>
+
+<div id="search" style="display:none">
+  <hr><br>
+  «INCLUDE «#SQLLIBRARY#»:OSSObjectSearch.phs;_MerchantId=«_MerchantId»;SqlReturn="HRMR:HRMR_ADDPLATFORM.phs";_SearchObjectTypeId="0:12"»
+«ENDIF»
+</div>
+
+<script>
+
+  «IF «id» > 0»
+    document.getElementById("_username").value = "«_oSupplier.azUsername»"
+    document.getElementById("_password").value = "«_oSupplier.azPassword»"
+    document.getElementById("_link").value = "«_oSupplier.azLink»"
+  «ELSEIF «id»==0 && @exists(«_ObjectId») == 0»
+    document.getElementById("search").style.display = "initial"
+  «ENDIF»
+
+  «IF «_SearchClient» == -1»
+    document.getElementById("search").style.display = "initial"
+  «ENDIF»
+
+  function submitNewPlatform() {
+    document.MyPlatForm.username.value = document.getElementById("_username").value;
+    document.MyPlatForm.password.value = document.getElementById("_password").value;
+    document.MyPlatForm.link.value = document.getElementById("_link").value;
+    document.MyPlatForm.typesupplier.value = «_ObjectTypeId»;
+    document.MyPlatForm.libsupplier.value = «_ObjectLibraryId»;
+    document.MyPlatForm.idsupplier.value = «_ObjectId»;
+    document.MyPlatForm.Sql.value = "HRMR:HRMR_TOOLS.phs";
+    document.MyPlatForm.redirect.value = "new_sup";
+    document.MyPlatForm.submit();
+  }
+
+  function submitModifyPlatform() {
+    document.MyPlatForm.Sql.value = "HRMR:HRMR_TOOLS.phs";
+    document.MyPlatForm.redirect.value = "mod_sup";
+    document.MyPlatForm.submit();
+  }
+
+  function submitDeletePlatform() {
+    document.MyPlatForm.Sql.value = "HRMR:HRMR_TOOLS.phs";
+    document.MyPlatForm.redirect.value = "del_sup";
+    document.MyPlatForm.submit();
+  }
+
+  function modifySelected() {
+    document.getElementById("search").style.display = "initial"
+  }
+</script>

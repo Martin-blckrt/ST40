@@ -1,0 +1,275 @@
+«*Secure Var *»
+«VAR NEW fct = "view"»
+«IF @exists("ContextViewMode") == 0»
+    «VAR NEW ContextViewMode = 0»
+«ENDIF»
+«IF @exists("_MerchantId") == 0 »
+    «VAR NEW _MerchantId = «idMerchant»»
+«ENDIF»
+«IF @exists("id") == 0»
+  «LET fct = "create"»
+  «VAR NEW _myId = -1 »
+  «INCLUDE _myId = HRMR_TOOLS.phs#GetTableIdentifier;_Table='HRMR_CANDIDATES'»«ELSE»
+    «VAR NEW [object]_oCandidate»
+    «SQLEXEC OBJECT _oCandidate = select * from HRMR_CANDIDATES where idCandidate=«id»»
+    «IF mod == "toModify"»
+      «LET fct = "modify"»
+    «ENDIF»
+«ENDIF»
+«* VAR *»
+«VAR NEW _b_status = 1 »
+«VAR NEW _b_session_status = 1 »
+
+«VAR NEW _NavLevel = 0»
+
+«VAR NEW _PageId = HRMR_CANDIDATE_PAGE_ID»
+«VAR NEW _PageLibraryId = HRMR_LIBRARY_ID»
+«VAR NEW _PageThemeId = -1 »
+«VAR NEW _PageViewMode = «ContextViewMode»»
+«VAR NEW _PageTitle = "Recrutement candidat"»
+«VAR NEW _ZoneFieldLibraryId = HRMR_LIBRARY_ID »
+«VAR NEW _FieldCallbackScript= "HRMR_CANDIDATE_model.phs#CallbackField"»
+«VAR NEW _ZoneCallbackScript= "HRMR_CANDIDATE_model.phs#CallbackZone"»
+«VAR NEW [object]_ZoneInfo»
+«VAR NEW _ZoneInfoStatus=0»
+«VAR NEW _ZoneCallbackLibrary = "HRMR" »
+«VAR NEW _FieldCallbackLibrary = "HRMR" »
+
+«*RIGHTS*»
+«VAR NEW _OwnerUserRights = '00000000000000000000000000000000'»
+«VAR NEW _OtherUserRights = '00000000000000000000000000000000'»
+«VAR NEW _OwnerUserRight = 0»
+«VAR NEW _OtherUserRight = 0»
+«INCLUDE _SqlStatus=HRMR:ossUserRights.phs»
+«INCLUDE _SqlStatus=HRMR:ossUserRights.phs;_iUserRight=0»
+
+«IF _OwnerUserRight < 49»
+  «LET _b_status = 0»
+«ENDIF»
+
+«* get theme *»
+«INCLUDE _PageThemeId=«#SQLLIBRARY#»:ProcPageTheme.phs#QueryUserPageTheme»
+
+«* get page title *»
+«LET _PageTitle = "«WRITEKEY HRMR_CANDIDATE_Title»"»
+
+«* get merchant preferences *»
+«SQLEXEC STRING _MerchantPrefs = select azCustomPrefs from «#SQLWPA#»OSSMERCHANT where idMerchant=«%d;idMerchant»»
+«* context navigation*»
+«IF @toi(ContextViewMode) == 0 »
+    «INCLUDE _NavLevel=«#SQLLIBRARY#»:ProcNavigation.phs#SecureNavigationLevel»
+    «LET _NavLink="&Sql=HRMR:HRMR_CANDIDATE_view.phs"»
+«ENDIF»
+«INCLUDE «#SQLLIBRARY#»:ProcNavigation.phs#PushNavigationLevel;_NavTitle=_PageTitle»
+«* start view*»
+«INCLUDE «#SQLLIBRARY#»:Header.phs;»
+«*Mode HTML*»
+«IF @toi(ContextViewMode) == OSS_PAGE_VIEW_MODE_HTML»
+
+    <FORM id="MyForm" name="MyForm" method="post" action="/Scripts/sql.exe" ENCTYPE="multipart/form-data">
+              <input type="hidden" name="SqlDB" value=«SqlDB»>
+              <input type="hidden" name="Sql" value="">
+              <input type="hidden" name="xid" value=«xid»>
+              <input type="hidden" name="ContextNavigation" value=«=_NavLevel»>
+              <input type="hidden" name="idJob" value="">
+              <input type="hidden" name="idStatus" value="">
+              <input type="hidden" name="mod" value="">
+              <input type="hidden" name="id" value="">
+              <input type="hidden" name="ticketId" value=«_oCandidate.idTicket»>
+              <input type="hidden" name="number" value="">
+              <input type="hidden" name="collaborators" value="">
+
+    <script>
+
+      var collabIndex = [];
+      var collabName = [];
+
+      «IF fct == "modify"»
+        «VAR NEW [array]userList»
+        «SQLEXEC ARRAY userList = select E.idUser, O.azFirstName, O.azName from HRMR_EVENTS E inner join OSSUSERINFO O on E.idUser = O.idUser where idCandidate = «id» and iStatus = 1»
+
+        «SQLREPEAT»
+          collabIndex[«#SQLREPEAT#»] = «userList[#SQLREPEAT#].idUser»
+          collabName[«#SQLREPEAT#»] = "«userList[#SQLREPEAT#].azFirstName» «userList[#SQLREPEAT#].azName»"
+        «/SQLREPEAT 0; ««userList.iSize» - 1»»
+
+      «ENDIF»
+
+      «INCLUDE «#SQLLIBRARY#»:JSProcSecureFile.phs»
+      var docId = 0;
+      var doctoDelete;
+      var iPopup=0;
+
+      setSQLWWWHOME('«#SQLWWWHOME#»');
+
+      function AddButtonFooter(_iIndexPopup,_azButtonName,_azButtonFunction){
+			    var _popupIdentifier = "popup_"+_iIndexPopup;
+			    var buttons = $("#"+_popupIdentifier).dialog("option", "buttons"); // getter
+			     buttons.push(	{
+										id: _azButtonName+"_"+_iIndexPopup,
+										text:_azButtonName,
+										click: function() {
+												if(parseInt($("#"+_popupIdentifier).attr("data-frame"),10) == 1)
+												{
+													var _f = $("#iFrame_"+_iIndexPopup).get(0);
+													var fd = _f.contentWindow || _f ;
+													eval("fd."+_azButtonFunction);  // run function
+                        }
+												else {
+													eval(_azButtonFunction);  // run function
+                  	     }
+                        }
+								});
+
+			 $("#"+_popupIdentifier).dialog("option", "buttons", buttons); // setter
+     }
+
+      var iAddMessagePopup = PopupCreate(1200,700,"«WRITEKEY HRMR_ADDMSG»","");
+      AddButtonFooter(iAddMessagePopup, "«WRITEKEY HRMR_ADD»", "submitMessage()");
+      AddQuitButtonFooterElementFocus(iAddMessagePopup,"«WRITEKEY HRMR_CANCEL»","«_FocusElement»");
+
+      var iAddInterviewPopup = PopupCreate(1200,600,"«WRITEKEY HRMR_ADD_INTERVIEW»","");
+      AddButtonFooter(iAddInterviewPopup, "«WRITEKEY HRMR_ADD»", "checkValidityofInterview()");
+      AddQuitButtonFooterElementFocus(iAddInterviewPopup,"«WRITEKEY HRMR_CANCEL»","«_FocusElement»");
+
+      var iModifyInterviewPopup = PopupCreate(1200,600,"«WRITEKEY HRMR_ITW_PLANNED»","");
+      AddButtonFooter(iModifyInterviewPopup, "«WRITEKEY HRMR_DELETE»", "deleteInterview()");
+      AddButtonFooter(iModifyInterviewPopup, "«WRITEKEY HRMR_MODIFY»", "checkValidityofInterview()");
+      AddQuitButtonFooterElementFocus(iModifyInterviewPopup,"«WRITEKEY HRMR_CANCEL»","«_FocusElement»");
+
+      var iAddCollabPopup = PopupCreate(1200,600,"«WRITEKEY HRMR_ADD_COLLAB»","");
+      AddButtonFooter(iAddCollabPopup, "«WRITEKEY HRMR_ADD»", "submitCollab()");
+      AddQuitButtonFooterElementFocus(iAddCollabPopup,"«WRITEKEY HRMR_CANCEL»","«_FocusElement»");
+
+      var iGradeCandidatePopup = PopupCreate(500,200,"«WRITEKEY HRMR_GRADE_CAND»","");
+      AddButtonFooter(iGradeCandidatePopup, "«WRITEKEY HRMR_GRADE»", "submitGrade()");
+      AddQuitButtonFooterElementFocus(iGradeCandidatePopup,"«WRITEKEY HRMR_CANCEL»","«_FocusElement»");
+
+      function onExport(){
+        document.getElementById("loaderPrint").style.display = "block";
+        $.ajax({
+            type:"POST",
+            url: "/Scripts/sql.exe",
+            data: 	'SqlDB=«SqlDB»'
+                    +'&Sql=HRMR:HRMR_PDF_view.phs'
+                    +'&xid=«xid»'
+                    +'&_bSaveDocument=1'
+                    +'&_idCandidate=«id»'
+                    +'&ContextViewMode=«OSS_PAGE_VIEW_MODE_PDF»',
+            dataType: "json",
+            cache: false,
+            async: true,
+
+            error: function(msg){
+
+              alert("Error: "+msg);
+              document.getElementById("loaderPrint").style.display = "none";
+            },
+        success: function(data){
+
+              if(parseInt(data._b_status,10) == 1 )
+              {
+                DownloadSecureFile(data._az_secure_file);
+                document.getElementById("loaderPrint").style.display = "none";
+              }
+            }
+        });
+      }
+
+      function downloadDoc(n) {
+        window.location.href = "/Scripts/sql.exe?SqlDB=«SqlDB»&Sql=Mail:downloadMail.phs&xid=«xid»&_MerchantId=«idMerchant»&_MailId=" + n;
+      }
+
+      function deleteDocument(n) {
+        docId=n;
+        lol_confirm("«WRITEKEY HRMR_CONFIRMATION»",deleteDocCallback);
+      }
+      function deleteDocCallback() {
+        window.location.href="/Scripts/sql.exe?SqlDB=«SqlDB»&Sql=HRMR:HRMR_TOOLS.phs&xid=«xid»&ContextNavigation=«ContextNavigation»&_MerchantId=«idMerchant»&docId=" + docId + "&redirect=del_doc&id=«id»&parent=0";
+      }
+
+      function addMessage() {
+        url="/Scripts/sql.exe?SqlDB=«SqlDB»&Sql=HRMR:HRMR_ADDMESSAGE.phs&xid=«xid»&_Popup=0&_MerchantId=«idMerchant»&id=«id»";
+        ViewPopup(iAddMessagePopup,url,'');
+      }
+
+      function addInterview(n) {
+        url="/Scripts/sql.exe?SqlDB=«SqlDB»&Sql=HRMR:HRMR_ADDINTERVIEW.phs&xid=«xid»&_Popup=0&_MerchantId=«idMerchant»&id=«id»&itwId=" + n;
+        ViewPopup(iAddInterviewPopup,url,'');
+      }
+
+      function addCollab() {
+        url="/Scripts/sql.exe?SqlDB=«SqlDB»&Sql=HRMR:HRMR_ADDCOLLAB.phs&xid=«xid»&_Popup=0&_MerchantId=«idMerchant»&id=«id»";
+        ViewPopup(iAddCollabPopup,url,'');
+      }
+
+      function deleteJob(n) {
+          $.ajax({
+                type: "POST",
+                url: "/Scripts/sql.exe",
+                dataType: "html",
+                data: 'SqlDB=«SqlDB»'
+                      +'&xid=«xid»'
+                      +'&ContextNavigation=«ContextNavigation»'
+                      +'&Sql=HRMR:HRMR_TOOLS.phs'
+                      +'&delId=' + n
+                      +'&redirect=del_job_cand'
+          });
+          window.location.href = '/Scripts/sql.exe?SqlDB=«SqlDB»&Sql=HRMR:HRMR_CANDIDATE_view.phs&xid=«xid»&_MerchantId=«idMerchant»&id=«id»&ContextNavigation=«ContextNavigation»&mod=toModify';
+      }
+
+      function showCollab(collabList) {
+        $(".collaborator").remove();
+        for (var i=0; i < collabList.length; i++) {
+          var collab = document.createElement("div");
+          document.getElementById("existingCollab").appendChild(collab);
+          collab.classList.add("collaborator");
+          collab.innerHTML = collabList[i];
+        }
+        $('<span class="fa fa-remove" style="margin-left:3px;position:relative;top:3px" id="removeCollab"></span>').appendTo(".collaborator")
+        $(".collaborator").click(function (event) {
+          let delName = event.target.parentElement.innerText;
+          let index = collabName.indexOf(delName);
+          $.ajax({
+                type: "POST",
+                url: "/Scripts/sql.exe",
+                dataType: "html",
+                data: 'SqlDB=«SqlDB»'
+                      +'&xid=«xid»'
+                      +'&ContextNavigation=«ContextNavigation»'
+                      +'&Sql=HRMR:HRMR_TOOLS.phs'
+                      +'&delId=' + collabIndex[index]
+                      +'&redirect=del_collab'
+                      +'&id=«id»'
+            });
+            collabIndex.splice(index, 1);
+            collabName.splice(index, 1);
+            showCollab(collabName);
+        });
+      }
+
+      function modifyItw(n) {
+          url="/Scripts/sql.exe?SqlDB=«SqlDB»&Sql=HRMR:HRMR_ADDINTERVIEW.phs&xid=«xid»&_Popup=0&_MerchantId=«idMerchant»&id=«id»&mod=yes&itwId=" + n;
+          ViewPopup(iModifyInterviewPopup,url,'');
+      }
+
+      function gradeCandidate(n, m) {
+          url="/Scripts/sql.exe?SqlDB=«SqlDB»&Sql=HRMR:HRMR_ADDINTERVIEW.phs&xid=«xid»&_Popup=0&_MerchantId=«idMerchant»&id=«id»&mod=grade&exGrade=" + m + "&itwId=" + n;
+          ViewPopup(iGradeCandidatePopup,url,'');
+      }
+
+  </script>
+
+«ENDIF»
+«INCLUDE «#SQLLIBRARY#»:ProcPageTheme.phs#ViewPageOpen»
+«* User allowed to do this ? *»
+
+«IF _b_status <> 1»
+  «INCLUDE «#SQLLIBRARY#»:MessageAccessDenied.phs#MessageSystemError»
+«ELSE»
+  «INCLUDE «#SQLLIBRARY#»:OSSThemePageView.phs;»
+«ENDIF»
+
+«INCLUDE «#SQLLIBRARY#»:ProcPageTheme.phs#ViewPageClose»
+
+«INCLUDE «#SQLLIBRARY#»:Footer.phs;»

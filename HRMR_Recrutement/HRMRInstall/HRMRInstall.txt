@@ -1,0 +1,12 @@
+#INCLUDE HRMR.h
+#INCLUDE ossbo.h
+
+#language fr;lang_fr.txt
+#language de;lang_de.txt
+#language en;lang_en.txt
+
+HRMRCreateSql.phs
+HRMRModuleInit.phs
+HRMRRegister.phs
+HRMRUpdateRights.phs
+OslInstall.phs

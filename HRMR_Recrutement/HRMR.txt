@@ -1,0 +1,42 @@
+#INCLUDE HRMR.h
+#INCLUDE ossbo.h
+
+#language fr;lang_fr.txt
+#language de;lang_de.txt
+#language en;lang_en.txt
+
+HRMR_DEFAULT_view.phs
+HRMR_DEFAULT_model.phs
+HRMR_DEFAULT_query.phs
+HRMR_CANDIDATE_view.phs
+HRMR_CANDIDATE_model.phs
+HRMR_CANDIDATE_query.phs
+HRMR_JOB_view.phs
+HRMR_JOB_model.phs
+HRMR_PDF_view.phs
+HRMR_PDF_model.phs
+HRMR_PDF_query.phs
+HRMR_AD_view.phs
+HRMR_AD_model.phs
+HRMR_ADDAD.phs
+HRMR_ADDCOLLAB.phs
+HRMR_ADDINTERVIEW.phs
+HRMR_ADDJOB.phs
+HRMR_ADDMESSAGE.phs
+HRMR_ADDPLATFORM.phs
+HRMR_AGENDA.phs
+HRMR_TOOLS.phs
+HRMR_DOCADD.phs
+
+ossModuleInit.phs
+ossModuleLogin.phs
+ossModuleRegister.phs
+ossModuleThemeInit.phs
+ossThemeField.phs
+ossThemePage.phs
+ossThemeZone.phs
+ossUserAdd.phs
+ossUserConfig.phs
+ossUserDelete.phs
+ossUserModify.phs
+ossUserRights.phs

@@ -1,0 +1,179 @@
+
+CREATE TABLE HRMR_JOBS (
+                        idJob INT(11) DEFAULT NULL,
+                        azJobName VARCHAR(255) DEFAULT NULL,
+                        iStatus INT(11) DEFAULT NULL,
+                        iType INT(11) DEFAULT NULL,
+                        UNIQUE KEY IHRMR_JOBS (idJob));
+
+CREATE TABLE HRMR_CANDIDATES (
+                        idCandidate INT(11) DEFAULT NULL,
+                        azFirstName VARCHAR(80) DEFAULT NULL,
+                        azName VARCHAR(255) DEFAULT NULL,
+                        azEMail VARCHAR(80) DEFAULT NULL,
+                        azTel VARCHAR(24) DEFAULT NULL,
+                        azAddress VARCHAR(255) DEFAULT NULL,
+                        iCTimeCreate INT(11) DEFAULT NULL,
+                        iCTimeModify INT(11) DEFAULT NULL,
+                        iStatus INT(11) DEFAULT NULL,
+                        idRemark INT(11) DEFAULT NULL,
+                        idTicket INT(11) DEFAULT NULL,
+                        UNIQUE KEY IHRMR_CANDIDATES (idCandidate));
+
+CREATE TABLE HRMR_SUPPLIERS (
+                        idSupplier INT(11) DEFAULT NULL,
+                        idSupplierLibrary INT(11) DEFAULT NULL,
+                        idSupplierLibraryObjectType INT(11) DEFAULT NULL,
+                        azUsername VARCHAR(255) DEFAULT NULL,
+                        azPassword VARCHAR(255) DEFAULT NULL,
+                        azLink VARCHAR(255) DEFAULT NULL,
+                        UNIQUE KEY IHRMR_SUPPLIERS (idSupplier));
+
+CREATE TABLE HRMR_ADS (
+                        idAd INT(11) DEFAULT NULL,
+                        idJob INT(11) DEFAULT NULL,
+                        iCTimeCreate INT(11) DEFAULT NULL,
+                        iCTimeExpire INT(11) DEFAULT NULL,
+                        idSupplier INT(11) DEFAULT NULL,
+                        UNIQUE KEY IHRMR_PUBLICATIONS (idAd),
+                        FOREIGN KEY (idJob) REFERENCES HRMR_JOBS (idJob),
+                        FOREIGN KEY (idSupplier) REFERENCES HRMR_SUPPLIERS (idSupplier));
+
+CREATE TABLE HRMR_EVENTS (
+                        idEvent INT(11) DEFAULT NULL,
+                        idCandidate INT(11) DEFAULT NULL,
+                        idUser INT(11) DEFAULT NULL,
+                        iGrade INT(11) DEFAULT NULL,
+                        iStatus INT(11) DEFAULT NULL,
+                        iCTimeInterview INT(11) DEFAULT NULL,
+                        iCTimeGrade INT(11) DEFAULT NULL,
+                        UNIQUE KEY IHRMR_EVENTS (idEvent),
+                        FOREIGN KEY (idCandidate) REFERENCES HRMR_CANDIDATES (idCandidate));
+
+CREATE TABLE HRMR_CANDIDATES_JOBS (
+                        id INT(11) DEFAULT NULL,
+                        idCandidate INT(11) DEFAULT NULL,
+                        idJob INT(11) DEFAULT NULL,
+                        UNIQUE KEY IHRMR_CANDIDATES_JOBS (id),
+                        FOREIGN KEY (idCandidate) REFERENCES HRMR_CANDIDATES (idCandidate),
+                        FOREIGN KEY (idJob) REFERENCES HRMR_JOBS (idJob));
+
+iStatus for HRMR_JOBS :
+0 --> Closed
+1 --> Open
+2 --> Suspended
+
+iType for HRMR_JOBS :
+0 --> Stage
+1 --> Emploi
+
+iStatus for HRMR_CANDIDATES (and HRMR_GRADES):
+1 --> Nouveau
+100 --> En cours
+110 --> En attente
+201 --> ITW Presence #1
+202 --> ITW Presence #2
+211 --> ITW Telephone #1
+212 --> ITW Telephone #2
+500 --> Offre
+600 --> Accepte
+700 --> Rejete
+999 --> Archive
+
+iGrade for HRMR_GRADES :
+0 - 5
+
+
+insert into HRMR_SUPPLIERS values (1, 0, 0, 0, "compteapec", "motdepasseapec"), (2, 0, 0, 0, "comptejobteaser", "motdepassejobteaser"), (3, 0, 0, 0, "comptelinkedin", "motdepasselinkedin");
+insert into HRMR_EVENTS values (1, 1, 3, 2, 1, ""), (2, 1, 4, 3, 1, ""), (3, 3, 3, 4, 1, ""), (4, 3, 4, 5, 1, "")
+insert into HRMR_ADS values (1, 1, "", "", 1), (2, 1, "", "", 2), (3, 1, "", "", 3), (4, 2, "", "", 2), (5, 3, "", "", 3)
+
+/////////////////////////////////////////////////////////////////////////
+
+CREATE TABLE HRMR_JOBS (
+                        idJob INT(11) DEFAULT NULL,
+                        azJobName VARCHAR(255) DEFAULT NULL,
+                        UNIQUE KEY IHRMR_JOBS (idJob));
+
+CREATE TABLE HRMR_CANDIDATES (
+                        idCandidate INT(11) DEFAULT NULL,
+                        azName VARCHAR(255) DEFAULT NULL,
+                        UNIQUE KEY IHRMR_CANDIDATES (idCandidate));
+
+CREATE TABLE HRMR_CANDIDATES_JOBS (
+                        id INT(11) DEFAULT NULL,
+                        idCandidate INT(11) DEFAULT NULL,
+                        idJob INT(11) DEFAULT NULL,
+                        UNIQUE KEY IHRMR_CANDIDATES_JOBS (id),
+                        FOREIGN KEY (idCandidate) REFERENCES HRMR_CANDIDATES (idCandidate),
+                        FOREIGN KEY (idJob) REFERENCES HRMR_JOBS (idJob));
+
+CREATE TABLE HRMR_EVENTS (
+                        idEvent INT(11) DEFAULT NULL,
+                        idCandidate INT(11) DEFAULT NULL,
+                        idUser INT(11) DEFAULT NULL,
+                        iGrade INT(11) DEFAULT NULL,
+                        iStatus INT(11) DEFAULT NULL,
+                        UNIQUE KEY IHRMR_EVENTS (idEvent),
+                        FOREIGN KEY (idCandidate) REFERENCES HRMR_CANDIDATES (idCandidate));
+
+insert into HRMR_JOBS values (1, "marketing"), (2, "commercial"), (3, "juriste");
+insert into HRMR_CANDIDATES values (1, "martin"), (2, "alex"), (3, "thomas");
+insert into HRMR_CANDIDATES_JOBS values (1, 1, 1), (2, 1, 2), (3, 2, 2), (4, 3, 2);
+insert into HRMR_EVENTS values (1, 1, 1, 3, 101), (2, 1, 2, 4, 101), (3, 1, 1, 2, 601), (4, 1, 2, 3, 601);
+
+
+
+Table Candidates as C {
+  idCandidate int [pk]
+  azFirstName varchar
+  azName varchar
+  azEmail varchar
+  azTel varchar
+  azAddress varchar
+  iCTimeCreate int
+  iCTimeModify int
+  iStatus int
+  idRemark int
+  idTicket int
+}
+
+Table Jobs as J {
+  idJob int [pk]
+  azJobName varchar
+  iStatus int
+  iType int
+ }
+
+Table Candidates_Jobs as CJ {
+  id int [pk]
+  idCandidate int [ref: > C.idCandidate]
+  idJob int [ref: > J.idJob]
+}
+
+Table Suppliers as S {
+  idSupplier int [pk]
+  idSupplierLibrary int [pk]
+  idSupplierLibraryObjectType int [pk]
+  azUsername varchar
+  azPassword varchar
+  azLink varchar
+}
+
+Table Events as E {
+  idEvent int [pk]
+  idCandidate int [ref: > C.idCandidate]
+  idUser int
+  iGrade int
+  iStatus int
+  iCTimeInterview int
+  iCTimeGrade int
+}
+
+Table Ads as A {
+  idAd int [pk]
+  idJob int [ref: > J.idJob]
+  iCTimeCreate int
+  iCTimeExpire int
+  idSupplier int [ref: > S.idSupplier]
+}

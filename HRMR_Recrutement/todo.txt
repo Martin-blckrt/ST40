@@ -1,0 +1,20 @@
+TODO :
+
+notifs : voir avec Marc Grün
+
+agenda : voir avec Cedric
+
+TODO TODO :
+
+dashboard and notifs
+auto-mails
+
+
+MAYBE :
+
+ADD :
+
+
+in other BDD :
+
+alter table HRMR_CANDIDATES drop column iStar

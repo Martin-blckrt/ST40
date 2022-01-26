@@ -1,0 +1,200 @@
+HRMR_NONE= Aucun
+HRMR_VIEW= Voir
+HRMR_MODIFY= Modifier
+HRMR_MODIFY_CREATE= Modifier/Creer
+HRMR_MODIFY_CREATE_DELETE= Modifier/Creer/Supprimer
+HRMR_ILLIMITED= Illimite
+HRMR_DEVELOPER= Developpeur
+
+HRMR_ERROR= Erreur !
+HRMR_CANCEL= Annuler
+HRMR_ADD= Ajouter
+HRMR_DELETE= Supprimer
+HRMR_CREATE= Cr&eacute;er
+HRMR_VALIDATE= Valider
+HRMR_CONFIRMATION= &Ecirc;tes-vous s&ucirc;r ?
+HRMR_CONFIRMATION_JOBDEL= Cela va supprimer tous les candidats qui postulent &agrave; ce poste.
+HRMR_FORMPB= Attention ! Il vous manque des zones.
+HRMR_APPLY= Postule &agrave; :
+HRMR_BACK= Retour
+HRMR_CONTACT= Contact
+HRMR_DOCUMENT= Documents
+HRMR_HISTORY= Historique
+HRMR_EXPORT= Exporter en PDF
+HRMR_ADDMSG= Ajouter un message
+
+HRMR_DEFAULT_Title= Recrutement
+HRMR_CANDIDATE_Title= Candidat
+HRMR_JOB_Title= Poste
+HRMR_PDF_Title= Pdf
+HRMR_AD_Title= Annonce
+
+HRMR_FNAME= Prenom
+HRMR_NAME= Nom
+HRMR_MAIL= E-mail
+HRMR_TEL= Tel
+HRMR_ADDRESS= Adresse
+HRMR_STATUS= Statut
+HRMR_TITLE= Titre
+HRMR_JOB= Poste
+HRMR_DESC= Description
+HRMR_STATE= Etat
+HRMR_REMARK= Remarque
+HRMR_CANDIDATE= Candidats
+HRMR_TABLE= Tableau
+HRMR_MANAGE= Gestion
+HRMR_NEW_CANDIDATE= Nouveau candidat
+HRMR_NEW_JOB= Nouveau poste
+HRMR_MANAGE_JOB= Gestion de poste
+HRMR_INFO= Informations
+HRMR_STAR= Etoile
+HRMR_CAND_STAR= Candidat &eacute;toil&eacute;
+
+HRMR_INTERNSHIP= Stage
+HRMR_SALARIED= Emploi
+HRMR_TYPE= Type de poste
+HRMR_OPEN= Ouvert
+HRMR_CLOSED= Ferm&eacute;
+HRMR_SUSPENDED= Suspendu
+HRMR_NEW= Nouveau
+HRMR_PROGRESS= En cours
+HRMR_WAIT= En attente
+HRMR_PHY_INTERVIEW= Entretien physique
+HRMR_DIST_INTERVIEW= Entretien distanciel
+HRMR_OFFER= Offre
+HRMR_REFUSED= Refuse
+HRMR_ACCEPTED= Accepte
+HRMR_ARCHIVED= Archive
+HRMR_DELETED= Supprime
+HRMR_YES= Oui
+HRMR_NO= Non
+HRMR_ALL= Tous
+HRMR_NONE= Aucun
+HRMR_PDF_NEW= Nouvelle candidature
+HRMR_PDF_PROGRESS= Candidature en cours
+HRMR_PDF_WAIT= Candidature en attente
+HRMR_PDF_PHY_INTERVIEW= Entretien physique planifie
+HRMR_PDF_DIST_INTERVIEW= Entretien distanciel planifie
+HRMR_PDF_OFFER= Offre effectuee
+HRMR_PDF_REFUSED= Candidature refusee
+HRMR_PDF_ACCEPTED= Candidature acceptee
+HRMR_PDF_ARCHIVED= Candidature archivee
+HRMR_SEARCH= Rechercher
+HRMR_RESET= R&eacute;initialiser
+HRMR_CAND_CREATE= Candidat ajout&eacute;.
+HRMR_STATUS_MOD= Statut passe de
+HRMR_TO= a
+HRMR_OR= OU
+
+HRMR_DEFAULT_PAGENAME= defaut
+HRMR_CANDIDATE_PAGENAME= candidat
+HRMR_JOB_PAGENAME= poste
+HRMR_PDF_PAGENAME= pdf
+HRMR_AD_PAGENAME= annonce
+
+HRMR_LASTMOD= Derniere Modification
+
+HRMR_CAND_DEL= Candidat supprim\u00e9 !
+HRMR_CAND_ADD= Candidat ajout\u00e9 !
+HRMR_CAND_MOD= Candidat modifi\u00e9 !
+HRMR_JOB_DEL= Poste supprim\u00e9 !
+HRMR_JOB_ADD= Poste ajout\u00e9 !
+HRMR_JOB_MOD= Poste modifi\u00e9 !
+HRMR_ITW_DEL= Entretien supprim\u00e9 !
+HRMR_ITW_ADD= Entretien ajout\u00e9 !
+HRMR_ITW_MOD= Entretien modifi\u00e9 !
+HRMR_AD_DEL= Annonce supprim\u00e9e !
+HRMR_AD_ADD= Annonce ajout\u00e9e !
+HRMR_AD_MOD= Annonce modifi\u00e9e !
+HRMR_PLAT_DEL= Plateforme supprim\u00e9e !
+HRMR_PLAT_ADD= Plateforme ajout\u00e9e !
+HRMR_PLAT_MOD= Plateforme modifi\u00e9e !
+HRMR_ADDEDMSG= Message ajout\u00e9 !
+HRMR_GRADE_VALID= Note ajout\u00e9e !
+
+HRMR_WRITEREMARK= &Eacute;crivez une remarque sur cette candidature
+HRMR_MODNOTE= Commentaire
+
+HRMR_ADDFILE= Ajoutez un fichier
+HRMR_CHOOSEFILE= Choisir un fichier
+HRMR_DELFILE= Fichier supprim\u00e9 !
+
+HRMR_TOOLONG= Le texte est trop long ! Il sera tronqu\u00e9.
+
+HRMR_DRAGNDROP= Glissez-D&eacute;posez des fichiers sur la page pour ajouter des documents.
+HRMR_BROWSE= Parcourir les fichiers
+
+HRMR_SCREENING= Selection
+HRMR_ADVICE= Avis
+HRMR_ADD_INTERVIEW= Ajouter un entretien
+HRMR_INTERVIEW= Entretien
+HRMR_GRADES= Note
+HRMR_OTHER_ITW= Autres entretiens
+
+HRMR_PLATFORM_INFO= Informations sur la plateforme
+HRMR_PLATFORM= Plateforme
+HRMR_USERNAME= Nom d'utilisateur
+HRMR_PASSWORD= Mot de passe
+HRMR_LINK= Lien
+HRMR_EXPIRED= Annonce expiree
+HRMR_ADD_DATE= Date d'ajout
+HRMR_EXP_DATE= Date d'expiration
+HRMR_CRED= Identifiants
+HRMR_UNNOTED= Pas de note
+
+HRMR_ITW_PLANNED= Entretien planifie le
+HRMR_ITW_PLANNED_WITH= Entretien planifie avec
+HRMR_ITW_PLANNED_WITHOUT= Entretien planifie sans collaborateurs
+HRMR_ITW_DONE_WITHOUT= Entretien effectue sans collaborateurs
+HRMR_ITW_MOVED= Entretien deplace le
+HRMR_DATE= Date
+HRMR_PARTICIPANTS= Participants
+
+HRMR_NO_COLLAB= Pas de collaborateurs
+HRMR_COLLAB= Collaborateurs
+HRMR_ADD_COLLAB= Ajouter un collaborateur
+
+HRMR_GRADE= Noter
+HRMR_GRADE_CAND= Notation du candidat
+
+HRMR_CLICK_FOR_INFO= Clickez sur une plateforme pour voir plus d'informations ou selectionnez la dans le filtre
+
+HRMR_NEW_JOB= Nouveeau poste
+HRMR_ADD_JOB= Ajouter un poste
+HRMR_MODIFY_JOB= Modifier un poste
+
+HRMR_NEW_AD= Nouvelle annonce
+HRMR_ADD_AD= Ajouter une annonce
+HRMR_MODIFY_AD= Modifier une annonce
+
+HRMR_NEW_PLATFORM= Nouvelle plateforme
+HRMR_ADD_PLATFORM= Ajouter une plateforme
+HRMR_MODIFY_PLATFORM= Modifier une plateforme
+
+HRMR_SELECTED_COLLAB= Collaborateur selectionne
+HRMR_SELECTED_PLATFORM= Plateforme selectionnee
+
+HRMR_GRADED_ON= Note le
+
+HRMR_EXIST_DOCS= Documents existants
+HRMR_NEW_DOCS= Nouveaux documents
+HRMR_NO_DOCS= Pas de documents
+
+HRMR_ADMIN= Administration
+
+HRMR_JOB_MOD_SEL= Selectionnez un poste a modifier
+HRMR_AD_MOD_SEL= Selectionnez une annonce a modifier
+HRMR_PLATFORM_MOD_SEL= Selectionnez une plateforme a modifier
+
+HRMR_NO_EXPIRY= Pas d'expiration
+
+HRMR_JOB_ACTIVE= Poste actif
+HRMR_JOB_CLOSED= Poste ferme
+HRMR_JOB_SUSPENDED= Poste suspendu
+HRMR_APPLICATIONS= candidatures
+HRMR_APPLICATION= candidature
+HRMR_NO_APPLICATIONS= Aucune candidature
+
+HRMR_AGENDA= Agenda
+HRMR_SLOT_TAKEN= Le creneau est deja occupe !
+HRMR_ITW_AGENDA_FAIL= Le creneau a ete ajoute, mais pas dans l'agenda

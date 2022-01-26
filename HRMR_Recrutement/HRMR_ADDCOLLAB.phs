@@ -1,0 +1,21 @@
+
+«IF @exists(_ObjectId) > 0»
+  «VAR NEW [object]User»
+  «SQLEXEC OBJECT User= select azFirstName, azName from OSSUSERINFO where idUser = «_ObjectId»»
+  «WRITEKEY HRMR_SELECTED_COLLAB» : «User.azFirstName» «User.azName»
+«ELSE»
+  «INCLUDE «#SQLLIBRARY#»:OSSUserSearch.phs;SqlReturn="HRMR:HRMR_ADDCOLLAB.phs"»
+«ENDIF»
+
+<script>
+
+  function submitCollab() {
+    «IF «@exists("_ObjectId")» > 0»
+      parent.collabIndex[parent.collabIndex.length] = «_ObjectId»
+      parent.collabName[parent.collabName.length] = "«User.azFirstName» «User.azName»"
+      parent.showCollab(parent.collabName);
+    «ENDIF»
+    parent.HiddePopup(0);
+  }
+
+</script>

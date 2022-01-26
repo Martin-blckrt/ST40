@@ -1,0 +1,200 @@
+HRMR_NONE= None
+HRMR_VIEW= View
+HRMR_MODIFY= Modify
+HRMR_MODIFY_CREATE= Modify/Create
+HRMR_MODIFY_CREATE_DELETE= Modify/Create/Delete
+HRMR_ILLIMITED= Illimited
+HRMR_DEVELOPER= Developer
+
+HRMR_ERROR= Error !
+HRMR_CANCEL= Cancel
+HRMR_ADD= Add
+HRMR_DELETE= Delete
+HRMR_CREATE= Create
+HRMR_VALIDATE= Submit
+HRMR_CONFIRMATION= Are you sure ?
+HRMR_CONFIRMATION_JOBDEL= This will delete all candidates applying to this job.
+HRMR_FORMPB= Careful ! You are missing inputs.
+HRMR_APPLY= Applying to :
+HRMR_BACK= Back
+HRMR_CONTACT= Contact
+HRMR_DOCUMENT= Documents
+HRMR_HISTORY= Records
+HRMR_EXPORT= Export to PDF
+HRMR_ADDMSG= Add a message
+
+HRMR_DEFAULT_Title= Recrutement
+HRMR_CANDIDATE_Title= Candidate
+HRMR_JOB_Title= Job
+HRMR_PDF_Ttile= Pdf
+HRMR_AD_Title= Ad
+
+HRMR_FNAME= First Name
+HRMR_NAME= Name
+HRMR_MAIL= E-mail
+HRMR_TEL= Tel
+HRMR_ADDRESS= Address
+HRMR_STATUS= Status
+HRMR_TITLE= Title
+HRMR_JOB= Job
+HRMR_DESC= Description
+HRMR_STATE= State
+HRMR_REMARK= Remark
+HRMR_CANDIDATE= Candidates
+HRMR_TABLE= Table
+HRMR_MANAGE= Manage
+HRMR_NEW_CANDIDATE= New candidate
+HRMR_NEW_JOB= New job
+HRMR_MANAGE_JOB= Manage job
+HRMR_INFO= Information
+HRMR_STAR= Star
+HRMR_CAND_STAR= Starred candidate
+
+HRMR_INTERNSHIP= Internship
+HRMR_SALARIED= Salaried
+HRMR_TYPE= Type of job
+HRMR_OPEN= Open
+HRMR_CLOSED= Closed
+HRMR_SUSPENDED= Suspended
+HRMR_NEW= New
+HRMR_PROGRESS= In progress
+HRMR_WAIT= Pending
+HRMR_PHY_INTERVIEW= Physical interview
+HRMR_DIST_INTERVIEW= Remote interview
+HRMR_OFFER= Offer
+HRMR_REFUSED= Rejected
+HRMR_ACCEPTED= Accepted
+HRMR_ARCHIVED= Archived
+HRMR_DELETED= Deleted
+HRMR_YES= Yes
+HRMR_NO= No
+HRMR_ALL= All
+HRMR_NONE= None
+HRMR_PDF_NEW= New application
+HRMR_PDF_PROGRESS= Application in progress
+HRMR_PDF_WAIT= Application pending
+HRMR_PDF_PHY_INTERVIEW= Physical interview planned
+HRMR_PDF_DIST_INTERVIEW= Remote interview planned
+HRMR_PDF_OFFER= Offer sent
+HRMR_PDF_REFUSED= Application rejected
+HRMR_PDF_ACCEPTED= Application accepted
+HRMR_PDF_ARCHIVED= Application archived
+HRMR_SEARCH= Search
+HRMR_RESET= Reset
+HRMR_CAND_CREATE= Candidate added.
+HRMR_STATUS_MOD= Status changed from
+HRMR_TO= to
+HRMR_OR= OR
+
+HRMR_DEFAULT_PAGENAME= default
+HRMR_CANDIDATE_PAGENAME= candidate
+HRMR_JOB_PAGENAME= job
+HRMR_PDF_PAGENAME= pdf
+HRMR_AD_PAGENAME= ad
+
+HRMR_LASTMOD= Last Modification
+
+HRMR_CAND_DEL= Candidate deleted !
+HRMR_CAND_ADD= Candidate added !
+HRMR_CAND_MOD= Candidate modified !
+HRMR_JOB_DEL= Job deleted !
+HRMR_JOB_ADD= Job added !
+HRMR_JOB_MOD= Job modified !
+HRMR_ITW_DEL= Interview supprim\u00e9 !
+HRMR_ITW_ADD= Interview ajout\u00e9 !
+HRMR_ITW_MOD= Interview modifi\u00e9 !
+HRMR_AD_DEL= Annonce supprim\u00e9e !
+HRMR_AD_ADD= Annonce ajout\u00e9e !
+HRMR_AD_MOD= Annonce modifi\u00e9e !
+HRMR_PLAT_DEL= Plateforme supprim\u00e9e !
+HRMR_PLAT_ADD= Plateforme ajout\u00e9e !
+HRMR_PLAT_MOD= Plateforme modifi\u00e9e !
+HRMR_ADDEDMSG= Message added !
+HRMR_GRADE_VALID= Grade added !
+
+HRMR_WRITEREMARK= Write a comment on this application
+HRMR_MODNOTE= Comment
+
+HRMR_ADDFILE= Add a file
+HRMR_CHOOSEFILE= Choose a file
+HRMR_DELFILE= File deleted !
+
+HRMR_TOOLONG= The text is too long ! It will be truncated.
+
+HRMR_DRAGNDROP= Drag and drop files on the page to add documents.
+HRMR_BROWSE= Browse Files
+
+HRMR_SCREENING= Screening
+HRMR_ADVICE= Advice
+HRMR_ADD_INTERVIEW= Add an interview
+HRMR_INTERVIEW= Interview
+HRMR_GRADES= Grade
+HRMR_OTHER_ITW= Other interviews
+
+HRMR_PLATFORM_INFO= Platform information
+HRMR_PLATFORM= Platform
+HRMR_USERNAME= Username
+HRMR_PASSWORD= Password
+HRMR_LINK= Link
+HRMR_EXPIRED= Expired ad
+HRMR_ADD_DATE= Added date
+HRMR_EXP_DATE= Expiry Date
+HRMR_CRED= Credentials
+HRMR_UNNOTED= No grade
+
+HRMR_ITW_PLANNED= Interview planned on the
+HRMR_ITW_PLANNED_WITH= Interview planned with
+HRMR_ITW_PLANNED_WITHOUT= Interview planned without collaborators
+HRMR_ITW_DONE_WITHOUT= Interview done without collaborators
+HRMR_ITW_MOVED= Interview moved on the
+HRMR_DATE= Date
+HRMR_PARTICIPANTS= Participants
+
+HRMR_NO_COLLAB= No collaborators
+HRMR_COLLAB= Collaborators
+HRMR_ADD_COLLAB= Add a collaborator
+
+HRMR_GRADE= Grade
+HRMR_GRADE_CAND= Grading of candidate
+
+HRMR_CLICK_FOR_INFO= Click on a platform to see more information or select it in the filter
+
+HRMR_NEW_JOB= New job
+HRMR_ADD_JOB= Add job
+HRMR_MODIFY_JOB= Modify job
+
+HRMR_NEW_AD= New ad
+HRMR_ADD_AD= Add ad
+HRMR_MODIFY_AD= Modify ad
+
+HRMR_NEW_PLATFORM= New platform
+HRMR_ADD_PLATFORM= Add platform
+HRMR_MODIFY_PLATFORM= Modify platform
+
+HRMR_SELECTED_COLLAB= Selected collaborator
+HRMR_SELECTED_PLATFORM= Selected platform
+
+HRMR_GRADED_ON= Graded on the
+
+HRMR_EXIST_DOCS= Existing documents
+HRMR_NEW_DOCS= New documents
+HRMR_NO_DOCS= No documents
+
+HRMR_ADMIN= Administration
+
+HRMR_JOB_MOD_SEL= Select a job to modify
+HRMR_AD_MOD_SEL= Select an ad to modify
+HRMR_PLATFORM_MOD_SEL= Select a platform to modify
+
+HRMR_NO_EXPIRY= No expiry
+
+HRMR_JOB_ACTIVE= Active job
+HRMR_JOB_CLOSED= Closed job
+HRMR_JOB_SUSPENDED= Suspended job
+HRMR_APPLICATIONS= applications
+HRMR_APPLICATION= application
+HRMR_NO_APPLICATIONS= No applications
+
+HRMR_AGENDA= Agenda
+HRMR_SLOT_TAKEN= This slot is already taken !
+HRMR_ITW_AGENDA_FAIL= The interview has been added, but not in the agenda

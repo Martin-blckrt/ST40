@@ -1,0 +1,9 @@
+﻿«SYSTEM ECHOLOG OSSInitLibrary start»
+
+«VAR NEW _SqlStatus = 1»
+
+«INCLUDE _SqlStatus=«#SQLLIBRARY#»:OSSInitLibrary.phs;_LibraryRegisterId=HRMR_LIBRARY_ID»
+
+«SYSTEM ECHOLOG OSSInitLibrary end»
+
+«RETURN _SqlStatus»

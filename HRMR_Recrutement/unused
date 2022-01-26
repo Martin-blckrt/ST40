@@ -1,0 +1,216 @@
+
+<div style="margin-bottom: 10px;" class="group-input select">
+  <select id="selectJob">
+   «SQLOUTPUT»
+   <option value="«azJobName»">«azJobName»</option>
+   «/SQLOUTPUT select distinct azJobName from HRMR_JOBS»
+ </select>
+</div>
+
+
+«IF fct == "manage"»
+  «IF «_oJob.bStatus» == 1»
+    <div id="jobRadio">
+      <div>
+        <input type="radio" name="jobStatus" id="jobOpen" value="1" checked>
+        <label for="jobOpen">«WRITEKEY HRMR_OPEN»</label>
+        <input type="radio" name="jobStatus" id="jobClosed" value="0">
+        <label for="jobOpen">«WRITEKEY HRMR_CLOSED»</label>
+    </div>
+  «ELSE»
+    <div id="jobRadio">
+      <div>
+        <input type="radio" name="jobStatus" id="jobOpen" value="1">
+        <label for="jobOpen">«WRITEKEY HRMR_OPEN»</label>
+        <input type="radio" name="jobStatus" id="jobClosed" value="0" checked>
+        <label for="jobOpen">«WRITEKEY HRMR_CLOSED»</label>
+    </div>
+  «ENDIF»
+«ELSEIF fct == "create"»
+  <div id="jobRadio">
+    <div>
+      <input type="radio" name="jobStatus" id="jobOpen" value="1">
+      <label for="jobOpen">«WRITEKEY HRMR_OPEN»</label>
+      <input type="radio" name="jobStatus" id="jobClosed" value="0">
+      <label for="jobOpen">«WRITEKEY HRMR_CLOSED»</label>
+  </div>
+«ENDIF»
+
+«IF fct == "modify"»
+  «IF «_oCandidate.bStar»==1»
+    <fieldset id="starRadio">
+        <input type="radio" name="StarStatus" id="starYes" value="1" checked>
+        <label for="starYes">«WRITEKEY HRMR_YES»</label>
+        <input type="radio" name="StarStatus" id="starNo" value="0">
+        <label for="starNo">«WRITEKEY HRMR_NO»</label>
+    </fieldset>
+  «ELSE»
+    <fieldset id="starRadio">
+        <input type="radio" name="StarStatus" id="starYes" value="1">
+        <label for="starYes">«WRITEKEY HRMR_YES»</label>
+        <input type="radio" name="StarStatus" id="starNo" value="0" checked>
+        <label for="starNo">«WRITEKEY HRMR_NO»</label>
+    </fieldset>
+  «ENDIF»
+«ELSEIF fct == "create"»
+  <fieldset id="starRadio">
+      <input type="radio" name="StarStatus" id="starYes" value="1">
+      <label for="starYes">«WRITEKEY HRMR_YES»</label>
+      <input type="radio" name="StarStatus" id="starNo" value="0">
+      <label for="starNo">«WRITEKEY HRMR_NO»</label>
+  </fieldset>
+«ENDIF»
+
+"cursor": "pointer",
+"color": "#428bca",
+"font-weight": "bold",
+"font-size": "14px"
+
+"color": "black",
+"font-weight": "normal",
+"font-size": "12px"
+
+$(document).ready(function() {
+  var tdFirstName, tdName;
+  $("td[headers='col-0'], td[headers='col-1']").hover(function (event) {
+      tdFirstName = event.target.parentElement.children[0];
+      tdName = event.target.parentElement.children[1];
+      var inStyles =  {
+
+      }
+      Object.assign(tdFirstName.style, inStyles);
+      Object.assign(tdName.style, inStyles);
+    }, function() {
+      var outStyles =  {
+
+      }
+      Object.assign(tdFirstName.style, outStyles);
+      Object.assign(tdName.style, outStyles);
+  });
+
+  $("td[headers='col-0'], td[headers='col-1']").click(function (event) {
+    location.href="/Scripts/sql.exe?SqlDB=«SqlDB»&Sql=HRMR:HRMR_CANDIDATE_view.phs&xid=«xid»&_MerchantId=«idMerchant»&id=" + event.target.children[0].innerHTML + "&ContextNavigation=" + «_NavLevel»+1;
+  });
+});
+
+
+$("tbody td").hover(function (event) {
+    td = event.target.parentElement;
+    td.style.backgroundColor = "#e2edf7";
+
+  }, function() {
+    td.style.backgroundColor = "white";
+});
+
+HERE GETDESC
+function getDesc() {
+  var job;
+  job = $("#JobName").get(0).getAttribute("data-value");
+  $.ajax({
+    type: "POST",
+    url: "/Scripts/sql.exe",
+    dataType: "html",
+    data: 'SqlDB=«SqlDB»' +
+      '&Sql=HRMR:HRMR_TOOLS.phs' +
+      '&xid=«xid»' +
+      '&job=' + job,
+    success: function(data) {
+      $("#desc").html(data);
+    }
+  });
+}
+
+CSS FOR ARROW
+
+    #curvedarrow {
+      position: relative;
+      width: 0;
+      height: 0;
+      border-top: 9px solid transparent;
+      border-right: 9px solid red;
+      transform: rotate(10deg);
+    }
+    #curvedarrow:after {
+      content: "";
+      position: absolute;
+      border: 0 solid transparent;
+      border-top: 3px solid red;
+      border-radius: 20px 0 0 0;
+      top: -12px;
+      left: -9px;
+      width: 12px;
+      height: 12px;
+      transform: rotate(45deg);
+    }
+
+STUFF
+
+#cont {
+  display: flex;
+  flex-direction: column;
+}
+#base {
+  background: #dfdfdf;
+  display: inline-block;
+  height: 55px;
+  margin-left: 20px;
+  margin-top: 55px;
+  position: relative;
+  width: 100px;
+  z-index:2;
+}
+#base::after {
+  border-top: 25px solid #dfdfdf;
+  border-left: 50px solid transparent;
+  border-right: 50px solid transparent;
+  content: "";
+  height: 0;
+  left: 0;
+  position: absolute;
+  top: 55px;
+  width: 0;
+}
+#base2 {
+  background: #a9a9a9;
+  display: inline-block;
+  height: 75px;
+  margin-left: 20px;
+  margin-top: 55px;
+  position: relative;
+  width: 100px;
+  top: -55px;
+  z-index:1;
+}
+#base2::after {
+  border-top: 25px solid #a9a9a9;
+  border-left: 50px solid transparent;
+  border-right: 50px solid transparent;
+  content: "";
+  height: 0;
+  left: 0;
+  position: absolute;
+  top: 75px;
+  width: 0;
+}
+#base3 {
+  background: #7d7d7d;
+  display: inline-block;
+  height: 75px;
+  margin-left: 20px;
+  margin-top: 55px;
+  position: relative;
+  width: 100px;
+  top: -110px;
+  z-index:0;
+}
+#base3::after {
+  border-top: 25px solid #7d7d7d;
+  border-left: 50px solid transparent;
+  border-right: 50px solid transparent;
+  content: "";
+  height: 0;
+  left: 0;
+  position: absolute;
+  top: 75px;
+  width: 0;
+}

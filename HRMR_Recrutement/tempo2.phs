@@ -1,0 +1,1995 @@
+«PROC RegisterSystemPage»
+
+  «VAR NEW _PageLibraryId=HRMR_LIBRARY_ID»
+  «VAR NEW _PageId=HRMR_CANDIDATE_PAGE_ID»
+  «IF @exists("_MerchantId") == 0 »
+      «VAR NEW _MerchantId = «idMerchant»»
+  «ENDIF»
+  «LET _PageName=«WRITEKEY HRMR_CANDIDATE_PAGENAME»»
+   «INCLUDE _SystemPageId=«#SQLLIBRARY#»:OSSPageRegister.phs;_PageLibraryId=HRMR_LIBRARY_ID;_PageId=HRMR_CANDIDATE_PAGE_ID»
+
+   «IF _SystemPageId>0»
+      «INCLUDE _b_status=«#SQLLIBRARY#»:OSSPageUpdateOpen.phs»
+
+
+    «VAR NEW _ZoneName="Zone sous-titre - form"»
+
+
+    «INCLUDE _SystemZoneId=«#SQLLIBRARY#»:OSSPageZoneRegister.phs;_PageLibraryId=HRMR_LIBRARY_ID;_PageId=HRMR_CANDIDATE_PAGE_ID;_PageZoneId=1;_ZoneType=OSS_PAGE_ZONE_TYPE_NORMAL;_ZoneLayoutType=OSS_PAGE_ZONE_LAYOUT_TYPE_FORM_NORMAL;_ZoneLayoutStyle=2;_ZoneRequired=1;_ZoneDirection=0»
+
+    «INCLUDE _b_status=«#SQLLIBRARY#»:OSSPageZoneUpdateOpen.phs;PageZoneId=1;_FieldLibraryId=HRMR_LIBRARY_ID;_MerchantId=«_MerchantId»»
+
+    «IF _SystemZoneId>0»
+
+      «LET _FieldName="«WRITEKEY HRMR_FNAME» - form"»
+      «INCLUDE _SystemFieldId=«#SQLLIBRARY#»:OSSPageZoneFieldRegister.phs;_PageLibraryId=HRMR_LIBRARY_ID;_PageId=HRMR_CANDIDATE_PAGE_ID;_PageZoneId=1;_FieldLibraryId=HRMR_LIBRARY_ID;_FieldId=101;_FieldType=OSS_PAGE_ZONE_FIELD_TYPE_INPUT_TEXT;_FieldRequired=2;_FieldUnique=2;_FieldHAlign=0»
+
+      «LET _FieldName="«WRITEKEY HRMR_NAME» - form"»
+      «INCLUDE _SystemFieldId=«#SQLLIBRARY#»:OSSPageZoneFieldRegister.phs;_PageLibraryId=HRMR_LIBRARY_ID;_PageId=HRMR_CANDIDATE_PAGE_ID;_PageZoneId=1;_FieldLibraryId=HRMR_LIBRARY_ID;_FieldId=102;_FieldType=OSS_PAGE_ZONE_FIELD_TYPE_INPUT_TEXT;_FieldRequired=2;_FieldUnique=2;_FieldHAlign=0»
+
+      «LET _FieldName="«WRITEKEY HRMR_STATUS» - form"»
+      «INCLUDE _SystemFieldId=«#SQLLIBRARY#»:OSSPageZoneFieldRegister.phs;_PageLibraryId=HRMR_LIBRARY_ID;_PageId=HRMR_CANDIDATE_PAGE_ID;_PageZoneId=1;_FieldLibraryId=HRMR_LIBRARY_ID;_FieldId=103;_FieldType=OSS_PAGE_ZONE_FIELD_TYPE_INPUT_TEXT;_FieldRequired=2;_FieldUnique=2;_FieldHAlign=0»
+
+      «LET _FieldName="«WRITEKEY HRMR_STAR» - form"»
+      «INCLUDE _SystemFieldId=«#SQLLIBRARY#»:OSSPageZoneFieldRegister.phs;_PageLibraryId=HRMR_LIBRARY_ID;_PageId=HRMR_CANDIDATE_PAGE_ID;_PageZoneId=1;_FieldLibraryId=HRMR_LIBRARY_ID;_FieldId=104;_FieldType=OSS_PAGE_ZONE_FIELD_TYPE_INPUT_TEXT;_FieldRequired=2;_FieldUnique=2;_FieldHAlign=0»
+
+    «ENDIF»
+
+    «INCLUDE _b_status=«#SQLLIBRARY#»:OSSPageZoneUpdateClose.phs;PageZoneId=1;_FieldLibraryId=HRMR_LIBRARY_ID;_MerchantId=«_MerchantId»»
+
+
+    «VAR NEW _ZoneName="Zone sous-titre - view"»
+
+
+    «INCLUDE _SystemZoneId=«#SQLLIBRARY#»:OSSPageZoneRegister.phs;_PageLibraryId=HRMR_LIBRARY_ID;_PageId=HRMR_CANDIDATE_PAGE_ID;_PageZoneId=2;_ZoneType=OSS_PAGE_ZONE_TYPE_NORMAL;_ZoneLayoutType=OSS_PAGE_ZONE_LAYOUT_TYPE_MENU_NORMAL;_ZoneLayoutStyle=2;_ZoneRequired=1;_ZoneDirection=0»
+
+    «INCLUDE _b_status=«#SQLLIBRARY#»:OSSPageZoneUpdateOpen.phs;PageZoneId=2;_FieldLibraryId=HRMR_LIBRARY_ID;_MerchantId=«_MerchantId»»
+
+    «IF _SystemZoneId>0»
+
+      «LET _FieldName="«WRITEKEY HRMR_NAME»"»
+      «INCLUDE _SystemFieldId=«#SQLLIBRARY#»:OSSPageZoneFieldRegister.phs;_PageLibraryId=HRMR_LIBRARY_ID;_PageId=HRMR_CANDIDATE_PAGE_ID;_PageZoneId=2;_FieldLibraryId=HRMR_LIBRARY_ID;_FieldId=201;_FieldType=OSS_PAGE_ZONE_FIELD_TYPE_INPUT_TEXT;_FieldRequired=2;_FieldUnique=2;_FieldHAlign=0»
+
+      «LET _FieldName="«WRITEKEY HRMR_STATUS»"»
+      «INCLUDE _SystemFieldId=«#SQLLIBRARY#»:OSSPageZoneFieldRegister.phs;_PageLibraryId=HRMR_LIBRARY_ID;_PageId=HRMR_CANDIDATE_PAGE_ID;_PageZoneId=2;_FieldLibraryId=HRMR_LIBRARY_ID;_FieldId=202;_FieldType=OSS_PAGE_ZONE_FIELD_TYPE_INPUT_TEXT;_FieldRequired=2;_FieldUnique=2;_FieldHAlign=0»
+
+      «LET _FieldName="«WRITEKEY HRMR_STAR»"»
+      «INCLUDE _SystemFieldId=«#SQLLIBRARY#»:OSSPageZoneFieldRegister.phs;_PageLibraryId=HRMR_LIBRARY_ID;_PageId=HRMR_CANDIDATE_PAGE_ID;_PageZoneId=2;_FieldLibraryId=HRMR_LIBRARY_ID;_FieldId=203;_FieldType=OSS_PAGE_ZONE_FIELD_TYPE_INPUT_TEXT;_FieldRequired=2;_FieldUnique=2;_FieldHAlign=0»
+    «ENDIF»
+
+    «INCLUDE _b_status=«#SQLLIBRARY#»:OSSPageZoneUpdateClose.phs;PageZoneId=2;_FieldLibraryId=HRMR_LIBRARY_ID;_MerchantId=«_MerchantId»»
+
+
+    «VAR NEW _ZoneName="Zone contact"»
+
+
+    «INCLUDE _SystemZoneId=«#SQLLIBRARY#»:OSSPageZoneRegister.phs;_PageLibraryId=HRMR_LIBRARY_ID;_PageId=HRMR_CANDIDATE_PAGE_ID;_PageZoneId=3;_ZoneType=OSS_PAGE_ZONE_TYPE_NORMAL;_ZoneLayoutType=OSS_PAGE_ZONE_LAYOUT_TYPE_FORM_NORMAL;_ZoneLayoutStyle=2;_ZoneRequired=1;_ZoneDirection=0»
+
+    «INCLUDE _b_status=«#SQLLIBRARY#»:OSSPageZoneUpdateOpen.phs;PageZoneId=3;_FieldLibraryId=HRMR_LIBRARY_ID;_MerchantId=«_MerchantId»»
+
+    «IF _SystemZoneId>0»
+
+      «LET _FieldName="«WRITEKEY HRMR_MAIL»"»
+      «INCLUDE _SystemFieldId=«#SQLLIBRARY#»:OSSPageZoneFieldRegister.phs;_PageLibraryId=HRMR_LIBRARY_ID;_PageId=HRMR_CANDIDATE_PAGE_ID;_PageZoneId=3;_FieldLibraryId=HRMR_LIBRARY_ID;_FieldId=301;_FieldType=OSS_PAGE_ZONE_FIELD_TYPE_INPUT_TEXT;_FieldRequired=2;_FieldUnique=2;_FieldHAlign=0»
+
+      «LET _FieldName="«WRITEKEY HRMR_TEL»"»
+      «INCLUDE _SystemFieldId=«#SQLLIBRARY#»:OSSPageZoneFieldRegister.phs;_PageLibraryId=HRMR_LIBRARY_ID;_PageId=HRMR_CANDIDATE_PAGE_ID;_PageZoneId=3;_FieldLibraryId=HRMR_LIBRARY_ID;_FieldId=302;_FieldType=OSS_PAGE_ZONE_FIELD_TYPE_INPUT_TEXT;_FieldRequired=2;_FieldUnique=2;_FieldHAlign=0»
+
+      «LET _FieldName="«WRITEKEY HRMR_ADDRESS»"»
+      «INCLUDE _SystemFieldId=«#SQLLIBRARY#»:OSSPageZoneFieldRegister.phs;_PageLibraryId=HRMR_LIBRARY_ID;_PageId=HRMR_CANDIDATE_PAGE_ID;_PageZoneId=3;_FieldLibraryId=HRMR_LIBRARY_ID;_FieldId=303;_FieldType=OSS_PAGE_ZONE_FIELD_TYPE_INPUT_TEXT;_FieldRequired=2;_FieldUnique=2;_FieldHAlign=0»
+
+    «ENDIF»
+
+    «INCLUDE _b_status=«#SQLLIBRARY#»:OSSPageZoneUpdateClose.phs;PageZoneId=3;_FieldLibraryId=HRMR_LIBRARY_ID;_MerchantId=«_MerchantId»»
+
+
+    «VAR NEW _ZoneName="Zone poste"»
+
+
+    «INCLUDE _SystemZoneId=«#SQLLIBRARY#»:OSSPageZoneRegister.phs;_PageLibraryId=HRMR_LIBRARY_ID;_PageId=HRMR_CANDIDATE_PAGE_ID;_PageZoneId=4;_ZoneType=OSS_PAGE_ZONE_TYPE_NORMAL;_ZoneLayoutType=OSS_PAGE_ZONE_LAYOUT_TYPE_MENU_NORMAL;_ZoneLayoutStyle=2;_ZoneRequired=1;_ZoneDirection=0»
+
+    «INCLUDE _b_status=«#SQLLIBRARY#»:OSSPageZoneUpdateOpen.phs;PageZoneId=4;_FieldLibraryId=HRMR_LIBRARY_ID;_MerchantId=«_MerchantId»»
+
+    «IF _SystemZoneId>0»
+
+      «LET _FieldName="«WRITEKEY HRMR_TITLE»"»
+      «INCLUDE _SystemFieldId=«#SQLLIBRARY#»:OSSPageZoneFieldRegister.phs;_PageLibraryId=HRMR_LIBRARY_ID;_PageId=HRMR_CANDIDATE_PAGE_ID;_PageZoneId=4;_FieldLibraryId=HRMR_LIBRARY_ID;_FieldId=401;_FieldType=OSS_PAGE_ZONE_FIELD_TYPE_INPUT_TEXT;_FieldRequired=2;_FieldUnique=2;_FieldHAlign=0»
+
+    «ENDIF»
+
+    «INCLUDE _b_status=«#SQLLIBRARY#»:OSSPageZoneUpdateClose.phs;PageZoneId=4;_FieldLibraryId=HRMR_LIBRARY_ID;_MerchantId=«_MerchantId»»
+
+
+    «VAR NEW _ZoneName="Zone remarque"»
+
+
+    «INCLUDE _SystemZoneId=«#SQLLIBRARY#»:OSSPageZoneRegister.phs;_PageLibraryId=HRMR_LIBRARY_ID;_PageId=HRMR_CANDIDATE_PAGE_ID;_PageZoneId=5;_ZoneType=OSS_PAGE_ZONE_TYPE_NORMAL;_ZoneLayoutType=OSS_PAGE_ZONE_LAYOUT_TYPE_MENU_NORMAL;_ZoneLayoutStyle=2;_ZoneRequired=1;_ZoneDirection=0»
+
+    «INCLUDE _b_status=«#SQLLIBRARY#»:OSSPageZoneUpdateOpen.phs;PageZoneId=5;_FieldLibraryId=HRMR_LIBRARY_ID;_MerchantId=«_MerchantId»»
+
+    «IF _SystemZoneId>0»
+
+      «LET _FieldName="«WRITEKEY HRMR_REMARK»"»
+      «INCLUDE _SystemFieldId=«#SQLLIBRARY#»:OSSPageZoneFieldRegister.phs;_PageLibraryId=HRMR_LIBRARY_ID;_PageId=HRMR_CANDIDATE_PAGE_ID;_PageZoneId=5;_FieldLibraryId=HRMR_LIBRARY_ID;_FieldId=501;_FieldType=OSS_PAGE_ZONE_FIELD_TYPE_INPUT_TEXT;_FieldRequired=2;_FieldUnique=2;_FieldHAlign=0»
+
+    «ENDIF»
+
+    «INCLUDE _b_status=«#SQLLIBRARY#»:OSSPageZoneUpdateClose.phs;PageZoneId=5;_FieldLibraryId=HRMR_LIBRARY_ID;_MerchantId=«_MerchantId»»
+
+
+    «VAR NEW _ZoneName="Zone document"»
+
+
+    «INCLUDE _SystemZoneId=«#SQLLIBRARY#»:OSSPageZoneRegister.phs;_PageZoneId=6;_PageLibraryId=HRMR_LIBRARY_ID;_PageId=HRMR_CANDIDATE_PAGE_ID;_ZoneType=OSS_PAGE_ZONE_TYPE_NORMAL;_ZoneLayoutType=OSS_PAGE_ZONE_LAYOUT_TYPE_CUSTOM;_ZoneRequired=OSS_PAGE_ZONE_PREF_REQUIRED_YES;_ZoneDirection=OSS_PAGE_ZONE_PREF_DIRECTION_HORIZONTAL»
+
+    «IF _SystemZoneId>0»
+    «ELSE»
+      «LET _b_status=0»
+      «INCLUDE «#SQLLIBRARY#»:ProcDebug.phs#ErrorLog;_err_message="Zone 6 creation error";_err_file="ProcPageTheme_helpdesk_default.phs#ModuleInit";_err_number="0x0010";_bForce=1»
+    «ENDIF»
+
+
+    «VAR NEW _ZoneName="Zone collab"»
+
+
+    «INCLUDE _SystemZoneId=«#SQLLIBRARY#»:OSSPageZoneRegister.phs;_PageLibraryId=HRMR_LIBRARY_ID;_PageId=HRMR_CANDIDATE_PAGE_ID;_PageZoneId=7;_ZoneType=OSS_PAGE_ZONE_TYPE_NORMAL;_ZoneLayoutType=OSS_PAGE_ZONE_LAYOUT_TYPE_FORM_NORMAL;_ZoneLayoutStyle=2;_ZoneRequired=1;_ZoneDirection=1»
+
+    «INCLUDE _b_status=«#SQLLIBRARY#»:OSSPageZoneUpdateOpen.phs;PageZoneId=7;_FieldLibraryId=HRMR_LIBRARY_ID;_MerchantId=«_MerchantId»»
+
+    «IF _SystemZoneId>0»
+
+      «LET _FieldName="«WRITEKEY HRMR_COLLAB»"»
+      «INCLUDE _SystemFieldId=«#SQLLIBRARY#»:OSSPageZoneFieldRegister.phs;_PageLibraryId=HRMR_LIBRARY_ID;_PageId=HRMR_CANDIDATE_PAGE_ID;_PageZoneId=7;_FieldLibraryId=HRMR_LIBRARY_ID;_FieldId=701;_FieldType=OSS_PAGE_ZONE_FIELD_TYPE_CUSTOM_TEXT;_FieldRequired=2;_FieldUnique=2;_FieldHAlign=0»
+
+      «LET _FieldName="«WRITEKEY HRMR_ADD_COLLAB»"»
+      «INCLUDE _SystemFieldId=«#SQLLIBRARY#»:OSSPageZoneFieldRegister.phs;_PageLibraryId=HRMR_LIBRARY_ID;_PageId=HRMR_CANDIDATE_PAGE_ID;_PageZoneId=7;_FieldLibraryId=HRMR_LIBRARY_ID;_FieldId=702;_FieldType=OSS_PAGE_ZONE_FIELD_TYPE_BUTTON;_FieldRequired=2;_FieldUnique=2;_FieldHAlign=0»
+
+    «ENDIF»
+
+    «INCLUDE _b_status=«#SQLLIBRARY#»:OSSPageZoneUpdateClose.phs;PageZoneId=7;_FieldLibraryId=HRMR_LIBRARY_ID;_MerchantId=«_MerchantId»»
+
+
+    «VAR NEW _ZoneName="Zone notes"»
+
+
+    «INCLUDE _SystemZoneId=«#SQLLIBRARY#»:OSSPageZoneRegister.phs;_PageLibraryId=HRMR_LIBRARY_ID;_PageId=HRMR_CANDIDATE_PAGE_ID;_PageZoneId=8;_ZoneType=OSS_PAGE_ZONE_TYPE_NORMAL;_ZoneLayoutType=OSS_PAGE_ZONE_LAYOUT_TYPE_MENU_NORMAL;_ZoneLayoutStyle=2;_ZoneRequired=1;_ZoneDirection=0»
+
+    «INCLUDE _b_status=«#SQLLIBRARY#»:OSSPageZoneUpdateOpen.phs;PageZoneId=8;_FieldLibraryId=HRMR_LIBRARY_ID;_MerchantId=«_MerchantId»»
+
+    «IF _SystemZoneId>0»
+
+      «LET _FieldName="«WRITEKEY HRMR_GRADES»"»
+      «INCLUDE _SystemFieldId=«#SQLLIBRARY#»:OSSPageZoneFieldRegister.phs;_PageLibraryId=HRMR_LIBRARY_ID;_PageId=HRMR_CANDIDATE_PAGE_ID;_PageZoneId=11;_FieldLibraryId=HRMR_LIBRARY_ID;_FieldId=801;_FieldType=OSS_PAGE_ZONE_FIELD_TYPE_INPUT_TEXT;_FieldRequired=2;_FieldUnique=2;_FieldHAlign=0»
+
+    «ENDIF»
+
+    «INCLUDE _b_status=«#SQLLIBRARY#»:OSSPageZoneUpdateClose.phs;PageZoneId=8;_FieldLibraryId=HRMR_LIBRARY_ID;_MerchantId=«_MerchantId»»
+
+
+    «VAR NEW _ZoneName="Zone historique"»
+
+
+    «INCLUDE _SystemZoneId=«#SQLLIBRARY#»:OSSPageZoneRegister.phs;_PageZoneId=9;_PageLibraryId=HRMR_LIBRARY_ID;_PageId=HRMR_CANDIDATE_PAGE_ID;_ZoneType=OSS_PAGE_ZONE_TYPE_NORMAL;_ZoneLayoutType=OSS_PAGE_ZONE_LAYOUT_TYPE_CUSTOM;_ZoneRequired=OSS_PAGE_ZONE_PREF_REQUIRED_YES;_ZoneDirection=OSS_PAGE_ZONE_PREF_DIRECTION_HORIZONTAL»
+
+    «IF _SystemZoneId>0»
+    «ELSE»
+      «LET _b_status=0»
+      «INCLUDE «#SQLLIBRARY#»:ProcDebug.phs#ErrorLog;_err_message="Zone 9 creation error";_err_file="ProcPageTheme_helpdesk_default.phs#ModuleInit";_err_number="0x0010";_bForce=1»
+    «ENDIF»
+
+
+    «VAR NEW _ZoneName="Zone button"»
+
+
+    «INCLUDE _SystemZoneId=«#SQLLIBRARY#»:OSSPageZoneRegister.phs;_PageLibraryId=HRMR_LIBRARY_ID;_PageId=HRMR_CANDIDATE_PAGE_ID;_PageZoneId=10;_ZoneType=OSS_PAGE_ZONE_TYPE_NORMAL;_ZoneLayoutType=OSS_PAGE_ZONE_LAYOUT_TYPE_MENU_NORMAL;_ZoneLayoutStyle=2;_ZoneRequired=1;_ZoneDirection=1»
+
+    «INCLUDE _b_status=«#SQLLIBRARY#»:OSSPageZoneUpdateOpen.phs;PageZoneId=10;_FieldLibraryId=HRMR_LIBRARY_ID;_MerchantId=«_MerchantId»»
+
+    «IF _SystemZoneId>0»
+
+      «LET _FieldName="«WRITEKEY HRMR_MODIFY»"»
+      «INCLUDE _SystemFieldId=«#SQLLIBRARY#»:OSSPageZoneFieldRegister.phs;_PageLibraryId=HRMR_LIBRARY_ID;_PageId=HRMR_CANDIDATE_PAGE_ID;_PageZoneId=10;_FieldLibraryId=HRMR_LIBRARY_ID;_FieldId=1001;_FieldType=OSS_PAGE_ZONE_FIELD_TYPE_BUTTON;_FieldRequired=2;_FieldUnique=2;_FieldHAlign=0»
+
+      «LET _FieldName="«WRITEKEY HRMR_DELETE»"»
+      «INCLUDE _SystemFieldId=«#SQLLIBRARY#»:OSSPageZoneFieldRegister.phs;_PageLibraryId=HRMR_LIBRARY_ID;_PageId=HRMR_CANDIDATE_PAGE_ID;_PageZoneId=10;_FieldLibraryId=HRMR_LIBRARY_ID;_FieldId=1002;_FieldType=OSS_PAGE_ZONE_FIELD_TYPE_BUTTON;_FieldRequired=2;_FieldUnique=2;_FieldHAlign=0»
+
+      «LET _FieldName="«WRITEKEY HRMR_EXPORT»"»
+      «INCLUDE _SystemFieldId=«#SQLLIBRARY#»:OSSPageZoneFieldRegister.phs;_PageLibraryId=HRMR_LIBRARY_ID;_PageId=HRMR_CANDIDATE_PAGE_ID;_PageZoneId=10;_FieldLibraryId=HRMR_LIBRARY_ID;_FieldId=1003;_FieldType=OSS_PAGE_ZONE_FIELD_TYPE_BUTTON;_FieldRequired=2;_FieldUnique=2;_FieldHAlign=0»
+
+      «LET _FieldName="«WRITEKEY HRMR_BACK»"»
+      «INCLUDE _SystemFieldId=«#SQLLIBRARY#»:OSSPageZoneFieldRegister.phs;_PageLibraryId=HRMR_LIBRARY_ID;_PageId=HRMR_CANDIDATE_PAGE_ID;_PageZoneId=10;_FieldLibraryId=HRMR_LIBRARY_ID;_FieldId=1004;_FieldType=OSS_PAGE_ZONE_FIELD_TYPE_BUTTON;_FieldRequired=2;_FieldUnique=2;_FieldHAlign=0»
+
+    «ENDIF»
+
+    «INCLUDE _b_status=«#SQLLIBRARY#»:OSSPageZoneUpdateClose.phs;PageZoneId=10;_FieldLibraryId=HRMR_LIBRARY_ID;_MerchantId=«_MerchantId»»
+
+
+    «LET _ZoneName="Zone container top"»
+
+
+    «INCLUDE _SystemZoneId=«#SQLLIBRARY#»:OSSPageZoneRegister.phs;_PageZoneId=11;_ZoneType=1;_ZoneLayoutType=1;_ZoneMaxZoneColumns=2;_ZoneRequired=1;_ZoneDirection=0;_ZoneUnique=0»
+    «IF _SystemZoneId>0»
+      «INCLUDE _b_status=«#SQLLIBRARY#»:OSSPageZoneUpdateOpen.phs;_PageZoneId=11;_FieldLibraryId=_PageLibraryId;_MerchantId=«_MerchantId»»
+      «IF _b_status==1»
+        «INCLUDE _b_status=«#SQLLIBRARY#»:OSSPageZoneUpdateClose.phs;_PageZoneId=11;_FieldLibraryId=_PageLibraryId;_MerchantId=«_MerchantId»»
+        «IF _b_status==0»
+          «INCLUDE «#SQLLIBRARY#»:ProcDebug.phs#ErrorLog;_err_message="OSSPageZoneUpdateClose 11 return false";_err_file="ProcPageThemeOrderManage.phs#ModuleThemeInit";_err_number="3x0103";_bForce=1»
+        «ENDIF»
+      «ENDIF»
+    «ELSE»
+      «LET _b_status=0»
+      «INCLUDE «#SQLLIBRARY#»:ProcDebug.phs#ErrorLog;_err_message="Zone 11 creation false";_err_file="HRMR_CANDIDATE_model.phs#ModuleInit";_err_number="3x0104";_bForce=1»
+    «ENDIF»
+
+
+    «LET _ZoneName="Zone container middle"»
+
+
+    «INCLUDE _SystemZoneId=«#SQLLIBRARY#»:OSSPageZoneRegister.phs;_PageZoneId=12;_ZoneType=1;_ZoneLayoutType=1;_ZoneMaxZoneColumns=2;_ZoneRequired=1;_ZoneDirection=0;_ZoneUnique=0»
+    «IF _SystemZoneId>0»
+      «INCLUDE _b_status=«#SQLLIBRARY#»:OSSPageZoneUpdateOpen.phs;_PageZoneId=12;_FieldLibraryId=_PageLibraryId;_MerchantId=«_MerchantId»»
+      «IF _b_status==1»
+        «INCLUDE _b_status=«#SQLLIBRARY#»:OSSPageZoneUpdateClose.phs;_PageZoneId=12;_FieldLibraryId=_PageLibraryId;_MerchantId=«_MerchantId»»
+        «IF _b_status==0»
+          «INCLUDE «#SQLLIBRARY#»:ProcDebug.phs#ErrorLog;_err_message="OSSPageZoneUpdateClose 12 return false";_err_file="ProcPageThemeOrderManage.phs#ModuleThemeInit";_err_number="3x0103";_bForce=1»
+        «ENDIF»
+      «ENDIF»
+    «ELSE»
+      «LET _b_status=0»
+      «INCLUDE «#SQLLIBRARY#»:ProcDebug.phs#ErrorLog;_err_message="Zone 12 creation false";_err_file="HRMR_CANDIDATE_model.phs#ModuleInit";_err_number="3x0104";_bForce=1»
+    «ENDIF»
+
+
+    «LET _ZoneName="Zone container bottom"»
+
+
+    «INCLUDE _SystemZoneId=«#SQLLIBRARY#»:OSSPageZoneRegister.phs;_PageZoneId=13;_ZoneType=1;_ZoneLayoutType=1;_ZoneMaxZoneColumns=2;_ZoneRequired=1;_ZoneDirection=0;_ZoneUnique=0»
+    «IF _SystemZoneId>0»
+      «INCLUDE _b_status=«#SQLLIBRARY#»:OSSPageZoneUpdateOpen.phs;_PageZoneId=13;_FieldLibraryId=_PageLibraryId;_MerchantId=«_MerchantId»»
+      «IF _b_status==1»
+        «INCLUDE _b_status=«#SQLLIBRARY#»:OSSPageZoneUpdateClose.phs;_PageZoneId=13;_FieldLibraryId=_PageLibraryId;_MerchantId=«_MerchantId»»
+        «IF _b_status==0»
+          «INCLUDE «#SQLLIBRARY#»:ProcDebug.phs#ErrorLog;_err_message="OSSPageZoneUpdateClose 13 return false";_err_file="ProcPageThemeOrderManage.phs#ModuleThemeInit";_err_number="3x0103";_bForce=1»
+        «ENDIF»
+      «ENDIF»
+    «ELSE»
+      «LET _b_status=0»
+      «INCLUDE «#SQLLIBRARY#»:ProcDebug.phs#ErrorLog;_err_message="Zone 13 creation false";_err_file="HRMR_CANDIDATE_model.phs#ModuleInit";_err_number="3x0104";_bForce=1»
+    «ENDIF»
+
+    «INCLUDE _b_status=«#SQLLIBRARY#»:OSSPageUpdateClose.phs»
+«ENDIF»
+
+«RETURN _b_status»
+«/PROC»
+
+«PROC RegisterDefaultThemes»
+
+  «VAR NEW _MyLibraryId = HRMR_LIBRARY_ID »
+  «VAR NEW [object]_objZoneInfo»
+
+  «VAR NEW [object]_objFieldInfoInfoForm»
+  «VAR NEW [object]_objFieldInfoInfo»
+  «VAR NEW [object]_objFieldInfoContact»
+  «VAR NEW [object]_objFieldInfoJob»
+  «VAR NEW [object]_objFieldInfoRemark»
+  «VAR NEW [object]_objFieldInfoDoc»
+  «VAR NEW [object]_objFieldInfoGrade»
+  «VAR NEW [object]_objFieldInfoCollab»
+
+  «VAR NEW [object]_objSubZoneInfoInfoForm»
+  «VAR NEW [object]_objSubZoneInfoInfo»
+  «VAR NEW [object]_objSubZoneInfoContact»
+  «VAR NEW [object]_objSubZoneInfoJob»
+  «VAR NEW [object]_objSubZoneInfoRemark»
+  «VAR NEW [object]_objSubZoneInfoDoc»
+  «VAR NEW [object]_objSubZoneInfoGrade»
+  «VAR NEW [object]_objSubZoneInfoCollab»
+
+  «VAR NEW _b_status = 1»
+  «VAR NEW _FieldLibraryId = HRMR_LIBRARY_ID »
+  «IF @toi(_PageLibraryId)==HRMR_LIBRARY_ID »
+      «IF @toi(_PageId)== HRMR_CANDIDATE_PAGE_ID »
+
+
+          «IF _b_status ==1 »
+              «INCLUDE _b_status = HRMR:HRMR_CANDIDATE_model.phs#RegisterThemePagesZone_11 »
+          «ENDIF»
+          «IF _b_status ==1 »
+              «INCLUDE _b_status = HRMR:HRMR_CANDIDATE_model.phs#RegisterThemePagesZone_12 »
+          «ENDIF»
+          «IF _b_status ==1 »
+              «INCLUDE _b_status = HRMR:HRMR_CANDIDATE_model.phs#RegisterThemePagesZone_13 »
+          «ENDIF»
+          «IF _b_status ==1 »
+              «INCLUDE _b_status = HRMR:HRMR_CANDIDATE_model.phs#RegisterThemePagesZone_1 »
+          «ENDIF»
+          «IF _b_status ==1 »
+              «INCLUDE _b_status = HRMR:HRMR_CANDIDATE_model.phs#RegisterThemePagesZone_2 »
+          «ENDIF»
+          «IF _b_status ==1 »
+              «INCLUDE _b_status = HRMR:HRMR_CANDIDATE_model.phs#RegisterThemePagesZone_3 »
+          «ENDIF»
+          «IF _b_status ==1 »
+              «INCLUDE _b_status = HRMR:HRMR_CANDIDATE_model.phs#RegisterThemePagesZone_4 »
+          «ENDIF»
+          «IF _b_status ==1 »
+              «INCLUDE _b_status = HRMR:HRMR_CANDIDATE_model.phs#RegisterThemePagesZone_5 »
+          «ENDIF»
+          «IF _b_status ==1 »
+              «INCLUDE _b_status = HRMR:HRMR_CANDIDATE_model.phs#RegisterThemePagesZone_6 »
+          «ENDIF»
+          «IF _b_status ==1 »
+              «INCLUDE _b_status = HRMR:HRMR_CANDIDATE_model.phs#RegisterThemePagesZone_7 »
+          «ENDIF»
+          «IF _b_status ==1 »
+              «INCLUDE _b_status = HRMR:HRMR_CANDIDATE_model.phs#RegisterThemePagesZone_8 »
+          «ENDIF»
+          «IF _b_status ==1 »
+              «INCLUDE _b_status = HRMR:HRMR_CANDIDATE_model.phs#RegisterThemePagesZone_9 »
+          «ENDIF»
+          «IF _b_status ==1 »
+              «INCLUDE _b_status = HRMR:HRMR_CANDIDATE_model.phs#RegisterThemePagesZone_10 »
+          «ENDIF»
+
+      «ENDIF»
+  «ENDIF»
+  «RETURN _b_status»
+«/PROC»
+
+«PROC RegisterThemePagesZone_11»
+  «VAR NEW _FieldLibraryId = HRMR_LIBRARY_ID »
+  «VAR NEW _MyLibraryId = HRMR_LIBRARY_ID »
+  «VAR NEW _FieldVisible = 1»
+  «VAR NEW _PageZoneId = 11»
+  «VAR NEW _b_status = 1»
+  «VAR NEW _SystemZoneId = 0 »
+  «VAR NEW _ZoneName=""»
+  «VAR NEW _ZoneLabel = "" »
+  «LET _ZoneLabel="container top"»
+
+  «INCLUDE _b_status=«#SQLLIBRARY#»:OSSThemePageZoneRegister.phs;_ZoneColumns=2;_ZoneVisible=1;_pZoneObject=&_objZoneInfo»
+
+  «IF _b_status==1»
+    «INCLUDE _b_status=«#SQLLIBRARY#»:OSSThemePageZoneUpdateOpen.phs;_MerchantId=_MerchantId»
+
+    «VAR NEW _FieldColumn=1»
+    «INCLUDE «#SQLLIBRARY#»:OSSThemePageZoneFieldRegister.phs;_PageThemeZoneId=_objZoneInfo.idThemeZone;_FieldId=-1;_FieldType=102;_FieldStyleContainerOpen=1;_pFieldObject=&_objFieldInfoInfoForm»
+
+    «LET _FieldColumn=1»
+    «INCLUDE «#SQLLIBRARY#»:OSSThemePageZoneFieldRegister.phs;_PageThemeZoneId=_objZoneInfo.idThemeZone;_FieldId=-1;_FieldType=102;_FieldStyleContainerOpen=1;_pFieldObject=&_objFieldInfoInfo»
+
+    «LET _FieldColumn=2»
+    «INCLUDE «#SQLLIBRARY#»:OSSThemePageZoneFieldRegister.phs;_PageThemeZoneId=_objZoneInfo.idThemeZone;_FieldId=-1;_FieldType=102;_FieldStyleContainerOpen=1;_pFieldObject=&_objFieldInfoContact»
+
+    «IF _b_status==1»
+      «INCLUDE _b_status=«#SQLLIBRARY#»:OSSThemePageZoneUpdateClose.phs;_MerchantId=_MerchantId»
+      «IF _b_status==0»
+        «INCLUDE «#SQLLIBRARY#»:ProcDebug.phs#ErrorLog;_err_message="OSSThemePageZoneUpdateClose 11 return false";_err_file="ProcPageThemeOrderManage.phs#ModuleThemeInit";_err_number="3x0201";_bForce=1»
+      «ENDIF»
+    «ENDIF»
+  «ENDIF»
+  «RETURN _b_status»
+«/PROC»
+
+«PROC RegisterThemePagesZone_12»
+  «VAR NEW _FieldLibraryId = HRMR_LIBRARY_ID »
+  «VAR NEW _MyLibraryId = HRMR_LIBRARY_ID »
+  «VAR NEW _FieldVisible = 1»
+  «VAR NEW _PageZoneId = 12»
+  «VAR NEW _b_status = 1»
+  «VAR NEW _SystemZoneId = 0 »
+  «VAR NEW _ZoneName=""»
+  «VAR NEW _ZoneLabel = "" »
+  «LET _ZoneLabel="container middle"»
+
+  «INCLUDE _b_status=«#SQLLIBRARY#»:OSSThemePageZoneRegister.phs;_ZoneColumns=2;_ZoneVisible=1;_pZoneObject=&_objZoneInfo»
+
+  «IF _b_status==1»
+    «INCLUDE _b_status=«#SQLLIBRARY#»:OSSThemePageZoneUpdateOpen.phs;_MerchantId=_MerchantId»
+
+    «VAR NEW _FieldColumn=1»
+    «INCLUDE «#SQLLIBRARY#»:OSSThemePageZoneFieldRegister.phs;_PageThemeZoneId=_objZoneInfo.idThemeZone;_FieldId=-1;_FieldType=102;_FieldStyleContainerOpen=1;_pFieldObject=&_objFieldInfoJob»
+
+    «LET _FieldColumn=2»
+    «INCLUDE «#SQLLIBRARY#»:OSSThemePageZoneFieldRegister.phs;_PageThemeZoneId=_objZoneInfo.idThemeZone;_FieldId=-1;_FieldType=102;_FieldStyleContainerOpen=1;_pFieldObject=&_objFieldInfoRemark»
+
+    «IF _b_status==1»
+      «INCLUDE _b_status=«#SQLLIBRARY#»:OSSThemePageZoneUpdateClose.phs;_MerchantId=_MerchantId»
+      «IF _b_status==0»
+        «INCLUDE «#SQLLIBRARY#»:ProcDebug.phs#ErrorLog;_err_message="OSSThemePageZoneUpdateClose 12 return false";_err_file="ProcPageThemeOrderManage.phs#ModuleThemeInit";_err_number="3x0201";_bForce=1»
+      «ENDIF»
+    «ENDIF»
+  «ENDIF»
+  «RETURN _b_status»
+«/PROC»
+
+«PROC RegisterThemePagesZone_13»
+  «VAR NEW _FieldLibraryId = HRMR_LIBRARY_ID »
+  «VAR NEW _MyLibraryId = HRMR_LIBRARY_ID »
+  «VAR NEW _FieldVisible = 1»
+  «VAR NEW _PageZoneId = 13»
+  «VAR NEW _b_status = 1»
+  «VAR NEW _SystemZoneId = 0 »
+  «VAR NEW _ZoneName=""»
+  «VAR NEW _ZoneLabel = "" »
+  «LET _ZoneLabel="container bottom"»
+
+  «INCLUDE _b_status=«#SQLLIBRARY#»:OSSThemePageZoneRegister.phs;_ZoneColumns=2;_ZoneVisible=1;_pZoneObject=&_objZoneInfo»
+
+  «IF _b_status==1»
+    «INCLUDE _b_status=«#SQLLIBRARY#»:OSSThemePageZoneUpdateOpen.phs;_MerchantId=_MerchantId»
+
+    «VAR NEW _FieldColumn=1»
+    «INCLUDE «#SQLLIBRARY#»:OSSThemePageZoneFieldRegister.phs;_PageThemeZoneId=_objZoneInfo.idThemeZone;_FieldId=-1;_FieldType=102;_FieldStyleContainerOpen=1;_pFieldObject=&_objFieldInfoDoc»
+
+    «LET _FieldColumn=2»
+    «INCLUDE «#SQLLIBRARY#»:OSSThemePageZoneFieldRegister.phs;_PageThemeZoneId=_objZoneInfo.idThemeZone;_FieldId=-1;_FieldType=102;_FieldStyleContainerOpen=1;_pFieldObject=&_objFieldInfoCollab»
+
+    «LET _FieldColumn=3»
+    «INCLUDE «#SQLLIBRARY#»:OSSThemePageZoneFieldRegister.phs;_PageThemeZoneId=_objZoneInfo.idThemeZone;_FieldId=-1;_FieldType=102;_FieldStyleContainerOpen=1;_pFieldObject=&_objFieldInfoGrade»
+
+    «IF _b_status==1»
+      «INCLUDE _b_status=«#SQLLIBRARY#»:OSSThemePageZoneUpdateClose.phs;_MerchantId=_MerchantId»
+      «IF _b_status==0»
+        «INCLUDE «#SQLLIBRARY#»:ProcDebug.phs#ErrorLog;_err_message="OSSThemePageZoneUpdateClose 13 return false";_err_file="ProcPageThemeOrderManage.phs#ModuleThemeInit";_err_number="3x0201";_bForce=1»
+      «ENDIF»
+    «ENDIF»
+  «ENDIF»
+  «RETURN _b_status»
+«/PROC»
+
+«PROC RegisterThemePagesZone_1»
+  «VAR NEW _FieldLibraryId = HRMR_LIBRARY_ID »
+  «VAR NEW _MyLibraryId = HRMR_LIBRARY_ID »
+  «VAR NEW _FieldVisible = 1»
+  «VAR NEW _PageZoneId = 1»
+  «VAR NEW _ZoneName=""»
+  «VAR NEW _b_status = 1»
+  «VAR NEW _SystemZoneId = 0 »
+  «VAR NEW _ZoneLabel = "«WRITEKEY HRMR_INFO» form" »
+
+  «INCLUDE _b_status=«#SQLLIBRARY#»:OSSThemePageZoneRegister.phs;_ZoneColumns=1;_ZoneVisible=1;_ParentThemeZoneId=_objZoneInfo.idThemeZone;_ZoneContainerId=_objFieldInfoInfoForm.idThemeField;_pZoneObject=&_objSubZoneInfoInfoForm;_ZoneStyleTitle=OSS_PAGE_ZONE_STYLE_TITLE_NONE;_ZoneStyleHeader=OSS_PAGE_ZONE_STYLE_HEADER_NONE; »
+
+  «IF _b_status==0»
+    «INCLUDE «#SQLLIBRARY#»:ProcDebug.phs#ErrorLog;_err_message="cannot register Zone 1 ";_err_file="HRMR_CANDIDATE_model.phs#RegisterThemePagesZone_1";_err_number="0x0001";_bForce=1»
+  «ELSE»
+    «INCLUDE _b_status=«#SQLLIBRARY#»:OSSThemePageZoneUpdateOpen.phs»
+    «IF _b_status == 0»
+      «INCLUDE «#SQLLIBRARY#»:ProcDebug.phs#ErrorLog;_err_message="Zone 1 OSSThemePageZoneUpdateOpen failed";_err_file="HRMR_CANDIDATE_model.phs#RegisterThemePagesZone_1";_err_number="0x0002";_bForce=1»
+    «ELSE»
+      «VAR NEW _FieldColumn=1»
+      «INCLUDE «#SQLLIBRARY#»:OSSThemePageZoneFieldRegister.phs;_FieldId=101;_FieldOrder=1»
+      «INCLUDE «#SQLLIBRARY#»:OSSThemePageZoneFieldRegister.phs;_FieldId=102;_FieldOrder=2»
+
+      «INCLUDE «#SQLLIBRARY#»:OSSThemePageZoneFieldRegister.phs;_FieldId=103;_FieldOrder=3»
+
+      «INCLUDE «#SQLLIBRARY#»:OSSThemePageZoneFieldRegister.phs;_FieldId=104;_FieldOrder=4»
+
+      «INCLUDE _b_status=«#SQLLIBRARY#»:OSSThemePageZoneUpdateClose.phs»
+
+      «IF _b_status == 0»
+        «INCLUDE «#SQLLIBRARY#»:ProcDebug.phs#ErrorLog;_err_message="Zone 1 OSSThemePageZoneUpdateClose failed";_err_file="HRMR_CANDIDATE_model.phs#RegisterThemePagesZone_1";_err_number="0x0003";_bForce=1»
+      «ENDIF»
+    «ENDIF»
+  «ENDIF»
+  «RETURN _b_status»
+«/PROC»
+
+«PROC RegisterThemePagesZone_2»
+  «VAR NEW _FieldLibraryId = HRMR_LIBRARY_ID »
+  «VAR NEW _MyLibraryId = HRMR_LIBRARY_ID »
+  «VAR NEW _FieldVisible = 1»
+  «VAR NEW _PageZoneId = 2»
+  «VAR NEW _ZoneName=""»
+  «VAR NEW _b_status = 1»
+  «VAR NEW _SystemZoneId = 0 »
+  «VAR NEW _ZoneLabel = "«WRITEKEY HRMR_INFO»" »
+
+«INCLUDE _b_status=«#SQLLIBRARY#»:OSSThemePageZoneRegister.phs;_ZoneColumns=1;_ZoneVisible=1;_ParentThemeZoneId=_objZoneInfo.idThemeZone;_ZoneContainerId=_objFieldInfoInfo.idThemeField;_pZoneObject=&_objSubZoneInfoInfo;_ZoneStyleTitle=OSS_PAGE_ZONE_STYLE_TITLE_NONE;_ZoneStyleHeader=OSS_PAGE_ZONE_STYLE_HEADER_NONE; »
+
+  «IF _b_status==0»
+    «INCLUDE «#SQLLIBRARY#»:ProcDebug.phs#ErrorLog;_err_message="cannot register Zone 2 ";_err_file="HRMR_CANDIDATE_model.phs#RegisterThemePagesZone_2";_err_number="0x0001";_bForce=1»
+  «ELSE»
+    «INCLUDE _b_status=«#SQLLIBRARY#»:OSSThemePageZoneUpdateOpen.phs»
+
+    «IF _b_status == 0»
+      «INCLUDE «#SQLLIBRARY#»:ProcDebug.phs#ErrorLog;_err_message="Zone 2 OSSThemePageZoneUpdateOpen failed";_err_file="HRMR_CANDIDATE_model.phs#RegisterThemePagesZone_2";_err_number="0x0002";_bForce=1»
+    «ELSE»
+      «VAR NEW _FieldColumn=1»
+      «INCLUDE «#SQLLIBRARY#»:OSSThemePageZoneFieldRegister.phs;_FieldId=201;_FieldOrder=1»
+
+      «INCLUDE «#SQLLIBRARY#»:OSSThemePageZoneFieldRegister.phs;_FieldId=202;_FieldOrder=2»
+
+      «INCLUDE «#SQLLIBRARY#»:OSSThemePageZoneFieldRegister.phs;_FieldId=203;_FieldOrder=3»
+
+      «INCLUDE _b_status=«#SQLLIBRARY#»:OSSThemePageZoneUpdateClose.phs»
+
+      «IF _b_status == 0»
+        «INCLUDE «#SQLLIBRARY#»:ProcDebug.phs#ErrorLog;_err_message="Zone 2 OSSThemePageZoneUpdateClose failed";_err_file="HRMR_CANDIDATE_model.phs#RegisterThemePagesZone_2";_err_number="0x0003";_bForce=1»
+      «ENDIF»
+    «ENDIF»
+  «ENDIF»
+  «RETURN _b_status»
+«/PROC»
+
+«PROC RegisterThemePagesZone_3»
+  «VAR NEW _FieldLibraryId = HRMR_LIBRARY_ID »
+  «VAR NEW _FieldVisible = 1»
+  «VAR NEW _PageZoneId = 3»
+  «VAR NEW _ZoneName=""»
+  «VAR NEW _b_status = 1»
+  «VAR NEW _SystemZoneId = 0 »
+  «VAR NEW _ZoneLabel = "«WRITEKEY HRMR_CONTACT»" »
+
+  «INCLUDE _b_status=«#SQLLIBRARY#»:OSSThemePageZoneRegister.phs;_ParentThemeZoneId=_objZoneInfo.idThemeZone;_ZoneContainerId=_objFieldInfoContact.idThemeField;_ZoneColumns=1;_ZoneVisible=1;_pZoneObject=&_objSubZoneInfoContact;_ZoneStyleTitle=OSS_PAGE_ZONE_STYLE_TITLE_NORMAL;_ZoneStyleHeader=OSS_PAGE_ZONE_STYLE_HEADER_NORMAL»
+  «IF _b_status==0»
+    «INCLUDE «#SQLLIBRARY#»:ProcDebug.phs#ErrorLog;_err_message="cannot register Zone 3 ";_err_file="HRMR_CANDIDATE_model.phs#RegisterThemePagesZone_3";_err_number="0x0001";_bForce=1»
+  «ELSE»
+    «INCLUDE _b_status=«#SQLLIBRARY#»:OSSThemePageZoneUpdateOpen.phs»
+    «IF _b_status == 0»
+      «INCLUDE «#SQLLIBRARY#»:ProcDebug.phs#ErrorLog;_err_message="Zone 3 OSSThemePageZoneUpdateOpen failed";_err_file="HRMR_CANDIDATE_model.phs#RegisterThemePagesZone_3";_err_number="0x0002";_bForce=1»
+    «ELSE»
+      «VAR NEW _FieldColumn=1»
+      «INCLUDE «#SQLLIBRARY#»:OSSThemePageZoneFieldRegister.phs;_FieldId=301;_FieldOrder=1»
+      «INCLUDE «#SQLLIBRARY#»:OSSThemePageZoneFieldRegister.phs;_FieldId=302;_FieldOrder=2»
+      «INCLUDE «#SQLLIBRARY#»:OSSThemePageZoneFieldRegister.phs;_FieldId=303;_FieldOrder=3»
+
+      «INCLUDE _b_status=«#SQLLIBRARY#»:OSSThemePageZoneUpdateClose.phs»
+
+      «IF _b_status == 0»
+          «INCLUDE «#SQLLIBRARY#»:ProcDebug.phs#ErrorLog;_err_message="Zone 3 OSSThemePageZoneUpdateClose failed";_err_file="HRMR_CANDIDATE_model.phs#RegisterThemePagesZone_3";_err_number="0x0003";_bForce=1»
+      «ENDIF»
+    «ENDIF»
+  «ENDIF»
+  «RETURN _b_status»
+«/PROC»
+
+«PROC RegisterThemePagesZone_4»
+  «VAR NEW _FieldLibraryId = HRMR_LIBRARY_ID »
+  «VAR NEW _FieldVisible = 1»
+  «VAR NEW _PageZoneId = 4»
+  «VAR NEW _ZoneName=""»
+  «VAR NEW _b_status = 1»
+  «VAR NEW _SystemZoneId = 0 »
+  «VAR NEW _ZoneLabel = "«WRITEKEY HRMR_JOB»" »
+
+  «INCLUDE _b_status=«#SQLLIBRARY#»:OSSThemePageZoneRegister.phs;_ParentThemeZoneId=_objZoneInfo.idThemeZone;_ZoneContainerId=_objFieldInfoJob.idThemeField;_ZoneColumns=1;_ZoneVisible=1;_pZoneObject=&_objSubZoneInfoJob;_ZoneStyleTitle=OSS_PAGE_ZONE_STYLE_TITLE_NORMAL;_ZoneStyleHeader=OSS_PAGE_ZONE_STYLE_HEADER_NORMAL»
+  «IF _b_status==0»
+    «INCLUDE «#SQLLIBRARY#»:ProcDebug.phs#ErrorLog;_err_message="cannot register Zone 4";_err_file="HRMR_CANDIDATE_model.phs#RegisterThemePagesZone_4";_err_number="0x0001";_bForce=1»
+  «ELSE»
+    «INCLUDE _b_status=«#SQLLIBRARY#»:OSSThemePageZoneUpdateOpen.phs»
+    «IF _b_status == 0»
+      «INCLUDE «#SQLLIBRARY#»:ProcDebug.phs#ErrorLog;_err_message="Zone 4 OSSThemePageZoneUpdateOpen failed";_err_file="HRMR_CANDIDATE_model.phs#RegisterThemePagesZone_4";_err_number="0x0002";_bForce=1»
+    «ELSE»
+      «VAR NEW _FieldColumn=1»
+      «INCLUDE «#SQLLIBRARY#»:OSSThemePageZoneFieldRegister.phs;_FieldId=401;_FieldOrder=1»
+
+      «INCLUDE _b_status=«#SQLLIBRARY#»:OSSThemePageZoneUpdateClose.phs»
+
+      «IF _b_status == 0»
+          «INCLUDE «#SQLLIBRARY#»:ProcDebug.phs#ErrorLog;_err_message="Zone 4 OSSThemePageZoneUpdateClose failed";_err_file="HRMR_CANDIDATE_model.phs#RegisterThemePagesZone_4";_err_number="0x0003";_bForce=1»
+      «ENDIF»
+    «ENDIF»
+  «ENDIF»
+  «RETURN _b_status»
+«/PROC»
+
+«PROC RegisterThemePagesZone_5»
+  «VAR NEW _FieldLibraryId = HRMR_LIBRARY_ID »
+  «VAR NEW _FieldVisible = 1»
+  «VAR NEW _PageZoneId = 5»
+  «VAR NEW _ZoneName=""»
+  «VAR NEW _b_status = 1»
+  «VAR NEW _SystemZoneId = 0 »
+  «VAR NEW _ZoneLabel = "«WRITEKEY HRMR_REMARK»" »
+
+  «INCLUDE _b_status=«#SQLLIBRARY#»:OSSThemePageZoneRegister.phs;_ParentThemeZoneId=_objZoneInfo.idThemeZone;_ZoneContainerId=_objFieldInfoRemark.idThemeField;_ZoneColumns=1;_ZoneVisible=1;_pZoneObject=&_objSubZoneInfoRemark;_ZoneStyleTitle=OSS_PAGE_ZONE_STYLE_TITLE_NORMAL;_ZoneStyleHeader=OSS_PAGE_ZONE_STYLE_HEADER_NORMAL»
+  «IF _b_status==0»
+    «INCLUDE «#SQLLIBRARY#»:ProcDebug.phs#ErrorLog;_err_message="cannot register Zone 5 ";_err_file="HRMR_CANDIDATE_model.phs#RegisterThemePagesZone_5";_err_number="0x0001";_bForce=1»
+  «ELSE»
+    «INCLUDE _b_status=«#SQLLIBRARY#»:OSSThemePageZoneUpdateOpen.phs»
+    «IF _b_status == 0»
+      «INCLUDE «#SQLLIBRARY#»:ProcDebug.phs#ErrorLog;_err_message="Zone 5 OSSThemePageZoneUpdateOpen failed";_err_file="HRMR_CANDIDATE_model.phs#RegisterThemePagesZone_5";_err_number="0x0002";_bForce=1»
+    «ELSE»
+      «VAR NEW _FieldColumn=1»
+      «INCLUDE «#SQLLIBRARY#»:OSSThemePageZoneFieldRegister.phs;_FieldId=501;_FieldOrder=1»
+
+      «INCLUDE _b_status=«#SQLLIBRARY#»:OSSThemePageZoneUpdateClose.phs»
+
+      «IF _b_status == 0»
+          «INCLUDE «#SQLLIBRARY#»:ProcDebug.phs#ErrorLog;_err_message="Zone 5 OSSThemePageZoneUpdateClose failed";_err_file="HRMR_CANDIDATE_model.phs#RegisterThemePagesZone_5";_err_number="0x0003";_bForce=1»
+      «ENDIF»
+    «ENDIF»
+  «ENDIF»
+  «RETURN _b_status»
+«/PROC»
+
+«PROC RegisterThemePagesZone_6»
+  «VAR NEW _FieldLibraryId = HRMR_LIBRARY_ID »
+  «VAR NEW _FieldVisible = 1»
+  «VAR NEW _PageZoneId = 6»
+  «VAR NEW _ZoneName=""»
+  «VAR NEW _b_status = 1»
+  «VAR NEW _SystemZoneId = 0 »
+  «VAR NEW _ZoneLabel = "«WRITEKEY HRMR_DOCUMENT»" »
+  «VAR NEW [object]stZoneInfo»
+
+  «INCLUDE _b_Status=«#SQLLIBRARY#»:OSSThemePageZoneRegister.phs;_ParentThemeZoneId=_objZoneInfo.idThemeZone;_ZoneContainerId=_objFieldInfoDoc.idThemeField;_ZoneColumns=1;_ZoneVisible=1;_pZoneObject=&_objSubZoneInfoDoc;_ZoneLayoutStyle=OSS_PAGE_ZONE_LAYOUT_TYPE_CUSTOM;_ZoneVisible=OSS_PAGE_ZONE_VISIBLE_YES;_pZoneObject=&stZoneInfo;_ZoneStyleDirection=OSS_PAGE_ZONE_STYLE_DIRECTION_HORIZONTAL;_ZoneStyleTitle=OSS_PAGE_ZONE_STYLE_TITLE_NORMAL;_ZoneStyleHeader=OSS_PAGE_ZONE_STYLE_HEADER_NORMAL»
+
+  «IF _b_status==0»
+    «INCLUDE «#SQLLIBRARY#»:ProcDebug.phs#ErrorLog;_err_message="cannot register Zone 6";_err_file="HRMR_CANDIDATE_model.phs#RegisterThemePagesZone_6";_err_number="0x0001";_bForce=1»
+  «ENDIF»
+  «RETURN _b_status»
+«/PROC»
+
+«PROC RegisterThemePagesZone_7»
+  «VAR NEW _FieldLibraryId = HRMR_LIBRARY_ID »
+  «VAR NEW _FieldVisible = 1»
+  «VAR NEW _PageZoneId = 7»
+  «VAR NEW _ZoneName=""»
+  «VAR NEW _b_status = 1»
+  «VAR NEW _SystemZoneId = 0 »
+  «VAR NEW _ZoneLabel = "«WRITEKEY HRMR_COLLAB»" »
+
+  «INCLUDE _b_status=«#SQLLIBRARY#»:OSSThemePageZoneRegister.phs;_ParentThemeZoneId=_objZoneInfo.idThemeZone;_ZoneContainerId=_objFieldInfoCollab.idThemeField;_ZoneColumns=1;_ZoneVisible=1;_pZoneObject=&_objSubZoneInfoCollab;_ZoneStyleTitle=OSS_PAGE_ZONE_STYLE_TITLE_NORMAL;_ZoneStyleHeader=OSS_PAGE_ZONE_STYLE_HEADER_NORMAL»
+  «IF _b_status==0»
+    «INCLUDE «#SQLLIBRARY#»:ProcDebug.phs#ErrorLog;_err_message="cannot register Zone 7 ";_err_file="HRMR_CANDIDATE_model.phs#RegisterThemePagesZone_7";_err_number="0x0001";_bForce=1»
+  «ELSE»
+    «INCLUDE _b_status=«#SQLLIBRARY#»:OSSThemePageZoneUpdateOpen.phs»
+    «IF _b_status == 0»
+      «INCLUDE «#SQLLIBRARY#»:ProcDebug.phs#ErrorLog;_err_message="Zone 7 OSSThemePageZoneUpdateOpen failed";_err_file="HRMR_CANDIDATE_model.phs#RegisterThemePagesZone_7";_err_number="0x0002";_bForce=1»
+    «ELSE»
+      «VAR NEW _FieldColumn=1»
+      «INCLUDE «#SQLLIBRARY#»:OSSThemePageZoneFieldRegister.phs;_FieldId=701;_FieldOrder=1»
+      «INCLUDE «#SQLLIBRARY#»:OSSThemePageZoneFieldRegister.phs;_FieldId=702;_FieldOrder=2»
+
+      «INCLUDE _b_status=«#SQLLIBRARY#»:OSSThemePageZoneUpdateClose.phs»
+
+      «IF _b_status == 0»
+          «INCLUDE «#SQLLIBRARY#»:ProcDebug.phs#ErrorLog;_err_message="Zone 7 OSSThemePageZoneUpdateClose failed";_err_file="HRMR_CANDIDATE_model.phs#RegisterThemePagesZone_7";_err_number="0x0003";_bForce=1»
+      «ENDIF»
+    «ENDIF»
+  «ENDIF»
+  «RETURN _b_status»
+«/PROC»
+
+«PROC RegisterThemePagesZone_8»
+  «VAR NEW _FieldLibraryId = HRMR_LIBRARY_ID »
+  «VAR NEW _FieldVisible = 1»
+  «VAR NEW _PageZoneId = 8»
+  «VAR NEW _ZoneName=""»
+  «VAR NEW _b_status = 1»
+  «VAR NEW _SystemZoneId = 0 »
+  «VAR NEW _ZoneLabel = "«WRITEKEY HRMR_GRADES»" »
+
+  «INCLUDE _b_status=«#SQLLIBRARY#»:OSSThemePageZoneRegister.phs;_ParentThemeZoneId=_objZoneInfo.idThemeZone;_ZoneContainerId=_objFieldInfoGrade.idThemeField;_ZoneColumns=1;_ZoneVisible=1;_pZoneObject=&_objSubZoneInfoGrade;_ZoneStyleTitle=OSS_PAGE_ZONE_STYLE_TITLE_NONE;_ZoneStyleHeader=OSS_PAGE_ZONE_STYLE_HEADER_NONE»
+  «IF _b_status==0»
+    «INCLUDE «#SQLLIBRARY#»:ProcDebug.phs#ErrorLog;_err_message="cannot register Zone 8 ";_err_file="HRMR_CANDIDATE_model.phs#RegisterThemePagesZone_8";_err_number="0x0001";_bForce=1»
+  «ELSE»
+    «INCLUDE _b_status=«#SQLLIBRARY#»:OSSThemePageZoneUpdateOpen.phs»
+    «IF _b_status == 0»
+      «INCLUDE «#SQLLIBRARY#»:ProcDebug.phs#ErrorLog;_err_message="Zone 8 OSSThemePageZoneUpdateOpen failed";_err_file="HRMR_CANDIDATE_model.phs#RegisterThemePagesZone_8";_err_number="0x0002";_bForce=1»
+    «ELSE»
+      «VAR NEW _FieldColumn=1»
+      «INCLUDE «#SQLLIBRARY#»:OSSThemePageZoneFieldRegister.phs;_FieldId=801;_FieldOrder=1»
+
+      «INCLUDE _b_status=«#SQLLIBRARY#»:OSSThemePageZoneUpdateClose.phs»
+
+      «IF _b_status == 0»
+          «INCLUDE «#SQLLIBRARY#»:ProcDebug.phs#ErrorLog;_err_message="Zone 8 OSSThemePageZoneUpdateClose failed";_err_file="HRMR_CANDIDATE_model.phs#RegisterThemePagesZone_8";_err_number="0x0003";_bForce=1»
+      «ENDIF»
+    «ENDIF»
+  «ENDIF»
+  «RETURN _b_status»
+«/PROC»
+
+«PROC RegisterThemePagesZone_9»
+  «VAR NEW _FieldLibraryId = HRMR_LIBRARY_ID »
+  «VAR NEW _FieldVisible = 1»
+  «VAR NEW _PageZoneId = 9»
+  «VAR NEW _ZoneName=""»
+  «VAR NEW _b_status = 1»
+  «VAR NEW _SystemZoneId = 0 »
+  «VAR NEW [object]_objZoneInfo»
+  «VAR NEW _ZoneLabel = "«WRITEKEY HRMR_HISTORY»" »
+  «VAR NEW [object]stZoneInfo»
+
+  «INCLUDE _b_Status=«#SQLLIBRARY#»:OSSThemePageZoneRegister.phs;_ZoneLayoutStyle=OSS_PAGE_ZONE_LAYOUT_TYPE_CUSTOM;_ZoneVisible=OSS_PAGE_ZONE_VISIBLE_YES;_pZoneObject=&stZoneInfo;_ZoneStyleDirection=OSS_PAGE_ZONE_STYLE_DIRECTION_HORIZONTAL;_ZoneStyleTitle=OSS_PAGE_ZONE_STYLE_TITLE_NORMAL;_ZoneStyleHeader=OSS_PAGE_ZONE_STYLE_HEADER_NORMAL;_ZoneColumns=1»
+
+  «IF _b_status==0»
+    «INCLUDE «#SQLLIBRARY#»:ProcDebug.phs#ErrorLog;_err_message="cannot register Zone 9 ";_err_file="HRMR_CANDIDATE_model.phs#RegisterThemePagesZone_9";_err_number="0x0001";_bForce=1»
+  «ENDIF»
+  «RETURN _b_status»
+«/PROC»
+
+«PROC RegisterThemePagesZone_10»
+  «VAR NEW _FieldLibraryId = HRMR_LIBRARY_ID »
+  «VAR NEW _FieldVisible = 1»
+  «VAR NEW _PageZoneId = 10»
+  «VAR NEW _ZoneName=""»
+  «VAR NEW _b_status = 1»
+  «VAR NEW _SystemZoneId = 0 »
+  «VAR NEW [object]_objZoneInfo»
+  «VAR NEW _ZoneLabel = "«WRITEKEY HRMR_MANAGE»" »
+
+  «INCLUDE _b_status=«#SQLLIBRARY#»:OSSThemePageZoneRegister.phs;_ZoneColumns=1;_ZoneVisible=1;_pZoneObject=&_objZoneInfo;_ZoneStyleTitle=OSS_PAGE_ZONE_STYLE_TITLE_NONE;_ZoneStyleHeader=OSS_PAGE_ZONE_STYLE_HEADER_NONE»
+  «IF _b_status==0»
+    «INCLUDE «#SQLLIBRARY#»:ProcDebug.phs#ErrorLog;_err_message="cannot register Zone 10";_err_file="HRMR_CANDIDATE_model.phs#RegisterThemePagesZone_10";_err_number="0x0001";_bForce=1»
+  «ELSE»
+    «INCLUDE _b_status=«#SQLLIBRARY#»:OSSThemePageZoneUpdateOpen.phs»
+    «IF _b_status == 0»
+      «INCLUDE «#SQLLIBRARY#»:ProcDebug.phs#ErrorLog;_err_message="Zone 10 OSSThemePageZoneUpdateOpen failed";_err_file="HRMR_CANDIDATE_model.phs#RegisterThemePagesZone_10";_err_number="0x0002";_bForce=1»
+    «ELSE»
+      «VAR NEW _FieldColumn=1»
+      «INCLUDE «#SQLLIBRARY#»:OSSThemePageZoneFieldRegister.phs;_FieldId=1001;_FieldOrder=1»
+      «INCLUDE «#SQLLIBRARY#»:OSSThemePageZoneFieldRegister.phs;_FieldId=1002;_FieldOrder=2»
+      «INCLUDE «#SQLLIBRARY#»:OSSThemePageZoneFieldRegister.phs;_FieldId=1003;_FieldOrder=3»
+      «INCLUDE «#SQLLIBRARY#»:OSSThemePageZoneFieldRegister.phs;_FieldId=1004;_FieldOrder=4»
+
+      «INCLUDE _b_status=«#SQLLIBRARY#»:OSSThemePageZoneUpdateClose.phs»
+
+      «IF _b_status == 0»
+          «INCLUDE «#SQLLIBRARY#»:ProcDebug.phs#ErrorLog;_err_message="Zone 10 OSSThemePageZoneUpdateClose failed";_err_file="HRMR_CANDIDATE_model.phs#RegisterThemePagesZone_10";_err_number="0x0003";_bForce=1»
+      «ENDIF»
+    «ENDIF»
+  «ENDIF»
+  «RETURN _b_status»
+«/PROC»
+
+«PROC CallbackZone»
+
+  «VAR NEW _Visible=_PageZoneVisible»
+  «IF _PageLibraryId==HRMR_LIBRARY_ID && _PageZoneId==1»
+      «INCLUDE _Visible = HRMR:HRMR_CANDIDATE_model.phs#CallbackZone_1»
+  «ELSEIF _PageLibraryId==HRMR_LIBRARY_ID && _PageZoneId==2»
+      «INCLUDE _Visible = HRMR:HRMR_CANDIDATE_model.phs#CallbackZone_2»
+  «ELSEIF _PageLibraryId==HRMR_LIBRARY_ID && _PageZoneId==3»
+      «INCLUDE _Visible = HRMR:HRMR_CANDIDATE_model.phs#CallbackZone_3»
+  «ELSEIF _PageLibraryId==HRMR_LIBRARY_ID && _PageZoneId==4»
+      «INCLUDE _Visible = HRMR:HRMR_CANDIDATE_model.phs#CallbackZone_4»
+  «ELSEIF _PageLibraryId==HRMR_LIBRARY_ID && _PageZoneId==5»
+      «INCLUDE _Visible = HRMR:HRMR_CANDIDATE_model.phs#CallbackZone_5»
+  «ELSEIF _PageLibraryId==HRMR_LIBRARY_ID && _PageZoneId==6»
+      «INCLUDE _Visible = HRMR:HRMR_CANDIDATE_model.phs#CallbackZone_6»
+  «ELSEIF _PageLibraryId==HRMR_LIBRARY_ID && _PageZoneId==7»
+      «INCLUDE _Visible = HRMR:HRMR_CANDIDATE_model.phs#CallbackZone_7»
+  «ELSEIF _PageLibraryId==HRMR_LIBRARY_ID && _PageZoneId==8»
+      «INCLUDE _Visible = HRMR:HRMR_CANDIDATE_model.phs#CallbackZone_8»
+  «ELSEIF _PageLibraryId==HRMR_LIBRARY_ID && _PageZoneId==9»
+      «INCLUDE _Visible = HRMR:HRMR_CANDIDATE_model.phs#CallbackZone_9»
+  «ELSEIF _PageLibraryId==HRMR_LIBRARY_ID && _PageZoneId==10»
+      «INCLUDE _Visible = HRMR:HRMR_CANDIDATE_model.phs#CallbackZone_10»
+  «ELSEIF _PageLibraryId==HRMR_LIBRARY_ID && _PageZoneId==11»
+      «INCLUDE _Visible = HRMR:HRMR_CANDIDATE_model.phs#CallbackZone_11»
+  «ELSEIF _PageLibraryId==HRMR_LIBRARY_ID && _PageZoneId==12»
+      «INCLUDE _Visible = HRMR:HRMR_CANDIDATE_model.phs#CallbackZone_12»
+  «ELSEIF _PageLibraryId==HRMR_LIBRARY_ID && _PageZoneId==13»
+      «INCLUDE _Visible = HRMR:HRMR_CANDIDATE_model.phs#CallbackZone_13»
+  «ENDIF»
+
+  «RETURN _Visible»
+«/PROC»
+
+
+«PROC CallbackZone_1»
+    «VAR NEW _Visible=_PageZoneVisible»
+
+    «IF @exists("_PageZoneComponent")==0»
+      «INCLUDE _Visible = «#SQLLIBRARY#»:ProcPageTheme.phs#ViewPageZone»
+    «ENDIF»
+
+    «RETURN _Visible»
+«/PROC»
+
+«PROC CallbackZone_2»
+  «VAR NEW _Visible=_PageZoneVisible»
+  «IF @exists("_PageZoneComponent")==0»
+    «INCLUDE _Visible = «#SQLLIBRARY#»:ProcPageTheme.phs#ViewPageZone»
+  «ENDIF»
+  «RETURN _Visible»
+«/PROC»
+
+«PROC CallbackZone_3»
+    «VAR NEW _Visible=_PageZoneVisible»
+    «IF @exists("_PageZoneComponent")==0»
+      «INCLUDE _Visible = «#SQLLIBRARY#»:ProcPageTheme.phs#ViewPageZone»
+    «ENDIF»
+
+    «RETURN _Visible»
+«/PROC»
+
+«PROC CallbackZone_4»
+    «VAR NEW _Visible=_PageZoneVisible»
+
+    «IF @exists("_PageZoneComponent")==0»
+      «INCLUDE _Visible = «#SQLLIBRARY#»:ProcPageTheme.phs#ViewPageZone»
+    «ENDIF»
+
+    «RETURN _Visible»
+«/PROC»
+
+«PROC CallbackZone_5»
+    «VAR NEW _Visible=_PageZoneVisible»
+
+    «IF @exists("_PageZoneComponent")==0»
+      «INCLUDE _Visible = «#SQLLIBRARY#»:ProcPageTheme.phs#ViewPageZone»
+    «ENDIF»
+
+    «RETURN _Visible»
+«/PROC»
+
+
+«PROC CallbackZone_6»
+    «VAR NEW _Visible=_PageZoneVisible»
+
+    «VAR NEW [object]_oDocuments»
+    «VAR NEW [array]_oDocuments.id»
+    «VAR NEW [array]_oDocuments.mailName»
+    «VAR NEW [array]_oDocuments.createDate»
+    «VAR NEW listId=""»
+    «VAR NEW index=0»
+
+    <style>
+    .drop_zone {
+      min-width: 100%;
+      max-width: 100%;
+      height: fit-content;
+      display: inline-block;
+      font-weight: 500;
+      font-size: 16px;
+      cursor: pointer;
+      color:  #8e8e8e;
+      background-color: #f9f9f9;
+      border: 2px dashed #8e8e8e;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      padding-left: 10px;
+    }
+    #candFiles {
+      max-width: 600px;
+      margin-top: 15px;
+      margin-left: -10px;
+      display: inline-flex;
+      overflow: auto;
+    }
+    #file_zone {
+      min-width: 100%;
+      max-width: 100%;
+      margin-top: 15px;
+      margin-left: -10px;
+      display: inline-flex;
+      overflow: auto;
+    }
+    .container {
+      display:flex;
+      flex-direction: column;
+      width: 230px;
+      margin-left: 10px;
+      padding-left: 0px;
+      margin-right: 0px;
+      padding-right: 0px;
+    }
+    .preview_title {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 183px;
+      border-style: solid;
+      border-color: #8e8e8e;
+      color: #8e8e8e;
+      background-color: white;
+      font-weight: 700;
+      border-width: 1px;
+      border-radius: 0px 0px 10px 10px;
+      padding-left: 10px;
+      «IF fct == "view"»
+        padding-right: 30px;
+      «ELSE»
+        padding-right: 20px;
+      «ENDIF»
+      font-size: 15px;
+      height: 25px;
+      padding-top: 3px;
+    }
+    #remove {
+      position: relative;
+      bottom: 22px;
+      margin-left: 160px;
+      color: #8e8e8e;
+    }
+    #download {
+      position: relative;
+      top: -22px;
+      margin-left: 158px;
+    }
+    .overlay {
+      opacity: 0.5;
+      border: 5px dashed #337ab7;
+    }
+    </style>
+
+    «IF @exists("_PageZoneComponent")==0»
+      «INCLUDE _Visible = «#SQLLIBRARY#»:ProcPageTheme.phs#ViewPageZone»
+    «ELSEIF _PageZoneComponent == OSS_PAGE_ZONE_COMPONENT_CONTENT»
+      «INCLUDE listId=Mail:MailDocumentList.phs;_MerchantId=«idMerchant»;_CallLibraryId=HRMR_LIBRARY_ID;_RefLibraryId=HRMR_LIBRARY_ID;_RefObjectTypeId=HRMR_CANDIDATE_ID;_RefObjectId=«_oCandidate.idCandidate»»
+      «IF listId <> ""»
+        «LET _oDocuments.id=@jsonfromstr("[«listId»]")»
+        «VAR NEW _MailName=""»
+        «VAR NEW _CreateDate=0»
+        «LET _oDocuments.mailName.iMaxSize = «_oDocuments.id.iSize»»
+        «LET _oDocuments.createDate.iMaxSize = «_oDocuments.id.iSize»»
+        «LET index = «_oDocuments.mailName.iMaxSize» - 1»
+
+        «IF fct=="modify"»
+          <div id="existingDocs">«WRITEKEY HRMR_EXIST_DOCS» <p style="display:inline" id="existingDocsCount">(««index» + 1»)</p> :</div>
+        «ENDIF»
+
+        <div id="candFiles">
+        «SQLREPEAT»
+          <div class="container">
+            «INCLUDE Mail:MailMailInfo.phs;_MerchantId=«idMerchant»;_MailId=«_oDocuments.id[«#SQLREPEAT#»]»»
+            «LET _oDocuments.mailName[«#SQLREPEAT#»] = _MailName»
+            «LET _oDocuments.createDate[«#SQLREPEAT#»] = _CreateDate»
+            «IF @strrnext("«_MailName»", 46) == "png" || @strrnext("«_MailName»", 46) == "jpg"»
+              <img style="vertical-align:unset" height="258px" width="183px" src="/Scripts/sql.exe?SqlDB=«SqlDB»&Sql=Mail:downloadMail.phs&xid=«xid»&_MerchantId=«idMerchant»&_MailId=«_oDocuments.id[«#SQLREPEAT#»]»&mode=2"></img>
+            «ELSE»
+              <iframe style="border: 1px solid #7d7d7d;border-bottom:0" id="«#SQLREPEAT#»" type="application/pdf" frameborder="0" height="258px" width="183px" src="/Scripts/sql.exe?SqlDB=«SqlDB»&Sql=Mail:downloadMail.phs&xid=«xid»&_MerchantId=«idMerchant»&_MailId=«_oDocuments.id[«#SQLREPEAT#»]»&mode=2&embedded=true"></iframe>
+            «ENDIF»
+
+            <div class="preview_title" style="cursor:pointer">
+              «_oDocuments.mailName[«#SQLREPEAT#»]»
+            </div>
+            «IF fct == "view"»
+              <span id="download" class="fa fa-download" onclick="downloadDoc(«_oDocuments.id[«#SQLREPEAT#»]»)"></span>
+            «ELSE»
+              «VAR NEW bEnabled = 1»
+              «INCLUDE bEnabled=Mail:MailCheckDelRights.phs»
+              «IF bEnabled == 0»
+                <span id="remove" class="fa fa-remove" existing="yes" idDoc="«_oDocuments.id[«#SQLREPEAT#»]»" style="margin-left:160px"></span>
+              «ENDIF»
+            «ENDIF»
+          </div>
+        «/SQLREPEAT 0; «index»»
+        </div>
+
+        <script>
+          var i = 0;
+          var title;
+          var clone;
+          document.querySelectorAll(".preview_title").forEach((doc) => {
+            doc.addEventListener("click", (e) => {
+              i = 1;
+              title = e.target;
+              clone = e.target.parentElement.cloneNode(true);
+              document.body.appendChild(clone);
+              $(clone).css({
+                top: 0,
+                left: 0,
+                position: "fixed",
+                width: "fit-content",
+                height: "fit-content",
+                "margin-left": "30%",
+                "margin-top": "5%",
+                "z-index": 10000
+              });
+              $(clone.children[1]).css("display", "none");
+              $(clone.children[2]).css("display", "none");
+              $(clone.children[0]).css({
+                width: "fit-content",
+                height: "fit-content"
+              });
+              if (navigator.userAgent.search("Firefox") > 0) {
+                $(clone.children[0]).css("height", "775px");
+                $(clone.children[0]).css("width", "630px");
+              } else {
+                $(clone.children[0]).css("height", "405px");
+              }
+
+              if (title.innerText.split(".").pop() === "png" || title.innerText.split(".").pop() === "jpg")
+              {
+                $(clone.children[0]).css("zoom", "1.7");
+              } else {
+                $(clone.children[0]).css("zoom", "2");
+              }
+              $(".page-content").css({
+                "opacity": 0.2,
+                "pointer-events": "none"
+              });
+            });
+          });
+
+          $(document).ready(function () {
+            $(".container-fluid").click(function (event) {
+              if (event.target !== title && i == 1) {
+                $(".page-content").css({
+                  "opacity": 1,
+                  "pointer-events": "all"
+                });
+                $(clone).css("display", "none");
+                i = 0;
+              }
+            });
+          });
+
+        </script>
+
+      «ELSEIF fct == "view"»
+        <div>«WRITEKEY HRMR_NO_DOCS»</div>
+      «ENDIF»
+
+      «IF fct <> "view"»
+        «IF fct =="modify"»
+          <hr>
+        «ENDIF»
+        <div style="max-width:600px">
+          <div class="drop_zone" id="dropzone">
+            <span id="prompt" style="vertical-align:sub" class="drop_zone__prompt">«WRITEKEY HRMR_DRAGNDROP»</span>
+            <input type="file" class="upload" style="display:none" name="uploadFile1" id="uploadFile1" multiple>
+            <input type="hidden" name="FileName" value="" id="FileName">
+          </div>
+          <div id="newDocs">«WRITEKEY HRMR_NEW_DOCS» <p style="display:inline" id="newDocsCount">(0)</p> :</div>
+          <div id="file_zone"></div>
+        </div>
+
+        <script>
+
+        «IF listId <> ""»
+          document.getElementById("candFiles").querySelectorAll("#remove").forEach((icon) => {
+            icon.addEventListener("click", (e) => {
+              if (e.target.getAttribute("existing") == "yes") {
+                deleteDocument(e.target.getAttribute("idDoc"))
+              }
+            });
+          });
+        «ENDIF»
+
+        document.querySelectorAll(".upload").forEach((inputElement) => {
+          const dropZoneElement = inputElement.closest(".drop_zone");
+
+          dropZoneElement.addEventListener("click", (e) => {
+            inputElement.click();
+          });
+
+          inputElement.addEventListener("change", (e) => {
+              uploadDocs(inputElement.files);
+              prevFile(inputElement.files);
+          });
+
+          document.body.addEventListener("dragover", (e) => {
+            e.preventDefault();
+            if (navigator.userAgent.search("Firefox") > 0) {
+              document.body.classList.add("overlay");
+            }
+          });
+
+          document.body.addEventListener("dragleave", (e) => {
+            if (navigator.userAgent.search("Firefox") > 0) {
+              document.body.classList.remove("overlay");
+            }
+          });
+
+          document.body.addEventListener("drop", (e) => {
+            e.preventDefault();
+            if (navigator.userAgent.search("Firefox") > 0) {
+              document.body.classList.remove("overlay");
+            }
+            uploadDocs(e.dataTransfer.files);
+            prevFile(e.dataTransfer.files);
+          });
+        });
+
+        function prevFile(files) {
+
+          let parent = document.getElementById("file_zone");
+
+          for (var i=0;i<files.length;i++) {
+
+            let preview;
+            let container = document.createElement("div");
+            container.classList.add("container");
+            parent.appendChild(container);
+
+            if (files[i].name.split(".").pop() === "png" || files[i].name.split(".").pop() === "jpg") {
+              preview = document.createElement("img");
+            } else {
+              preview = document.createElement("iframe");
+            }
+
+            var src = URL.createObjectURL(files[i]);
+            preview.setAttribute("height", 258);
+            preview.setAttribute("width", 183);
+            preview.setAttribute("src", src);
+            container.appendChild(preview);
+
+            let title = document.createElement("div");
+            title.classList.add("preview_title");
+            title.innerText = files[i].name;
+            container.appendChild(title);
+
+            $('<span class="fa fa-remove" id="remove"></span>').appendTo(container);
+          }
+
+          document.getElementById("newDocsCount").innerText = "(" + document.querySelectorAll("#file_zone .container").length + ")";
+
+          parent.querySelectorAll("#remove").forEach((icon) => {
+            icon.addEventListener("click", (e) => {
+              $.ajax({
+                  type:"POST",
+                  url: "/Scripts/sql.exe",
+                  data: 'SqlDB=«SqlDB»'
+                        +'&xid=«xid»'
+                        +'&ContextNavigation=«ContextNavigation»'
+                        +'&Sql=HRMR:HRMR_DOCADD.phs'
+                        +'&fileName=' + e.target.parentElement.children[1].innerText
+                        +'&fct=delete'
+                        «IF fct == "modify"»
+                          +'&id=«_oCandidate.idCandidate»'
+                        «ELSEIF fct == "create"»
+                          +'&id=«_myId»'
+                        «ENDIF»
+                        +'&objTypeId=candidate'
+              });
+              e.target.parentElement.remove();
+              document.getElementById("newDocsCount").innerText = "(" + document.querySelectorAll("#file_zone .container").length + ")";
+            });
+          });
+        }
+
+        function uploadDocs(files) {
+
+          for (var i=0; i < files.length; i++) {
+            var myFormData = new FormData();
+            myFormData.append('uploadFile1', files[i]);
+            myFormData.append('SqlDB', '«SqlDB»');
+            myFormData.append('Sql', 'HRMR:HRMR_DOCADD.phs');
+            myFormData.append('xid', '«xid»');
+            myFormData.append('FileName', files[i].name);
+            «IF fct == "modify"»
+              myFormData.append('id', «_oCandidate.idCandidate»);
+            «ELSEIF fct == "create"»
+              myFormData.append('id', «_myId»);
+            «ENDIF»
+            myFormData.append('fct', 'upload');
+            myFormData.append('objTypeId', "candidate");
+
+            $.ajax({
+                type:"POST",
+                processData: false,
+                contentType: false,
+                url: "/Scripts/sql.exe",
+                dataType: "html",
+                data: myFormData
+            });
+          }
+        }
+
+        </script>
+           <br>
+    «ENDIF»
+  «ENDIF»
+  «RETURN _Visible»
+«/PROC»
+
+«PROC CallbackZone_7»
+    «VAR NEW _Visible=_PageZoneVisible»
+
+    «IF @exists("_PageZoneComponent")==0»
+      «INCLUDE _Visible = «#SQLLIBRARY#»:ProcPageTheme.phs#ViewPageZone»
+    «ENDIF»
+
+    «RETURN _Visible»
+«/PROC»
+
+«PROC CallbackZone_8»
+    «VAR NEW _Visible=_PageZoneVisible»
+
+    «IF @exists("_PageZoneComponent")==0»
+      «INCLUDE _Visible = «#SQLLIBRARY#»:ProcPageTheme.phs#ViewPageZone»
+    «ENDIF»
+
+    «RETURN _Visible»
+«/PROC»
+
+«PROC CallbackZone_9»
+    «VAR NEW _Visible=_PageZoneVisible»
+
+    «IF @exists("_PageZoneComponent")==0»
+      «INCLUDE _Visible = «#SQLLIBRARY#»:ProcPageTheme.phs#ViewPageZone»
+    «ELSEIF _PageZoneComponent == OSS_PAGE_ZONE_COMPONENT_CONTENT && fct <> "create"»
+      «IF fct == "view"»
+        <span style="color:#7d7d7d;vertical-align:middle;margin-bottom:10px" class="fa fa-angle-down" id="show" onclick="showHist()"></span>
+        <span style="color:#7d7d7d;vertical-align:middle;margin-bottom:10px" class="fa fa-angle-up" id="hide" onclick="hideHist()"></span>
+      «ENDIF»
+      «IF _XRights[0] > 50»
+        <button class="btn-primary" type="button" onclick="addMessage()">«WRITEKEY HRMR_ADDMSG»</button>
+      «ENDIF»
+      «IF fct == "view"»
+        «INCLUDE HD:HDTicketComments.phs;_TicketId=«_oCandidate.idTicket»;_ObjectId=«_oCandidate.idCandidate»;_ObjectTypeId=HRMR_CANDIDATE_ID;_ObjectLibraryId=HRMR_LIBRARY_ID;_MerchantId=«idMerchant»;_ReverseOrder=1»
+      «ENDIF»
+
+      <script>
+        «IF fct=="view"»
+          hideHist();
+        «ENDIF»
+
+        function showHist() {
+          document.getElementById("show").style.display="none";
+          document.getElementById("hide").style.display="initial";
+          document.getElementsByClassName("comment-box")[0].style.display="initial";
+        }
+        function hideHist() {
+          document.getElementById("hide").style.display="none";
+          document.getElementById("show").style.display="initial";
+          document.getElementsByClassName("comment-box")[0].style.display="none";
+        }
+      </script>
+    «ENDIF»
+
+    «RETURN _Visible»
+«/PROC»
+
+«PROC CallbackZone_10»
+    «VAR NEW _Visible=_PageZoneVisible»
+
+    «IF @exists("_PageZoneComponent")==0»
+      «INCLUDE _Visible = «#SQLLIBRARY#»:ProcPageTheme.phs#ViewPageZone»
+    «ENDIF»
+
+    «RETURN _Visible»
+«/PROC»
+
+«PROC CallbackZone_11»
+    «VAR NEW _Visible=_PageZoneVisible»
+
+    «IF @exists("_PageZoneComponent")==0»
+      «INCLUDE _Visible = «#SQLLIBRARY#»:ProcPageTheme.phs#ViewPageZone»
+    «ENDIF»
+
+    «RETURN _Visible»
+«/PROC»
+
+«PROC CallbackZone_12»
+    «VAR NEW _Visible=_PageZoneVisible»
+
+    «IF @exists("_PageZoneComponent")==0»
+      «INCLUDE _Visible = «#SQLLIBRARY#»:ProcPageTheme.phs#ViewPageZone»
+    «ENDIF»
+
+    «RETURN _Visible»
+«/PROC»
+
+«PROC CallbackZone_13»
+    «VAR NEW _Visible=_PageZoneVisible»
+
+    «IF @exists("_PageZoneComponent")==0»
+      «INCLUDE _Visible = «#SQLLIBRARY#»:ProcPageTheme.phs#ViewPageZone»
+    «ENDIF»
+
+    «RETURN _Visible»
+«/PROC»
+
+
+«PROC CallbackField»
+
+    «VAR NEW _Visible=-1»
+
+    «IF _ZoneFieldLibraryId==HRMR_LIBRARY_ID  &&  _PageZoneId==1 &&_ZoneFieldVisible==1 && fct<>"view"»
+        «INCLUDE _Visible = HRMR:HRMR_CANDIDATE_model.phs#CallbackField_Zone_1»
+    «ELSEIF _ZoneFieldLibraryId==HRMR_LIBRARY_ID  &&  _PageZoneId==2 &&_ZoneFieldVisible==1 && fct=="view"»
+        «INCLUDE _Visible = HRMR:HRMR_CANDIDATE_model.phs#CallbackField_Zone_2»
+    «ELSEIF _ZoneFieldLibraryId==HRMR_LIBRARY_ID  &&  _PageZoneId==3 &&_ZoneFieldVisible==1»
+        «INCLUDE _Visible = HRMR:HRMR_CANDIDATE_model.phs#CallbackField_Zone_3»
+    «ELSEIF _ZoneFieldLibraryId==HRMR_LIBRARY_ID  &&  _PageZoneId==4 &&_ZoneFieldVisible==1»
+        «INCLUDE _Visible = HRMR:HRMR_CANDIDATE_model.phs#CallbackField_Zone_4»
+    «ELSEIF _ZoneFieldLibraryId==HRMR_LIBRARY_ID  &&  _PageZoneId==5 &&_ZoneFieldVisible==1»
+        «INCLUDE _Visible = HRMR:HRMR_CANDIDATE_model.phs#CallbackField_Zone_5»
+    «ELSEIF _ZoneFieldLibraryId==HRMR_LIBRARY_ID  &&  _PageZoneId==6 &&_ZoneFieldVisible==1»
+        «INCLUDE _Visible = HRMR:HRMR_CANDIDATE_model.phs#CallbackField_Zone_6»
+    «ELSEIF _ZoneFieldLibraryId==HRMR_LIBRARY_ID  &&  _PageZoneId==7 &&_ZoneFieldVisible==1 && fct<>"view"»
+        «INCLUDE _Visible = HRMR:HRMR_CANDIDATE_model.phs#CallbackField_Zone_7»
+    «ELSEIF _ZoneFieldLibraryId==HRMR_LIBRARY_ID  &&  _PageZoneId==8 &&_ZoneFieldVisible==1 && fct=="view"»
+        «INCLUDE _Visible = HRMR:HRMR_CANDIDATE_model.phs#CallbackField_Zone_8»
+    «ELSEIF _ZoneFieldLibraryId==HRMR_LIBRARY_ID  &&  _PageZoneId==9 &&_ZoneFieldVisible==1 && fct=="view"»
+        «INCLUDE _Visible = HRMR:HRMR_CANDIDATE_model.phs#CallbackField_Zone_9»
+    «ELSEIF _ZoneFieldLibraryId==HRMR_LIBRARY_ID  &&  _PageZoneId==10 &&_ZoneFieldVisible==1»
+        «INCLUDE _Visible = HRMR:HRMR_CANDIDATE_model.phs#CallbackField_Zone_10»
+    «ELSEIF _ZoneFieldLibraryId==HRMR_LIBRARY_ID  &&  _PageZoneId==11 &&_ZoneFieldVisible==1»
+        «INCLUDE _Visible = HRMR:HRMR_CANDIDATE_model.phs#CallbackField_Zone_11»
+    «ELSEIF _ZoneFieldLibraryId==HRMR_LIBRARY_ID  &&  _PageZoneId==12 &&_ZoneFieldVisible==1»
+        «INCLUDE _Visible = HRMR:HRMR_CANDIDATE_model.phs#CallbackField_Zone_12»
+    «ELSEIF _ZoneFieldLibraryId==HRMR_LIBRARY_ID  &&  _PageZoneId==13 &&_ZoneFieldVisible==1»
+        «INCLUDE _Visible = HRMR:HRMR_CANDIDATE_model.phs#CallbackField_Zone_13»
+    «ENDIF»
+
+    «RETURN _Visible»
+«/PROC»
+
+
+«PROC CallbackField_Zone_1»
+  «VAR NEW _Visible=-1»
+  «*Field 101*»
+  «IF @toi(_ZoneFieldId) ==101 »
+    «LET _Visible=_ZoneFieldVisible»
+
+    «IF @toi(_ZoneFieldComponent)==1»
+      «WRITEKEY HRMR_FNAME»
+    «ELSEIF _ZoneFieldComponent==OSS_PAGE_ZONE_FIELD_COMPONENT_VALUE»
+      «IF fct == "modify"»
+        <input type="text" name="FirstName" value="«_oCandidate.azFirstName»">
+      «ELSEIF fct == "create"»
+        <input type="text" name="FirstName">
+      «ENDIF»
+    «ENDIF»
+
+  «ELSEIF @toi(_ZoneFieldId) ==102 »
+    «LET _Visible=_ZoneFieldVisible»
+    «IF @toi(_ZoneFieldComponent)==1»
+      «WRITEKEY HRMR_NAME»
+    «ELSEIF _ZoneFieldComponent==OSS_PAGE_ZONE_FIELD_COMPONENT_VALUE»
+      «IF fct == "modify"»
+        <input type="text" name="Name" value="«_oCandidate.azName»">
+      «ELSEIF fct == "create"»
+        <input type="text" name="Name">
+      «ENDIF»
+    «ENDIF»
+
+  «ELSEIF @toi(_ZoneFieldId) ==103 »
+    «LET _Visible=_ZoneFieldVisible»
+      «IF @toi(_ZoneFieldComponent)==1»
+        «WRITEKEY HRMR_STATUS»
+      «ELSEIF _ZoneFieldComponent==OSS_PAGE_ZONE_FIELD_COMPONENT_VALUE»
+        «VAR NEW status»
+        «IF fct == "modify"»
+          «INCLUDE status = HRMR:HRMR_TOOLS.phs#GetStatus;i=«_oCandidate.iStatus»»
+          <div class="group-input select" style="min-width:200px">
+            <input type="hidden" name="StatusSelect" id="StatusSelect"/>
+            <input style="min-width:172px" data-value=«_oCandidate.iStatus» type="text" id="Status" name="Status" value="«status»" readonly/>
+            <button type="button" class="btn-primary">
+              <span class="fa fa-sort-down"></span>
+            </button>
+            <ul class="dropdown">
+              <li id="status1" class="statusOption" data-option=1 value=1>«WRITEKEY HRMR_NEW»</li>
+              <li id="status100" class="statusOption" data-option=100 value=100>«WRITEKEY HRMR_PROGRESS»</li>
+              <li id="status110" class="statusOption" data-option=110 value=110>«WRITEKEY HRMR_WAIT»</li>
+              <div style="display:flex;width:100%"><li style="width:100%;position:absolute" id="status201" class="statusOption" data-option=201 value=201 onclick="addInterview(201)">«WRITEKEY HRMR_PHY_INTERVIEW»</li><span class="fa fa-plus-circle" id="201" onclick="addInterview(200)"></span></div>
+              <div style="display:flex;width:100%"><li style="width:100%;position:absolute" id="status211" class="statusOption" data-option=211 value=211 onclick="addInterview(211)">«WRITEKEY HRMR_DIST_INTERVIEW»</li><span class="fa fa-plus-circle" id="211" onclick="addInterview(210)"></span></div>
+              <li id="status500" class="statusOption" data-option=500 value=500>«WRITEKEY HRMR_OFFER»</li>
+              <li id="status600" class="statusOption" data-option=600 value=600>«WRITEKEY HRMR_ACCEPTED»</li>
+              <li id="status700" class="statusOption" data-option=700 value=700>«WRITEKEY HRMR_REFUSED»</li>
+              <li id="status999" class="statusOption" data-option=999 value=999>«WRITEKEY HRMR_ARCHIVED»</li>
+            </ul>
+          </div>
+          <span style="vertical-align:super;color:#8e8e8e" class="fa fa-remove" onclick='clearStatus()'></span><br>
+          <script>
+
+          function clearStatus() {
+            $("#Status").attr("data-value", «_oCandidate.iStatus»);
+            document.getElementById("Status").value="«status»";
+            document.getElementById("StatusSelect").value=«_oCandidate.iStatus»;
+          }
+
+            $(".statusOption").each(function (i, el) {
+              if (el.value == «_oCandidate.iStatus» && el.value != 201 && el.value != 211) {
+                el.style.backgroundColor = "#f5f5f5";
+                el.style.pointerEvents = "none";
+              } else if («_oCandidate.iStatus» < 210 && «_oCandidate.iStatus» > 200 && el.value == 201) {
+                el.style.backgroundColor = "#f5f5f5";
+                el.style.pointerEvents = "none";
+                document.getElementById(el.value).style.visibility = "visible";
+              } else if («_oCandidate.iStatus» < 220 && «_oCandidate.iStatus» > 210 && el.value == 211) {
+                el.style.backgroundColor = "#f5f5f5";
+                el.style.pointerEvents = "none";
+                document.getElementById(el.value).style.visibility = "visible";
+              }
+            });
+
+          </script>
+          <style>
+            .fa-plus-circle {
+              z-index:2;
+              margin-left:175px;
+              margin-top:1px;
+              visibility: hidden;
+            }
+          </style>
+        «ELSEIF fct == "create"»
+          <div class="group-input select">
+            <input type="hidden" name="StatusSelect"/>
+            <input data-value="1" type="text" id="Status" name="Status" value="«WRITEKEY HRMR_NEW»" readonly/>
+            <button type="button" class="btn-primary">
+              <span class="fa fa-sort-down"></span>
+            </button>
+            <ul class="dropdown">
+              <li data-option=1 value=1>«WRITEKEY HRMR_NEW»</li>
+            </ul>
+          </div>
+        «ENDIF»
+    «ENDIF»
+
+  «ELSEIF @toi(_ZoneFieldId) ==104 »
+    «LET _Visible=_ZoneFieldVisible»
+    «IF @toi(_ZoneFieldComponent)==1»
+      «WRITEKEY HRMR_STAR»
+    «ELSEIF _ZoneFieldComponent==OSS_PAGE_ZONE_FIELD_COMPONENT_VALUE»
+      <input type="hidden" name="StarStatus" id="StarStatus"/>
+      <div style="display:inline-block">
+        <ul class="pagin" style="margin-bottom:0px">
+          <li id="starYes" value="1" class="pagin-btn" style="width:auto;padding-left:5px;padding-right:5px" onclick="updateRadio(1)">«WRITEKEY HRMR_YES»</li>
+          <li id="starNo" value="0" class="pagin-btn" style="width:auto;padding-left:5px;padding-right:5px" onclick="updateRadio(0)">«WRITEKEY HRMR_NO»</li>
+        </ul>
+      </div>
+      «IF fct == "modify"»
+        <script>
+          updateRadio(«_oCandidate.iStar»);
+        </script>
+      «ENDIF»
+    «ENDIF»
+  «ENDIF»
+  «RETURN _Visible»
+«/PROC»
+
+«PROC CallbackField_Zone_2»
+  «VAR NEW _Visible=-1»
+  «*Field 1001*»
+  «IF @toi(_ZoneFieldId) ==201 »
+    «LET _Visible=_ZoneFieldVisible»
+    «IF _ZoneFieldComponent==OSS_PAGE_ZONE_FIELD_COMPONENT_VALUE»
+        <h1 style="margin: 10px 100px 10px 0px">«_oCandidate.azFirstName» «_oCandidate.azName»</h1>
+    «ENDIF»
+
+  «ELSEIF @toi(_ZoneFieldId) ==202 »
+    «LET _Visible=_ZoneFieldVisible»
+    «IF _ZoneFieldComponent==OSS_PAGE_ZONE_FIELD_COMPONENT_VALUE»
+      «VAR NEW status»
+      «INCLUDE status = HRMR:HRMR_TOOLS.phs#GetStatus;i=«_oCandidate.iStatus»;label=1»
+    «ENDIF»
+
+  «ELSEIF @toi(_ZoneFieldId) ==203 »
+    «LET _Visible=_ZoneFieldVisible»
+    «IF _ZoneFieldComponent==OSS_PAGE_ZONE_FIELD_COMPONENT_VALUE»
+      «IF «_oCandidate.iStar»==1»
+        <span style="margin-top:10px;pointer-events:none" id="starred" class="fa fa-star"></span>
+      «ENDIF»
+      <br><br>
+    «ENDIF»
+  «ENDIF»
+  «RETURN _Visible»
+«/PROC»
+
+«PROC CallbackField_Zone_3»
+  «VAR NEW _Visible=-1»
+
+  «IF @toi(_ZoneFieldId) ==301 »
+    «LET _Visible=_ZoneFieldVisible»
+    «IF @toi(_ZoneFieldComponent)==1»
+      «WRITEKEY HRMR_MAIL»
+    «ELSEIF _ZoneFieldComponent==OSS_PAGE_ZONE_FIELD_COMPONENT_VALUE»
+      «IF fct == "view"»
+        <div>«_oCandidate.azEMail»</div>
+      «ELSEIF fct == "modify"»
+        <input type="text" name="EMail" value="«_oCandidate.azEMail»">
+      «ELSEIF fct == "create"»
+        <input type="text" name="EMail">
+      «ENDIF»
+    «ENDIF»
+
+  «ELSEIF @toi(_ZoneFieldId) ==302 »
+    «LET _Visible=_ZoneFieldVisible»
+    «IF @toi(_ZoneFieldComponent)==1»
+      «WRITEKEY HRMR_TEL»
+    «ELSEIF _ZoneFieldComponent==OSS_PAGE_ZONE_FIELD_COMPONENT_VALUE»
+      «IF fct == "view"»
+        <div>«_oCandidate.azTel»</div>
+      «ELSEIF fct == "modify"»
+        <input type="text" name="Tel" value=«_oCandidate.azTel»>
+      «ELSEIF fct == "create"»
+        <input type="text" name="Tel">
+      «ENDIF»
+    «ENDIF»
+
+    «ELSEIF @toi(_ZoneFieldId) ==303 »
+      «LET _Visible=_ZoneFieldVisible»
+      «IF @toi(_ZoneFieldComponent)==1»
+        «WRITEKEY HRMR_ADDRESS»
+      «ELSEIF _ZoneFieldComponent==OSS_PAGE_ZONE_FIELD_COMPONENT_VALUE»
+        «IF fct == "view"»
+          <div>«_oCandidate.azAddress»</div>
+        «ELSEIF fct == "modify"»
+          <input type="text" style="width:300px" name="Address" value="«_oCandidate.azAddress»">
+        «ELSEIF fct == "create"»
+          <input type="text" style="min-width:300px" name="Address">
+        «ENDIF»
+        <br>
+      «ENDIF»
+
+  «ENDIF»
+  «RETURN _Visible»
+«/PROC»
+
+«PROC CallbackField_Zone_4»
+  «VAR NEW _Visible=-1»
+
+  «IF @toi(_ZoneFieldId) ==401 »
+    «LET _Visible=_ZoneFieldVisible»
+    «IF _ZoneFieldComponent==OSS_PAGE_ZONE_FIELD_COMPONENT_VALUE»
+      «IF fct == "view"»
+        «SQLOUTPUT»
+          <div>&#8226; «azJobName»</div><br>
+        «/SQLOUTPUT select azJobName from HRMR_JOBS J left join HRMR_CANDIDATES_JOBS CJ on J.idJob = CJ.idJob left join HRMR_CANDIDATES C on CJ.idCandidate = C.idCandidate where C.idCandidate = «_oCandidate.idCandidate»»
+      «ELSEIF fct == "modify"»
+        <div id="joblist" style="margin-top:10px">
+          «SQLOUTPUT»
+            <div style="display:inline-block">«azJobName»</div>
+            <span style="vertical-align: text-top;" class="fa fa-remove" onclick='deleteJob(«id»)'></span><br>
+          «/SQLOUTPUT select CJ.id, azJobName from HRMR_JOBS J left join HRMR_CANDIDATES_JOBS CJ on J.idJob = CJ.idJob left join HRMR_CANDIDATES C on CJ.idCandidate = C.idCandidate where C.idCandidate = «_oCandidate.idCandidate»»
+        </div>
+      «ENDIF»
+      «IF fct <> "view"»
+        <div style="margin-top:10px" class="group-input select">
+          <input type="hidden" id="JobSelect" name="JobSelect"/>
+          <input data-value="" type="text" id="JobName" name="JobName" readonly/>
+          <button type="button" class="btn-primary">
+            <span class="fa fa-sort-down"></span>
+          </button>
+          <ul class="dropdown" style="">
+            <li class="parent_job" style="font-weight:bold;background:#f5f5f5;pointer-events:none">«WRITEKEY HRMR_SALARIED»</li>
+            «SQLOUTPUT»
+              <li class="jobOption" style="padding-left:25px;text-overflow:ellipsis" data-option=«idJob» value=«idJob»>«azJobName»</li>
+            «/SQLOUTPUT select distinct idJob, azJobName from HRMR_JOBS where iType = 0 order by azJobName»
+            <li class="parent_job" style="font-weight:bold;background:#f5f5f5;pointer-events:none">«WRITEKEY HRMR_INTERNSHIP»</li>
+            «SQLOUTPUT»
+              <li class="jobOption" style="padding-left:25px;text-overflow:ellipsis" data-option=«idJob» value=«idJob»>«azJobName»</li>
+            «/SQLOUTPUT select distinct idJob, azJobName from HRMR_JOBS where iType = 1 order by azJobName»
+          </ul>
+        </div>
+        <span style="vertical-align:super;color:#8e8e8e" class="fa fa-remove" onclick='clearJob()'></span><br>
+        <script>
+          function clearJob() {
+            $("#JobName").attr("data-value", "");
+            document.getElementById("JobName").value="";
+            document.getElementById("JobSelect").value="";
+          }
+        </script>
+      «ENDIF»
+    «ENDIF»
+
+  «ENDIF»
+  «RETURN _Visible»
+«/PROC»
+
+«PROC CallbackField_Zone_5»
+  «VAR NEW _Visible=-1»
+
+  «IF @toi(_ZoneFieldId) ==501 »
+    «LET _Visible=_ZoneFieldVisible»
+    «IF _ZoneFieldComponent==OSS_PAGE_ZONE_FIELD_COMPONENT_VALUE»
+      «VAR NEW _TmpTxt = @osl_varstring_get(«_oCandidate.idRemark»)»
+      «IF fct == "view"»
+        <div style="margin-bottom: 15px">«_TmpTxt»</div>
+      «ELSEIF fct == "modify" && _XRights[0] > 80»
+        <div style="margin-bottom: 15px" class="group-input phone-12">
+          <textarea style="min-width:450px;max-width:80%" name="Remark" id="Remark">«_TmpTxt»</textarea>
+        </div>
+      «ELSEIF fct == "create" && _XRights[0] > 80»
+        <div style="margin-bottom: 15px" class="group-input phone-12">
+          <textarea style="min-width:450px;max-width:80%" name="Remark" id="Remark" placeholder="«WRITEKEY HRMR_WRITEREMARK»"></textarea>
+        </div>
+      «ENDIF»
+    «ENDIF»
+
+  «ENDIF»
+  «RETURN _Visible»
+«/PROC»
+
+«PROC CallbackField_Zone_6»
+  «VAR NEW _Visible=_ZoneFieldVisible»
+  «RETURN _Visible»
+«/PROC»
+
+«PROC CallbackField_Zone_7»
+  «VAR NEW _Visible=-1»
+
+  «IF @toi(_ZoneFieldId) ==701 »
+    «*IF collabList <> 0 --> visible = 1 else visible = 0*»
+    «LET _Visible=_ZoneFieldVisible»
+    «IF @toi(_ZoneFieldComponent)==1»
+      «WRITEKEY HRMR_COLLAB»
+    «ELSEIF _ZoneFieldComponent==OSS_PAGE_ZONE_FIELD_COMPONENT_VALUE»
+      <div id="existingCollab"></div>
+      <script>
+        showCollab(collabName);
+      </script>
+    «ENDIF»
+
+  «ELSEIF @toi(_ZoneFieldId) ==702 && _XRights[0] > 49»
+    «LET _Visible=_ZoneFieldVisible»
+    «IF @toi(_ZoneFieldComponent)==1»
+      «WRITEKEY HRMR_ADD_COLLAB»
+    «ELSEIF _ZoneFieldComponent==OSS_PAGE_ZONE_FIELD_COMPONENT_VALUE»
+      <div class="group-input validation-field" id="div_collab">
+        <input id="azCollab" type="text" placeholder="Rechercher" value="" readonly/>
+        <button type="button" onclick="addCollab()"><span class="fa fa-search"></span></button>
+      </div>
+    «ENDIF»
+
+  «ENDIF»
+  «RETURN _Visible»
+«/PROC»
+
+«PROC CallbackField_Zone_8»
+  «VAR NEW _Visible=-1»
+
+  «IF @toi(_ZoneFieldId) ==801 »
+    «LET _Visible=_ZoneFieldVisible»
+    «IF @atoi(_ZoneFieldComponent) == 1»
+      «WRITEKEY HRMR_ADVICE»
+    «ELSEIF _ZoneFieldComponent==OSS_PAGE_ZONE_FIELD_COMPONENT_VALUE»
+
+    «VAR NEW status»
+    «VAR NEW i=0»
+    «VAR NEW time = ""»
+
+    <div class="big_container">
+      «SQLOUTPUT»
+        <div class="medium_container">
+          <div class="left_panel" id="«i»">
+            <div class="rectangle" id="«i»">
+              «@timestr(«iCTimeInterview»; 4)»
+            </div>
+            <div class="triangle" id="«i»">
+            </div>
+          </div>
+          <div class="right_panel" id="«i»">
+            <table class="gradeTable" id="«i»">
+              «INCLUDE status = HRMR:HRMR_TOOLS.phs#GetStatus;i=«iStatus»»
+              «IF status == "«WRITEKEY HRMR_NEW»"»
+                «LET status = "«WRITEKEY HRMR_SCREENING»"»
+              «ENDIF»
+              <caption class="caption">«status»</caption>
+              «IF iStatus > 1 && _XRights[0] > 49»
+                  <span style="position:relative;float:right;top:-6px" class="fa fa-pencil" onclick="modifyItw(«iStatus»)"></span>
+              «ENDIF»
+
+              «VAR NEW j=0»
+
+              «SQLOUTPUT»
+                «IF «idUser» == 0 && iCTimeInterview > @time()»
+                  <tr>
+                    <td id="planned" class="user">
+                      «WRITEKEY HRMR_ITW_PLANNED_WITHOUT»
+                    </td>
+                  </tr>
+                «ELSEIF «idUser» == 0 && iCTimeInterview == 0»
+                  <tr>
+                    <td id="planned" class="user">
+                      «WRITEKEY HRMR_NO_COLLAB»
+                    </td>
+                  </tr>
+                «ELSEIF «idUser» ²== 0 && iCTimeInterview <= @time()»
+                  <tr>
+                    <td id="planned" class="user">
+                      «WRITEKEY HRMR_ITW_DONE_WITHOUT»
+                    </td>
+                  </tr>
+                «ELSEIF «idUser» <> 0 && iCTimeInterview > @time()»
+                  «IF j == 0»
+                    <tr>
+                      <td id="«j»" class="user">
+                        «WRITEKEY HRMR_ITW_PLANNED_WITH» «azFirstName»&nbsp;«azName»
+                      </td>
+                    </tr>
+                  «ELSE»
+                    <script>
+                      $("#" + «i» + ".gradeTable").find(".user")[0].innerText = $("#" + «i» + ".gradeTable").find(".user")[0].innerText + ", «azFirstName»" + " " + "«azName»";
+                    </script>
+                  «ENDIF»
+                «ELSEIF «idUser» <> 0 && iCTimeInterview <= @time()»
+                  <tr>
+                    <td class="user">«azFirstName» «azName»:</td>
+                    «IF «@exists(«iGrade»)» > 0»
+                      <td>
+                        «IF «idUser» == «#SQLUSERID#»»
+                          <div onclick="gradeCandidate(«idEvent», «iGrade»)" style="margin-right: 10px">
+                        «ELSEIF _XRights[0] > 51»
+                          «LET time = @timestr(«iCTimeGrade»; 4)»
+                          <div class="starGrade" style="margin-right: 10px">
+                          <div class="gradeInfo" id="«idUser»">
+                            «WRITEKEY HRMR_GRADED_ON» «time»
+                          </div>
+                        «ELSE»
+                          <div style="margin-right: 10px;pointer-events:none">
+                        «ENDIF»
+
+                        «SQLREPEAT»
+                          <span style="color: #f8ce0b" class="fa fa-star">
+                        «/SQLREPEAT 1; «iGrade»»
+                        «SQLREPEAT»
+                          <span style="color: #7d7d7d" class="fa fa-star">
+                        «/SQLREPEAT «iGrade»; 4»
+                        </div>
+                      </td>
+
+                    «ELSE»
+                      «IF «idUser» == «#SQLUSERID#»»
+                        <td><button type="button" onclick="gradeCandidate(«idEvent»)" class="btn-primary">«WRITEKEY HRMR_GRADE»</button></td>
+                      «ELSE»
+                        <td>«WRITEKEY HRMR_UNNOTED»</td>
+                      «ENDIF»
+                    «ENDIF»
+                  </tr>
+                «ENDIF»
+
+                «LET j = j + 1»
+              «/SQLOUTPUT select U.idUser, U.azName, U.azFirstName, E.iGrade, E.idEvent, E.iCTimeGrade from HRMR_EVENTS E left join OSSUSERINFO U on E.idUser = U.idUser inner join HRMR_CANDIDATES C on E.idCandidate = C.idCandidate where C.idCandidate = «_oCandidate.idCandidate» and E.iStatus = «iStatus»»
+
+            </table>
+          </div>
+        </div>
+        «LET i = i + 1»
+      «/SQLOUTPUT select distinct iStatus, iCTimeInterview from HRMR_EVENTS where idCandidate=«_oCandidate.idCandidate»»
+    </div>
+
+
+    <style>
+      .gradeInfo{
+        padding: 0px 15px 0px 5px;
+        width: fit-content;
+        position: absolute;
+        border: 2px solid #428bca;
+        border-radius: 4px;
+        background-color: #fff;
+        white-space: nowrap;
+        font-size: .875rem;
+        color: #3e3d3d;
+        box-shadow: 0 3px 12px rgba(180,180,180,.23),0 3px 12px rgba(180,180,180,.16);
+        z-index: 99;
+        left: auto;
+        pointer-events: none;
+        display: none;
+      }
+      .big_container{
+        display: flex;
+        flex-direction: column;
+      }
+      .medium_container{
+        display: flex;
+        height: fit-content;
+      }
+      .left_panel{
+        background: #d4e5f3;
+        display: inline-block;
+        position: relative;
+        width: 80px;
+        font-weight:bold;
+        line-height:20px;
+        font-size: 0.875rem;
+        color: #7d7d7d;
+        text-align: center;
+      }
+      .rectangle {
+        padding-top: 30px;
+      }
+      .triangle{
+        border-top: 25px solid #d4e5f3;
+        border-left: 40px solid transparent;
+        border-right: 40px solid transparent;
+        content: "";
+        height: 0;
+        left: 0;
+        position: absolute;
+      }
+      .right_panel{
+        width: fit-content;
+        height: fit-content;
+        border-top: 1px solid #428bca;
+        padding-top: 10px;
+        margin-bottom: 10px;
+      }
+      .user {
+        font-weight:bold;
+        line-height:28px;
+        font-size: 0.875rem;
+        color: #7d7d7d;
+        margin-left: 10px;
+      }
+      .caption {
+        display:inline-block;
+        font-style:italic;
+        font-weight:800;
+        color:#428bca;
+        padding-left: 8px;
+        text-decoration: underline;
+      }
+      #clickableCaption:hover {
+        cursor:pointer;
+      }
+      #gradeCont {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: flex-start;
+        column-gap: 50px;
+        row-gap: 20px;
+        width:100%;
+        margin-top:5px;
+        margin-left:5px;
+      }
+    </style>
+
+    <script>
+      document.querySelectorAll(".starGrade").forEach((grade, i) => {
+
+        var info = grade.children[0];
+        grade.addEventListener("mouseover", function (event) {
+          info.style.display="block";
+        });
+        grade.addEventListener("mouseleave", function (event) {
+          info.style.display="none";
+        });
+      });
+
+      $(".left_panel").each(function (index) {
+        $(this).css("z-index", -($(this).attr("id")));
+        $("#" + index + ".triangle").css("top", $(this).height());
+        $("#" + index + ".rectangle").css("height", $(this).height());
+
+        if (Number.isInteger(($(this).attr("id")/2))) {
+          $(this).css("background-color", "#428bca");
+          $(this).css("color", "white");
+          $("#" + index + ".triangle").css("border-top", "25px solid #428bca");
+        }
+      });
+    </script>
+    «ENDIF»
+  «ENDIF»
+  «RETURN _Visible»
+«/PROC»
+
+«PROC CallbackField_Zone_9»
+  «VAR NEW _Visible=_ZoneFieldVisible»
+  «RETURN _Visible»
+«/PROC»
+
+«PROC CallbackField_Zone_10»
+  «VAR NEW _Visible=-1»
+  «*Field 901*»
+
+  «IF @toi(_ZoneFieldId) ==1001 && _XRights[0] > 49»
+    «LET _Visible=_ZoneFieldVisible»
+    «IF _ZoneFieldComponent==OSS_PAGE_ZONE_FIELD_COMPONENT_VALUE»
+    <br><br>
+      «IF fct == "view"»
+        <button class="btn-primary" type="button" onclick="onToModify()">«WRITEKEY HRMR_MODIFY»</button>
+        <script language="JavaScript">
+          function onToModify() {
+            document.MyForm.Sql.value = "HRMR:HRMR_CANDIDATE_view.phs";
+            document.MyForm.mod.value = "toModify";
+            document.MyForm.id.value = «_oCandidate.idCandidate»;
+            document.MyForm.submit();
+          }
+        </script>
+      «ELSEIF fct == "modify"»
+        <button class="btn-primary" type="button" onclick="onModify()">«WRITEKEY HRMR_MODIFY»</button>
+        <script language="JavaScript">
+          function onModify() {
+            if(document.MyForm.FirstName.value!="" && document.MyForm.Name.value!="" && document.MyForm.Status.value!="" && document.MyForm.StarStatus.value!="") {
+            document.MyForm.Sql.value = "HRMR:HRMR_CANDIDATE_query.phs" ;
+            document.MyForm.mod.value = "submitModify";
+            document.MyForm.id.value = «_oCandidate.idCandidate»;
+            document.MyForm.idJob.value = $("#JobName").get(0).getAttribute("data-value");
+            document.MyForm.idStatus.value = $("#Status").get(0).getAttribute("data-value");
+            document.MyForm.ticketId.value = «_oCandidate.idTicket»;
+            document.MyForm.collaborators.value = collabIndex;
+            document.MyForm.submit();
+            } else {
+              lol_alert("«WRITEKEY HRMR_FORMPB»");
+            }
+          }
+        </script>
+      «ELSEIF fct == "create" && _XRights[0] > 50»
+        <button class="btn-primary" type="button" onclick="onCreate()">«WRITEKEY HRMR_CREATE»</button>
+        <script language="JavaScript">
+          function onCreate() {
+            if(document.MyForm.FirstName.value!="" && document.MyForm.Name.value!="" && document.MyForm.Status.value!="" && document.MyForm.StarStatus.value!="") {
+            document.MyForm.Sql.value = "HRMR:HRMR_CANDIDATE_query.phs" ;
+            document.MyForm.mod.value = "submitCreate";
+            document.MyForm.id.value = «_myId»;
+            document.MyForm.idJob.value = $("#JobName").get(0).getAttribute("data-value");
+            document.MyForm.idStatus.value = $("#Status").get(0).getAttribute("data-value");
+            document.MyForm.collaborators.value = collabIndex;
+            document.MyForm.submit();
+            } else {
+              lol_alert("«WRITEKEY HRMR_FORMPB»");
+            }
+          }
+        </script>
+      «ENDIF»
+    «ENDIF»
+
+    «ELSEIF @toi(_ZoneFieldId) ==1002 && _XRights[0] > 51 && fct == "modify"»
+      «LET _Visible=_ZoneFieldVisible»
+      «IF _ZoneFieldComponent==OSS_PAGE_ZONE_FIELD_COMPONENT_VALUE»
+      <br><br>
+
+          <button class="btn-default" type="button" onclick="onDelete()">«WRITEKEY HRMR_DELETE»</button>
+          <script language="JavaScript">
+
+          function onDelete() {
+            lol_confirm("«WRITEKEY HRMR_CONFIRMATION»",deleteCallback);
+            }
+
+          function deleteCallback() {
+              document.MyForm.Sql.value = "HRMR:HRMR_CANDIDATE_query.phs" ;
+              document.MyForm.ContextNavigation.value = "«_NavLevel»" ;
+              document.MyForm.id.value = «_oCandidate.idCandidate»;
+              document.MyForm.mod.value = "submitDelete";
+              document.MyForm.submit();
+          }
+          </script>
+      «ENDIF»
+
+    «ELSEIF @toi(_ZoneFieldId) ==1003 && fct == "view"»
+      «LET _Visible=_ZoneFieldVisible»
+      «IF _ZoneFieldComponent==OSS_PAGE_ZONE_FIELD_COMPONENT_VALUE»
+      <br><br>
+        <button class="btn-default" type="button" onclick="onExport()">«WRITEKEY HRMR_EXPORT»</button>
+        <div style="text-align: center;display: none;" class="clearfix" id="loaderPrint"><div class="phone-12">  <div class="loader loader">  <span class="fa fa-spin fa-circle-o-notch"></span>  </div>  </div>  </div>
+      «ENDIF»
+
+    «ELSEIF @toi(_ZoneFieldId) ==1004»
+      «LET _Visible=_ZoneFieldVisible»
+      «IF _ZoneFieldComponent==OSS_PAGE_ZONE_FIELD_COMPONENT_VALUE»
+      <br><br>
+          <button class="btn-default" type="button" onclick="onBack()">«WRITEKEY HRMR_BACK»</button>
+          <script language="JavaScript">
+            function onBack() {
+              «IF fct == "modify"»
+                document.querySelectorAll(".preview_title").forEach((name) => {
+                  $.ajax({
+                      type:"POST",
+                      url: "/Scripts/sql.exe",
+                      data: 'SqlDB=«SqlDB»'
+                            +'&xid=«xid»'
+                            +'&ContextNavigation=«ContextNavigation»'
+                            +'&Sql=HRMR:HRMR_DOCADD.phs'
+                            +'&fileName=' + name.innerText
+                            +'&fct=delete'
+                            +'&id=«_oCandidate.idCandidate»'
+                            +'&objTypeId=candidate'
+                  });
+                });
+              «ENDIF»
+
+              «IF fct == "modify"»
+                document.MyForm.Sql.value = "HRMR:HRMR_CANDIDATE_view.phs" ;
+                document.MyForm.mod.value = "";
+                document.MyForm.id.value = «_oCandidate.idCandidate»;
+              «ELSE»
+                document.MyForm.Sql.value = "HRMR:HRMR_DEFAULT_view.phs" ;
+                document.MyForm.ContextNavigation.value = «=_NavLevel-1» ;
+              «ENDIF»
+                document.MyForm.submit();
+            }
+          </script>
+      «ENDIF»
+
+    «ENDIF»
+    «RETURN _Visible»
+«/PROC»
+
+«PROC CallbackField_Zone_11»
+  «VAR NEW _Visible=_ZoneFieldVisible»
+  «RETURN _Visible»
+«/PROC»
+
+«PROC CallbackField_Zone_12»
+  «VAR NEW _Visible=_ZoneFieldVisible»
+  «RETURN _Visible»
+«/PROC»
+
+«PROC CallbackField_Zone_13»
+  «VAR NEW _Visible=_ZoneFieldVisible»
+  «RETURN _Visible»
+«/PROC»

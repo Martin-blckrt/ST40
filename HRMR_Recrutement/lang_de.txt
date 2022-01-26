@@ -1,0 +1,203 @@
+
+
+HRMR_GRADED_BY= Not\u00e9 par
+HRMR_GRADED_ON= leHRMR_NONE= Kein
+HRMR_VIEW= Sehen
+HRMR_MODIFY= Andern
+HRMR_MODIFY_CREATE= Andern/Schaffen
+HRMR_MODIFY_CREATE_DELETE= Andern/Schaffen/Loschen
+HRMR_ILLIMITED= Unbegrenzt
+HRMR_DEVELOPER= Entwickler
+
+HRMR_ERROR= Fehler !
+HRMR_CANCEL= Abbrechen
+HRMR_ADD= Hinzuf&uuml;gen
+HRMR_DELETE= L&ouml;schen
+HRMR_CREATE= Schaffen
+HRMR_VALIDATE= Best&auml;tigen
+HRMR_CONFIRMATION= Sind sie sicher ?
+HRMR_CONFIRMATION_JOBDEL= Dadurch werden alle Bewerber, die sich fur diese Position bewerben, entfernt.
+HRMR_FORMPB= Achtung ! &Uuml;berpr&uuml;ft ihre Eingabe
+HRMR_APPLY= Bewirbt sich um :
+HRMR_BACK= R&uuml;ckkehr
+HRMR_CONTACT= Kontakt
+HRMR_DOCUMENT= Dokuments
+HRMR_HISTORY= Historisch
+HRMR_EXPORT= als PDF exportieren
+HRMR_ADDMSG= Nachricht hinzuf&uuml;gen
+
+HRMR_DEFAULT_Title= Rekrutierung
+HRMR_CANDIDATE_Title= Kandidat
+HRMR_JOB_Title= Stelle
+HRMR_PDF_Title= Pdf
+HRMR_AD_Title= Anzeige
+
+HRMR_FNAME= Vorname
+HRMR_NAME= Name
+HRMR_MAIL= E-mail
+HRMR_TEL= Tel
+HRMR_ADDRESS= Anschrift
+HRMR_STATUS= Status
+HRMR_TITLE= Titel
+HRMR_JOB= Stelle
+HRMR_DESC= Beschreibung
+HRMR_STATE= Zustand
+HRMR_REMARK= Anmerkung
+HRMR_CANDIDATE= Kandidaten
+HRMR_TABLE= Tabelle
+HRMR_MANAGE= F&uuml;hrung
+HRMR_NEW_CANDIDATE= Neuer Kandidat
+HRMR_NEW_JOB= Neue Stelle
+HRMR_MANAGE_JOB= Stelle f&uuml;hren
+HRMR_INFO= Informationen
+HRMR_STAR= Stern
+HRMR_CAND_STAR= Starkandidat
+
+HRMR_INTERNSHIP= Praktikum
+HRMR_SALARIED= Anstellung
+HRMR_TYPE= Stelle Typ
+HRMR_OPEN= Ge&ouml;ffnet
+HRMR_CLOSED= Geschlossen
+HRMR_SUSPENDED= Ausgesetzt
+HRMR_NEW= Neu
+HRMR_PROGRESS= Laufend
+HRMR_WAIT= Warten
+HRMR_PHY_INTERVIEW= Physisches Vorstellungsgesprach
+HRMR_DIST_INTERVIEW= Fernvorstellungsgesprach
+HRMR_OFFER= Angebot
+HRMR_REFUSED= Ablehnt
+HRMR_ACCEPTED= Annimmt
+HRMR_ARCHIVED= Achiviert
+HRMR_DELETED= Geloscht
+HRMR_YES= Ja
+HRMR_NO= Nein
+HRMR_ALL= Alle
+HRMR_NONE= Kein
+HRMR_PDF_NEW= Neue Bewerbung
+HRMR_PDF_PROGRESS= Bewerbung lauft noch
+HRMR_PDF_WAIT= Bewerbung warten
+HRMR_PDF_PHY_INTERVIEW= Physisches Vorstellungsgesprach austellen fur
+HRMR_PDF_DIST_INTERVIEW= Fernvorstellungsgesprach austellen fur
+HRMR_PDF_OFFER= Angebot geschickt
+HRMR_PDF_REFUSED= Abgelehnte Bewerbung
+HRMR_PDF_ACCEPTED= Erfolgreiche Bewerbung
+HRMR_PDF_ARCHIVED= Bewerbung archiviert
+HRMR_SEARCH= Suchen
+HRMR_RESET= Zur&uuml;cksetzen
+HRMR_CAND_CREATE= Kandidat hinzugef&uuml;gt !
+HRMR_STATUS_MOD= Status geandert von
+HRMR_TO= zu
+HRMR_OR= ODER
+
+HRMR_DEFAULT_PAGENAME= abgerundet
+HRMR_CANDIDATE_PAGENAME= kandidaten
+HRMR_JOB_PAGENAME= stelle
+HRMR_PDF_PAGENAME= pdf
+HRMR_AD_PAGENAME= anzeige
+
+HRMR_LASTMOD= Letzte Anderung
+
+HRMR_CAND_DEL= Kandidat gel\u00f6scht !
+HRMR_CAND_ADD= Kandidat hinzugef\u00fcgt !
+HRMR_CAND_MOD= Kandidat \u00e4ndert !
+HRMR_JOB_DEL= Stelle gel\u00f6scht !
+HRMR_JOB_ADD= Stelle hinzugef\u00fcgt !
+HRMR_JOB_MOD= Stelle \u00e4ndert !
+HRMR_ITW_DEL= Vorstellungsgesprach gel\u00f6scht !
+HRMR_ITW_ADD= Vorstellungsgesprach hinzugef\u00fcgt !
+HRMR_ITW_MOD= Vorstellungsgesprach \u00e4ndert !
+HRMR_AD_DEL= Anzeige gel\u00f6scht !
+HRMR_AD_ADD= Anzeige hinzugef\u00fcgt !
+HRMR_AD_MOD= Anzeige \u00e4ndert !
+HRMR_PLAT_DEL= Plattform gel\u00f6scht !
+HRMR_PLAT_ADD= Plattform hinzugef\u00fcgt !
+HRMR_PLAT_MOD= Plattform \u00e4ndert !
+HRMR_ADDEDMSG= Nachricht hinzugef\u00fcgt !
+HRMR_GRADE_VALID= Note hinzugef\u00fcgt !
+
+HRMR_WRITEREMARK= Schreiben Sie eine Anmerkung zu dieser Anwendung
+HRMR_MODNOTE= Kommentar
+
+HRMR_ADDFILE= Eine Datei hinzuf&uuml;gen
+HRMR_CHOOSEFILE= W&auml;hle eine Datei aus
+HRMR_DELFILE= gel&ouml;schte Datei !
+
+HRMR_TOOLONG= Der Text ist zu lang! Er wird gek\u00fcrzt.
+
+HRMR_DRAGNDROP= Dateien auf die Seite legen um Dokumente hinzuzufugen
+HRMR_BROWSE= Durchsuche
+
+HRMR_SCREENING= Screening
+HRMR_ADVICE= Beratung
+HRMR_ADD_INTERVIEW= Vorstellungsgesprach hinzufugen
+HRMR_INTERVIEW= Vorstellungsgespr&auml;ch
+HRMR_GRADES= Note
+HRMR_OTHER_ITW= Weitere Vorstellungsgespr&auml;ch
+
+HRMR_PLATFORM_INFO= Plattforminformationen
+HRMR_PLATFORM= Plattform
+HRMR_USERNAME= Benutzername
+HRMR_PASSWORD= Passwort
+HRMR_LINK= Link
+HRMR_EXPIRED= abgelaufene Anzeige
+HRMR_ADD_DATE= Datum hinzugefugt
+HRMR_EXP_DATE= Verfallsdatum
+HRMR_CRED= Kennungen
+HRMR_UNNOTED= keine Notiz
+
+HRMR_ITW_PLANNED= Vorstellungsgesprach geplant am
+HRMR_ITW_PLANNED_WITH= Vorstellungsgesprach geplant mit
+HRMR_ITW_PLANNED_WITHOUT= Vorstellungsgesprach geplant ohne Mitarbeiter
+HRMR_ITW_DONE_WITHOUT= Vorstellungsgesprach durchgefurt ohne Mitarbeiter
+HRMR_ITW_MOVED= Vorstellungsgesprach bewgt am
+HRMR_DATE= Datum
+HRMR_PARTICIPANTS= Teilnehmern
+
+HRMR_NO_COLLAB= keine Mitarbeiter
+HRMR_COLLAB= Mitarbeitern
+HRMR_ADD_COLLAB= Mitarbeiter hinzufugen
+
+HRMR_GRADE= Benoten
+HRMR_GRADE_CAND= Kandidat benoten
+
+HRMR_CLICK_FOR_INFO= Klicken Sie auf eine Plattform, um weitere Informationen zu sehen
+
+HRMR_NEW_JOB= Neue Stelle
+HRMR_ADD_JOB= Stelle hinzufugen
+HRMR_MODIFY_JOB= Stelle andern
+
+HRMR_NEW_AD= Neue Anzeige
+HRMR_ADD_AD= Anzeige hinzufugen
+HRMR_MODIFY_AD= Anzeige andern
+
+HRMR_NEW_PLATFORM= Neue Plattform
+HRMR_ADD_PLATFORM= Plattform hinzufugen
+HRMR_MODIFY_PLATFORM= Plattform andern
+
+HRMR_SELECTED_COLLAB= Ausgewahlter Mitarbeiter
+HRMR_SELECTED_PLATFORM= Ausgewahlte Plattform
+
+HRMR_GRADED_ON= Notiert auf der
+
+HRMR_EXIST_DOCS= Vorhandene Dokumente
+HRMR_NEW_DOCS= Neue Dokumente
+HRMR_NO_DOCS= Keine Dokumente
+
+HRMR_ADMIN= Verwaltung
+
+HRMR_JOB_MOD_SEL= Wahlen Sie eine Stelle zum Andern
+HRMR_AD_MOD_SEL= Wahlen Sie eine Anzeige zum Andern
+HRMR_PLATFORM_MOD_SEL= Wahlen Sie eine Plattform zum Andern
+
+HRMR_NO_EXPIRY= Kein Ablauf
+
+HRMR_JOB_ACTIVE= Aktive Stelle
+HRMR_JOB_CLOSED= Geschlosst Stelle
+HRMR_JOB_SUSPENDED= Ausgesetzt Stelle
+HRMR_APPLICATIONS= Bewerbungen
+HRMR_APPLICATION= Bewerbung
+HRMR_NO_APPLICATIONS= Keine Bewerbungen
+
+HRMR_AGENDA= Agenda
+HRMR_SLOT_TAKEN= Die Grube ist besetzt !
+HRMR_ITW_AGENDA_FAIL= Das Vorstellungsgesprach wird hinzugefugt, aber nicht in der Agenda

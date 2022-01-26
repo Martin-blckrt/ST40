@@ -1,0 +1,242 @@
+
+«CGI VAR %d;ContextNavigation»
+«CGI VAR %d;ContextViewMode»
+«CGI VAR %d;_MerchantId»
+«CGI VAR %d;_Popup»
+
+«INCLUDE «#SQLLIBRARY#»:Header.phs»
+
+«VAR NEW [object]_oCandidate»
+«SQLEXEC OBJECT _oCandidate = select * from HRMR_CANDIDATES where idCandidate=«id»»
+«VAR NEW valid=0»
+
+<script type="text/javascript" src="«#SQLWWWHOME#»/js/popup/popup.js"></script>
+<link rel="stylesheet" href="«#SQLWWWHOME#»/css/popup/popupMain.css" type="text/css" media="screen" />
+
+<FORM id="MyItwForm" name="MyItwForm" method="post" action="/Scripts/sql.exe" ENCTYPE="multipart/form-data">
+  <input type="hidden" name="SqlDB" value=«SqlDB»>
+  <input type="hidden" name="Sql" value="">
+  <input type="hidden" name="xid" value=«xid»>
+  <input type="hidden" name="ContextNavigation" value=«=_NavLevel»+1>
+  <input type="hidden" name="id" value=«_oCandidate.idCandidate»>
+  <input type="hidden" name="iStatus" value=«_oCandidate.iStatus»>
+  <input type="hidden" name="itwId" value="">
+  <input type="hidden" name="redirect" value="">
+  <input type="hidden" name="User" value="">
+  <input type="hidden" name="nonUser" value="">
+  <input type="hidden" name="ticketId" value=«_oCandidate.idTicket»>
+  <input type="hidden" name="CTimeItwDate" value="">
+
+  «IF mod == "yes"»
+
+    «VAR NEW [object]_itwInfo»
+    «SQLEXEC OBJECT _itwInfo = select idCandidate as idCandidate, group_concat(idUser) as idUser, iStatus, iCTimeInterview from HRMR_EVENTS where idCandidate = «_oCandidate.idCandidate» and iStatus = «itwId»»
+
+    «VAR NEW [array]users»
+    «LET users=@jsonfromstr("[«_itwInfo.idUser»]")»
+
+    <div style="margin-top:20px;">
+      <label style="display:inline" for="itwDate">«WRITEKEY HRMR_DATE»:</label>
+      <input type="datetime-local" id="itwDate" name="itwDate" step="1800" min="2022-01-01T00:00">
+    </div>
+
+    <script>
+      var itwDayDate = new Date((«_itwInfo.iCTimeInterview» + 3600) * 1000).toISOString().slice(0, -8);
+      document.getElementById("itwDate").value = itwDayDate;
+    </script>
+
+    <div>
+      <h3>«WRITEKEY HRMR_PARTICIPANTS»</h3>
+      <table>
+        «SQLOUTPUT»
+          <tr>
+            <td id="user">«azFirstName» «azName»</td>
+            <td><div class="row">
+                  <div style="width: 105px;" class="group-input checkbox no-label">
+                    «SQLREPEAT»
+                      «IF userIdentifier == users[#SQLREPEAT#]»
+                        <input type="checkbox" class="userCheckbox" name="itwParticipant" id="«userIdentifier»" value="«userIdentifier»" checked>
+                        «BREAK»
+                      «ELSEIF «#SQLREPEAT#» == ««users.iSize» - 1»»
+                        <input type="checkbox" class="userCheckbox" name="itwParticipant" id="«userIdentifier»" value="«userIdentifier»">
+                      «ENDIF»
+                    «/SQLREPEAT 0; ««users.iSize» - 1»»
+                    <label for="«userIdentifier»">user</label>
+                  </div>
+            </div></td>
+          </tr>
+        «/SQLOUTPUT select distinct U.idUser as userIdentifier, U.azName, U.azFirstName from OSSUSERINFO U inner join HRMR_EVENTS E on U.idUser = E.idUser where E.idCandidate = «_oCandidate.idCandidate»»
+      </table>
+    </div>
+
+  «ELSEIF mod == "grade"»
+
+    <div style="margin-top:20px">
+      <label style="display:inline;margin-right:10px">«WRITEKEY HRMR_GRADES»:</label>
+      <div style="display:inline;width:fit-content" id="cont">
+        <span style="color: #7d7d7d" id="1" value="1" class="fa fa-star"></span>
+        <span style="color: #7d7d7d" id="2" value="2" class="fa fa-star"></span>
+        <span style="color: #7d7d7d" id="3" value="3" class="fa fa-star"></span>
+        <span style="color: #7d7d7d" id="4" value="4" class="fa fa-star"></span>
+        <span style="color: #7d7d7d" id="5" value="5" class="fa fa-star"></span>
+        <input type="hidden" name="grade" value="">
+      <div>
+    </div>
+
+  «ELSE»
+
+    <div style="margin-top:20px;">
+      <label style="display:inline" for="itwDate">«WRITEKEY HRMR_DATE»:</label>
+      <input type="datetime-local" id="itwDate" name="itwDate" step="1800" min="2022-01-01T00:00">
+    </div>
+
+    <br><br>
+
+    «VAR NEW hasItw = 0»
+    «IF «itwId» == 201»
+      «SQLEXEC INT hasItw = select iStatus from HRMR_EVENTS where idCandidate = «_oCandidate.idCandidate» and iStatus like '20_%' order by iStatus desc limit 1»
+      «IF hasItw <> 0»
+        «LET itwId = «hasItw» + 1»
+      «ENDIF»
+    «ELSEIF «itwId» == 211»
+      «SQLEXEC INT hasItw = select iStatus from HRMR_EVENTS where idCandidate = «_oCandidate.idCandidate» and iStatus like '21_%' order by iStatus desc limit 1»
+      «IF hasItw <> 0»
+        «LET itwId = «hasItw» + 1»
+      «ENDIF»
+    «ENDIF»
+
+    <div>
+      <h3>«WRITEKEY HRMR_PARTICIPANTS»</h3>
+      <table>
+        «SQLOUTPUT»
+          <tr>
+            <td id="user">«azFirstName» «azName»</td>
+            <td><div class="row">
+                  <div style="width: 105px;" class="group-input checkbox no-label">
+                    <input type="checkbox" class="userCheckbox" name="itwParticipant" id="«userIdentifier»" value="«userIdentifier»">
+                    <label for="«userIdentifier»">user</label>
+                  </div>
+            </div></td>
+          </tr>
+        «/SQLOUTPUT select distinct U.idUser as userIdentifier, U.azName, U.azFirstName from OSSUSERINFO U inner join HRMR_EVENTS E on U.idUser = E.idUser where E.idCandidate = «_oCandidate.idCandidate»»
+      </table>
+    </div>
+
+  «ENDIF»
+
+  <script>
+
+    function checkValidityofInterview() {
+      $.ajax({
+            type: "POST",
+            url: "/Scripts/sql.exe",
+            dataType: "json",
+            data: 'SqlDB=«SqlDB»'
+                  +'&xid=«xid»'
+                  +'&ContextNavigation=«ContextNavigation»'
+                  +'&Sql=HRMR:HRMR_TOOLS.phs'
+                  +'&redirect=check_itw_date'
+                  +'&date=' + Date.parse(document.MyItwForm.itwDate.value)/1000,
+            success: function() {
+              alert("«WRITEKEY HRMR_SLOT_TAKEN»");
+            },
+            error: function () {
+              «IF mod == "yes"»
+                modifyInterview();
+              «ELSE»
+                submitInterview();
+              «ENDIF»
+            }
+      });
+    }
+
+    function submitInterview() {
+      var users=[];
+      document.MyItwForm.Sql.value = "HRMR:HRMR_TOOLS.phs";
+      document.querySelectorAll('.userCheckbox:checked').forEach((element, i) => users[i] = element.value);
+      document.MyItwForm.User.value = users;
+      document.MyItwForm.itwId.value = «itwId»;
+      document.MyItwForm.redirect.value = "new_itw";
+      document.MyItwForm.CTimeItwDate.value = Date.parse(document.MyItwForm.itwDate.value)/1000;
+      if (document.MyItwForm.itwDate != "") {
+        document.MyItwForm.submit();
+      } else {
+        lol_alert("«WRITEKEY HRMR_FORMPB»");
+      }
+    }
+
+    function modifyInterview() {
+      var users=[];
+      var nonusers=[];
+      document.MyItwForm.Sql.value = "HRMR:HRMR_TOOLS.phs";
+      document.MyItwForm.itwId.value = «itwId»;
+      document.querySelectorAll('.userCheckbox:checked').forEach((element, i) => users[i] = element.value);
+      document.MyItwForm.User.value = users;
+      document.querySelectorAll('.userCheckbox:not(:checked)').forEach((element, i) => nonusers[i] = element.value);
+      document.MyItwForm.nonUser.value = nonusers;
+      document.MyItwForm.CTimeItwDate.value = Date.parse(document.MyItwForm.itwDate.value)/1000;
+      document.MyItwForm.redirect.value = "mod_itw";
+      if (document.MyItwForm.itwDate != "") {
+        document.MyItwForm.submit();
+      } else {
+        lol_alert("«WRITEKEY HRMR_FORMPB»");
+      }
+    }
+
+    function deleteInterview() {
+      document.MyItwForm.Sql.value = "HRMR:HRMR_TOOLS.phs";
+      document.MyItwForm.itwId.value = «itwId»;
+      document.MyItwForm.redirect.value = "del_itw";
+      document.MyItwForm.submit();
+    }
+
+    $(document).ready(function () {
+      $(".fa-star").click(function (event) {
+        $(".fa-star").each(function (i, span) {
+          if (i < event.target.id) {
+            span.style.color = "#f8ce0b"
+          } else {
+            span.style.color = "#7d7d7d"
+          }
+        });
+        document.MyItwForm.grade.value=event.target.id;
+      });
+      $("#cont").hover(function () {
+        $(".fa-star").hover(function (event) {
+          $(".fa-star").each(function (i, span) {
+            if (i < event.target.id) {
+              span.style.color = "#f8ce0b"
+            } else {
+              span.style.color = "#7d7d7d"
+            }
+          });
+        });
+        $(this).css("cursor", "pointer");
+      }, function () {
+        $(".fa-star").each(function (i, span) {
+          if (i < document.MyItwForm.grade.value) {
+            span.style.color = "#f8ce0b"
+          } else {
+            span.style.color = "#7d7d7d"
+          }
+        });
+      });
+      $(".fa-star").each(function (i, span) {
+        if (i < «exGrade») {
+          span.style.color = "#f8ce0b"
+        } else {
+          span.style.color = "#7d7d7d"
+        }
+      });
+      «IF @exists(«exGrade») > 0»
+        document.MyItwForm.grade.value = «exGrade»
+      «ENDIF»
+    });
+
+    function submitGrade() {
+      document.MyItwForm.Sql.value = "HRMR:HRMR_TOOLS.phs";
+      document.MyItwForm.itwId.value = «itwId»;
+      document.MyItwForm.redirect.value = "grade";
+      document.MyItwForm.submit();
+    }
+  </script>

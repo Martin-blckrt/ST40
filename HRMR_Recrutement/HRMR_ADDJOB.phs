@@ -1,0 +1,495 @@
+«CGI VAR %d;ContextNavigation»
+«CGI VAR %d;ContextViewMode»
+«CGI VAR %d;_MerchantId»
+«CGI VAR %d;_Popup»
+
+«INCLUDE «#SQLLIBRARY#»:Header.phs»
+
+«IF fct == "modify"»
+  «VAR NEW [object]_oJob»
+  «SQLEXEC OBJECT _oJob = select * from HRMR_JOBS where idJob=«id»»
+
+  «VAR NEW [object]_oDocuments»
+  «VAR NEW [array]_oDocuments.id»
+  «VAR NEW [array]_oDocuments.mailName»
+  «VAR NEW [array]_oDocuments.createDate»
+  «VAR NEW listId=""»
+  «VAR NEW index=0»
+  «INCLUDE listId=Mail:MailDocumentList.phs;_MerchantId=«idMerchant»;_CallLibraryId=HRMR_LIBRARY_ID;_RefLibraryId=HRMR_LIBRARY_ID;_RefObjectTypeId=HRMR_JOB_ID;_RefObjectId=«_oJob.idJob»»
+
+«ELSE»
+  «VAR NEW _myId = -1 »
+  «INCLUDE _myId = HRMR_TOOLS.phs#GetTableIdentifier;_Table='HRMR_JOBS'»
+  «SQL delete from LOL_MAIL where idRefLibrary=999 and idRefObjectType=HRMR_JOB_ID and idRefObject=«_myId»»
+«ENDIF»
+
+<script type="text/javascript" src="«#SQLWWWHOME#»/js/popup/popup.js"></script>
+<link rel="stylesheet" href="«#SQLWWWHOME#»/css/popup/popupMain.css" type="text/css" media="screen" />
+
+<form id="MyJobForm" name="MyJobForm" method="post" action="/Scripts/sql.exe" ENCTYPE="multipart/form-data">
+  <input type="hidden" name="SqlDB" value=«SqlDB»>
+  <input type="hidden" name="Sql" value="HRMR:HRMR_ADDJOB.phs">
+  <input type="hidden" name="xid" value=«xid»>
+  <input type="hidden" name="ContextNavigation" value=«=_NavLevel»>
+  <input type="hidden" name="id" value="«id»">
+  <input type="hidden" name="redirect" value="">
+
+<script>
+function updateStatusRadio(n) {
+  if (n==0) {
+    $('#jobOpen').removeClass('is-active');
+    $('#jobClosed').addClass('is-active');
+    $('#jobSuspended').removeClass('is-active');
+  }
+  else if (n==1) {
+    $('#jobOpen').addClass('is-active');
+    $('#jobClosed').removeClass('is-active');
+    $('#jobSuspended').removeClass('is-active');
+  }
+  else if (n==2) {
+    $('#jobOpen').removeClass('is-active');
+    $('#jobClosed').removeClass('is-active');
+    $('#jobSuspended').addClass('is-active');
+  }
+  document.getElementById("jobStatus").value = n;
+}
+
+function updateTypeRadio(n) {
+  if (n==1) {
+    $('#jobSalaried').removeClass('is-active');
+    $('#jobInternship').addClass('is-active');
+  }
+  else if (n==0) {
+    $('#jobSalaried').addClass('is-active');
+    $('#jobInternship').removeClass('is-active');
+  }
+  document.getElementById("jobType").value = n;
+}
+
+function deleteDocument(n) {
+  docId=n;
+  lol_confirm("«WRITEKEY HRMR_CONFIRMATION»",deleteDocCallback);
+}
+function deleteDocCallback() {
+    window.location.href="/Scripts/sql.exe?SqlDB=«SqlDB»&Sql=HRMR:HRMR_TOOLS.phs&ContextNavigation=«ContextNavigation»&xid=«xid»&_MerchantId=«idMerchant»&docId=" + docId + "&redirect=del_doc&id=«jobId»&parent=1";
+}
+
+function downloadDoc(n) {
+  window.location.href = "/Scripts/sql.exe?SqlDB=«SqlDB»&Sql=Mail:downloadMail.phs&xid=«xid»&_MerchantId=«idMerchant»&_MailId=" + n;
+}
+</script>
+
+
+<table>
+  <tr>
+    <td class="label">
+      «WRITEKEY HRMR_TITLE» :
+    </td>
+    <td>
+      «IF fct == "modify"»
+        <input  style="margin-bottom:10px;margin-top:10px" type="text" name="jobName" id="jobName" value="«_oJob.azJobName»" maxlength="255">
+      «ELSE»
+        <input  style="margin-bottom:10px;margin-top:10px" type="text" name="jobName" id="jobName" value="" maxlength="255">
+      «ENDIF»
+    </td>
+  </tr>
+  <tr>
+    <td class="label">
+      «WRITEKEY HRMR_STATE» :
+    </td>
+    <td>
+      <input type="hidden" name="jobStatus" id="jobStatus"/>
+      <div style="display:inline-block">
+        <ul class="pagin" style="margin-bottom:10px;margin-top:10px">
+          <li id="jobOpen" value="1" class="pagin-btn" style="width:auto;padding-left:5px;padding-right:5px" onclick="updateStatusRadio(1)">«WRITEKEY HRMR_OPEN»</li>
+          <li id="jobClosed" value="0" class="pagin-btn" style="width:auto;padding-left:5px;padding-right:5px" onclick="updateStatusRadio(0)">«WRITEKEY HRMR_CLOSED»</li>
+          <li id="jobSuspended" value="2" class="pagin-btn" style="width:auto;padding-left:5px;padding-right:5px" onclick="updateStatusRadio(2)">«WRITEKEY HRMR_SUSPENDED»</li>
+        </ul>
+      </div>
+      «IF fct == "modify"»
+        <script>
+        updateStatusRadio(«_oJob.iStatus»);
+        </script>
+      «ENDIF»
+    </td>
+  </tr>
+  <tr>
+    <td class="label">
+      «WRITEKEY HRMR_TYPE» :
+    </td>
+    <td>
+      <input type="hidden" name="jobType" id="jobType"/>
+      <div style="display:inline-block">
+        <ul class="pagin" style="margin-bottom:10px;margin-top:10px">
+          <li id="jobInternship" value="1" class="pagin-btn" style="width:auto;padding-left:5px;padding-right:5px" onclick="updateTypeRadio(1)">«WRITEKEY HRMR_INTERNSHIP»</li>
+          <li id="jobSalaried" value="0" class="pagin-btn" style="width:auto;padding-left:5px;padding-right:5px" onclick="updateTypeRadio(0)">«WRITEKEY HRMR_SALARIED»</li>
+        </ul>
+      </div>
+      «IF fct == "modify"»
+        <script>
+        updateTypeRadio(«_oJob.iType»);
+        </script>
+      «ENDIF»
+    </td>
+  </tr>
+</table>
+
+<div class="label" style="margin-top:15px;margin-bottom:10px">«WRITEKEY HRMR_DOCUMENT»</div>
+
+<style>
+.label {
+  font-weight: 600;
+  color: #7d7d7d;
+}
+.line {
+  border-top: 2px solid #b6b6b6;
+  width: 52px;
+  position: relative;
+  margin: 0 10px;
+}
+#horizontal_drag {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.drop_zone {
+  min-width: 400px;
+  max-width: 400px;
+  height: 200px;
+  display: flex;
+  font-weight: 500;
+  font-size: 16px;
+  color: #8e8e8e;
+  background-color: #f9f9f9;
+  border: 2px dashed #8e8e8e;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  padding-left: 10px;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-content: center;
+  justify-content: space-evenly;
+  align-items: center;
+}
+#jobFiles {
+  max-width: 600px;
+  margin-top: 15px;
+  margin-left: -10px;
+  display: inline-flex;
+  overflow: auto;
+}
+#file_zone {
+  min-width: 100%;
+  max-width: 100%;
+  margin-top: 15px;
+  margin-left: -10px;
+  display: inline-flex;
+  overflow: auto;
+}
+.container {
+  display:flex;
+  flex-direction: column;
+  width: 230px;
+  margin-left: 10px;
+  padding-left: 0px;
+  margin-right: 0px;
+  padding-right: 0px;
+}
+.preview_title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 183px;
+  border-style: solid;
+  border-color: #8e8e8e;
+  color: #8e8e8e;
+  font-weight: 700;
+  border-width: 1px;
+  border-radius: 0px 0px 10px 10px;
+  padding-left: 10px;
+  padding-right: 20px;
+  font-size: 15px;
+  height: 25px;
+  padding-top: 3px;
+}
+#remove {
+  position: relative;
+  bottom: 22px;
+  margin-left: 160px;
+  color: #8e8e8e;
+}
+#download {
+  position: relative;
+  top: -22px;
+  margin-left: 6px;
+  width: fit-content;
+}
+.overlay {
+  opacity: 0.5;
+  border: 5px dashed #337ab7;
+}
+</style>
+
+«IF listId <> "" && fct == "modify"»
+  «LET _oDocuments.id=@jsonfromstr("[«listId»]")»
+  «VAR NEW _MailName=""»
+  «VAR NEW _CreateDate=0»
+  «LET _oDocuments.mailName.iMaxSize = «_oDocuments.id.iSize»»
+  «LET _oDocuments.createDate.iMaxSize = «_oDocuments.id.iSize»»
+  «LET index = «_oDocuments.mailName.iMaxSize» - 1»
+
+  <div id="existingDocs">«WRITEKEY HRMR_EXIST_DOCS» <p style="display:inline" id="existingDocsCount">(««index» + 1»)</p> :</div>
+
+  <div id="jobFiles">
+  «SQLREPEAT»
+    <div class="container">
+      «INCLUDE Mail:MailMailInfo.phs;_MerchantId=«idMerchant»;_MailId=«_oDocuments.id[«#SQLREPEAT#»]»»
+      «LET _oDocuments.mailName[«#SQLREPEAT#»] = _MailName»
+      «LET _oDocuments.createDate[«#SQLREPEAT#»] = _CreateDate»
+      «IF @strrnext("«_MailName»", 46) == "png" || @strrnext("«_MailName»", 46) == "jpg"»
+        <img style="vertical-align:unset" height="258px" width="183px" src="/Scripts/sql.exe?SqlDB=«SqlDB»&Sql=Mail:downloadMail.phs&xid=«xid»&_MerchantId=«idMerchant»&_MailId=«_oDocuments.id[«#SQLREPEAT#»]»&mode=2"></img>
+      «ELSE»
+        <iframe style="border: 1px solid #7d7d7d;border-bottom:0" id="«#SQLREPEAT#»" type="application/pdf" frameborder="0" height="258px" width="183px" src="/Scripts/sql.exe?SqlDB=«SqlDB»&Sql=Mail:downloadMail.phs&xid=«xid»&_MerchantId=«idMerchant»&_MailId=«_oDocuments.id[«#SQLREPEAT#»]»&mode=2&embedded=true"></iframe>
+      «ENDIF»
+
+      <div class="preview_title" style="padding-left:30px;cursor:pointer">
+        «_oDocuments.mailName[«#SQLREPEAT#»]»
+      </div>
+      <span id="download" class="fa fa-download" onclick="downloadDoc(«_oDocuments.id[«#SQLREPEAT#»]»)"></span>
+      «VAR NEW bEnabled = 1»
+      «INCLUDE bEnabled=Mail:MailCheckDelRights.phs»
+      «IF bEnabled == 0»
+        <span id="remove" class="fa fa-remove" existing="yes" idDoc="«_oDocuments.id[«#SQLREPEAT#»]»" style="margin-left:162px;top:-43px"></span>
+      «ENDIF»
+    </div>
+  «/SQLREPEAT 0; «index»»
+  </div>
+«ELSEIF fct == "modify"»
+  <div>«WRITEKEY HRMR_NO_DOCS»</div>
+«ENDIF»
+
+«IF fct =="modify"»
+  <hr style="margin-top:0">
+«ENDIF»
+<div style="max-width:600px">
+  <div class="drop_zone" id="dropzone">
+    <span class="fa fa-folder-add fa-3x"></span>
+    <span id="prompt" style="vertical-align:sub;text-align:center;font-weight:600" class="drop_zone__prompt">«WRITEKEY HRMR_DRAGNDROP»</span>
+    <div id="horizontal_drag">
+      <div class="line"></div><div style="font-weight:600;color:#b6b6b6">«WRITEKEY HRMR_OR»</div><div class="line"></div>
+    </div>
+    <button type="button" id="file_add_btn" style="font-weight:600;height:40px" class="btn-primary">«WRITEKEY HRMR_BROWSE»</button>
+    <input type="file" class="upload" style="display:none" name="uploadFile1" id="uploadFile1" multiple>
+    <input type="hidden" name="FileName" value="" id="FileName">
+  </div>
+  <div id="newDocs">«WRITEKEY HRMR_NEW_DOCS» <p style="display:inline" id="newDocsCount">(0)</p> :</div>
+  <div id="file_zone"></div>
+</div>
+
+<script>
+  function submitNewJob () {
+    document.MyJobForm.Sql.value = "HRMR:HRMR_TOOLS.phs";
+    document.MyJobForm.redirect.value = "new_job";
+    document.MyJobForm.id.value = «_myId»;
+    document.MyJobForm.submit();
+  }
+
+  function submitModifyJob () {
+    document.MyJobForm.Sql.value = "HRMR:HRMR_TOOLS.phs";
+    document.MyJobForm.redirect.value = "mod_job";
+    document.MyJobForm.submit();
+  }
+
+  function submitDeleteJob () {
+    document.MyJobForm.Sql.value = "HRMR:HRMR_TOOLS.phs";
+    document.MyJobForm.redirect.value = "del_job";
+    document.MyJobForm.submit();
+  }
+
+var i = 0;
+var title;
+var clone;
+document.querySelectorAll(".preview_title").forEach((doc) => {
+  doc.addEventListener("click", (e) => {
+    i = 1;
+    title = e.target;
+    clone = e.target.parentElement.cloneNode(true);
+    window.parent.document.body.appendChild(clone);
+    $(clone).css({
+      top: 0,
+      left: 0,
+      position: "fixed",
+      width: "fit-content",
+      height: "fit-content",
+      "margin-left": "30%",
+      "margin-top": "5%",
+      "z-index": 10000
+    });
+    $(clone.children[1]).css("display", "none");
+    $(clone.children[2]).css("display", "none");
+    $(clone.children[3]).css("display", "none");
+    $(clone.children[0]).css({
+      width: "fit-content",
+      height: "fit-content"
+    });
+    if (navigator.userAgent.search("Firefox") > 0) {
+      $(clone.children[0]).css("height", "775px");
+      $(clone.children[0]).css("width", "630px");
+    } else {
+      $(clone.children[0]).css("height", "405px");
+    }
+
+    if (title.innerText.split(".").pop() === "png" || title.innerText.split(".").pop() === "jpg")
+    {
+      $(clone.children[0]).css("zoom", "1.7");
+    } else {
+      $(clone.children[0]).css("zoom", "2");
+    }
+    window.parent.document.getElementById("modCont").style.display="revert";
+  });
+});
+
+$(document).ready(function () {
+  $(window.parent.document.getElementsByClassName("backModAdmin")[0]).click(function (event) {
+    if (event.target !== title && i == 1) {
+      $("#modCont").css("display", "none");
+      $(clone).css("display", "none");
+      i = 0;
+    }
+  });
+});
+
+«IF listId <> "" && fct == "modify"»
+  document.getElementById("jobFiles").querySelectorAll("#remove").forEach((icon) => {
+    icon.addEventListener("click", (e) => {
+      if (e.target.getAttribute("existing") == "yes") {
+        deleteDocument(e.target.getAttribute("idDoc"))
+      }
+    });
+  });
+«ENDIF»
+
+
+document.querySelectorAll(".upload").forEach((inputElement) => {
+  const dropZoneElement = inputElement.closest(".drop_zone");
+
+  document.getElementById("file_add_btn").addEventListener("click", (e) => {
+    inputElement.click();
+  });
+
+  inputElement.addEventListener("change", (e) => {
+      uploadDocs(inputElement.files);
+      prevFile(inputElement.files);
+  });
+
+  document.body.addEventListener("dragover", (e) => {
+    e.preventDefault();
+    if (navigator.userAgent.search("Firefox") > 0) {
+      document.body.classList.add("overlay");
+    }
+  });
+
+  document.body.addEventListener("dragleave", (e) => {
+    if (navigator.userAgent.search("Firefox") > 0) {
+      document.body.classList.remove("overlay");
+    }
+  });
+
+  document.body.addEventListener("drop", (e) => {
+    e.preventDefault();
+    if (navigator.userAgent.search("Firefox") > 0) {
+      document.body.classList.remove("overlay");
+    }
+    uploadDocs(e.dataTransfer.files);
+    prevFile(e.dataTransfer.files);
+  });
+});
+
+function prevFile(files) {
+
+  let parent = document.getElementById("file_zone");
+
+  for (var i=0;i<files.length;i++) {
+
+    let preview;
+    let container = document.createElement("div");
+    container.classList.add("container");
+    parent.appendChild(container);
+
+    if (files[i].name.split(".").pop() === "png" || files[i].name.split(".").pop() === "jpg") {
+      preview = document.createElement("img");
+    } else {
+      preview = document.createElement("iframe");
+    }
+
+    var src = URL.createObjectURL(files[i]);
+    preview.setAttribute("height", 258);
+    preview.setAttribute("width", 183);
+    preview.setAttribute("src", src);
+    container.appendChild(preview);
+
+    let title = document.createElement("div");
+    title.classList.add("preview_title");
+    title.innerText = files[i].name;
+    container.appendChild(title);
+
+    $('<span class="fa fa-remove" id="remove"></span>').appendTo(container);
+  }
+
+  document.getElementById("newDocsCount").innerText = "(" + document.querySelectorAll("#file_zone .container").length + ")";
+
+  parent.querySelectorAll("#remove").forEach((icon) => {
+    icon.addEventListener("click", (e) => {
+      $.ajax({
+          type:"POST",
+          url: "/Scripts/sql.exe",
+          data: 'SqlDB=«SqlDB»'
+                +'&xid=«xid»'
+                +'&ContextNavigation=«ContextNavigation»'
+                +'&Sql=HRMR:HRMR_DOCADD.phs'
+                +'&fileName=' + e.target.parentElement.children[1].innerText
+                +'&fct=delete'
+                «IF fct == "modify"»
+                  +'&id=«_oJob.idJob»'
+                «ELSE»
+                  +'&id=«_myId»'
+                «ENDIF»
+                +'&objTypeId=job'
+      });
+      e.target.parentElement.remove();
+      document.getElementById("newDocsCount").innerText = "(" + document.querySelectorAll("#file_zone .container").length + ")";
+    });
+  });
+}
+
+var docId=0;
+
+function uploadDocs(files) {
+
+  for (var i=0; i < files.length; i++) {
+    var myFormData = new FormData();
+    myFormData.append('uploadFile1', files[i]);
+    myFormData.append('SqlDB', '«SqlDB»');
+    myFormData.append('Sql', 'HRMR:HRMR_DOCADD.phs');
+    myFormData.append('xid', '«xid»');
+    myFormData.append('FileName', files[i].name);
+    «IF fct == "modify"»
+      myFormData.append('id', «_oJob.idJob»);
+    «ELSE»
+      myFormData.append('id', «_myId»);
+    «ENDIF»
+    myFormData.append('fct', 'upload');
+    myFormData.append('objTypeId', "job");
+
+    $.ajax({
+        type:"POST",
+        processData: false,
+        contentType: false,
+        url: "/Scripts/sql.exe",
+        dataType: "html",
+        data: myFormData
+    });
+  }
+}
+
+</script>

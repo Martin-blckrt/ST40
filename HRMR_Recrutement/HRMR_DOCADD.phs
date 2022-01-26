@@ -1,0 +1,36 @@
+«VAR NEW objType = 0»
+«IF objTypeId == "candidate"»
+  «LET objType = HRMR_CANDIDATE_ID»
+«ELSEIF objTypeId == "job"»
+  «LET objType = HRMR_JOB_ID»
+«ELSEIF objTypeId == "ad"»
+  «LET objType = HRMR_AD_ID»
+«ENDIF»
+
+«IF fct == "upload"»
+
+  «INCLUDE _SqlStatus=Mail:MailMailAdd.phs;_RefObjectLibraryId=HRMR_LIBRARY_ID;_RefObjectTypeId=«objType»;_RefObjectId=«id»;_MerchantId=«idMerchant»;_TicketId=«ticketId»;MailType=1;_LibraryId=6;MailFile='«uploadFile1»';FileName='«FileName»';MailName='«FileName»'»
+
+«ELSEIF fct == "delete"»
+
+  «VAR NEW [object]_oDocuments»
+  «VAR NEW [array]_oDocuments.id»
+  «VAR NEW listId=""»
+  «VAR NEW index=0»
+  «VAR NEW delIndex = 0»
+
+  «INCLUDE listId=Mail:MailDocumentList.phs;_MerchantId=«idMerchant»;_CallLibraryId=HRMR_LIBRARY_ID;_RefLibraryId=HRMR_LIBRARY_ID;_RefObjectTypeId=«objType»;_RefObjectId=«id»»
+
+  «LET _oDocuments.id=@jsonfromstr("[«listId»]")»
+  «VAR NEW _MailName=""»
+  «LET index = «_oDocuments.id.iSize» - 1»
+  «SQLREPEAT»
+    «INCLUDE Mail:MailMailInfo.phs;_MerchantId=«idMerchant»;_MailId=«_oDocuments.id[«#SQLREPEAT#»]»»
+    «IF _MailName == "«fileName»"»
+      «LET delIndex = «_oDocuments.id[«#SQLREPEAT#»]»»
+    «ENDIF»
+  «/SQLREPEAT 0; «index»»
+
+  «INCLUDE Mail:MailDelMail.phs;_MailId=«delIndex»»
+
+«ENDIF»

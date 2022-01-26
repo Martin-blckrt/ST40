@@ -1,0 +1,100 @@
+«*Secure Var*»
+«IF @exists("ContextViewMode") == 0»
+    «VAR NEW ContextViewMode = 0»
+«ENDIF»
+«IF @exists("_MerchantId") == 0 »
+    «VAR NEW _MerchantId = «idMerchant»»
+«ENDIF»
+
+«* VAR *»
+«VAR NEW _b_status = 1 »
+«VAR NEW _b_session_status = 1 »
+«VAR NEW _NavLink = ""»
+«VAR NEW _NavLevel = 0»
+«VAR NEW _PageId = HRMR_JOB_PAGE_ID »
+«VAR NEW _PageLibraryId = HRMR_LIBRARY_ID»
+«VAR NEW _PageThemeId = -1 »
+«VAR NEW _PageViewMode = «ContextViewMode»»
+«VAR NEW _PageTitle = "Gestion job" »
+«VAR NEW _ZoneFieldLibraryId = HRMR_LIBRARY_ID »
+«VAR NEW _FieldCallbackScript= "HRMR_JOB_model.phs#CallbackField"»
+«VAR NEW _ZoneCallbackScript= "HRMR_JOB_model.phs#CallbackZone"»
+«VAR NEW [object]_ZoneInfo»
+«VAR NEW _ZoneInfoStatus=0»
+«VAR NEW _ZoneCallbackLibrary = "HRMR" »
+«VAR NEW _FieldCallbackLibrary = "HRMR" »
+
+«*RIGHTS*»
+«VAR NEW _OwnerUserRights = '00000000000000000000000000000000'»
+«VAR NEW _OtherUserRights = '00000000000000000000000000000000'»
+«VAR NEW _OwnerUserRight = 0»
+«VAR NEW _OtherUserRight = 0»
+«INCLUDE _SqlStatus=HRMR:ossUserRights.phs»
+«INCLUDE _SqlStatus=HRMR:ossUserRights.phs;_iUserRight=0»
+
+«IF _OwnerUserRight < 49»
+  «LET _b_status = 0»
+«ENDIF»
+
+«* get theme *»
+«INCLUDE _PageThemeId=«#SQLLIBRARY#»:ProcPageTheme.phs#QueryUserPageTheme»
+
+«* get page title *»
+«LET _PageTitle = "«WRITEKEY HRMR_JOB_Title»"»
+
+«* get merchant preferences *»
+«SQLEXEC STRING _MerchantPrefs = select azCustomPrefs from «#SQLWPA#»OSSMERCHANT where idMerchant=«%d;idMerchant»»
+«* context navigation*»
+«IF @toi(ContextViewMode) == 0 »
+    «INCLUDE _NavLevel=«#SQLLIBRARY#»:ProcNavigation.phs#SecureNavigationLevel»
+    «LET _NavLink="&Sql=HRMR:HRMR_JOB_view.phs"»
+«ENDIF»
+
+«INCLUDE «#SQLLIBRARY#»:ProcNavigation.phs#PushNavigationLevel;_NavTitle=_PageTitle»
+«* start view*»
+«INCLUDE «#SQLLIBRARY#»:Header.phs;»
+«*Mode HTML*»
+«IF @toi(ContextViewMode) == OSS_PAGE_VIEW_MODE_HTML»
+
+  <FORM id="MyForm" name="MyForm" method="post" action="/Scripts/sql.exe" ENCTYPE="multipart/form-data" >
+          <input type="hidden" name="SqlDB" value=«SqlDB»>
+          <input type="hidden" name="Sql" value="">
+          <input type="hidden" name="xid" value=«xid»>
+          <input type="hidden" name="ContextNavigation" value=«=_NavLevel»>
+
+
+  <script>
+
+    «INCLUDE «#SQLLIBRARY#»:JSProcSecureFile.phs»
+
+    function wait(ms)
+    {
+        var d = new Date();
+        var d2 = null;
+        do { d2 = new Date(); }
+        while(d2-d < ms);
+    }
+
+    function downloadDoc(n) {
+      n.forEach((doc) => {
+        window.location.href = "/Scripts/sql.exe?SqlDB=«SqlDB»&Sql=Mail:downloadMail.phs&xid=«xid»&_MerchantId=«idMerchant»&_MailId=" + doc;
+        wait(1000);
+      });
+    }
+
+    function candSort(n) {
+      window.location.href = "/Scripts/sql.exe?SqlDB=«SqlDB»&Sql=HRMR:HRMR_DEFAULT_view.phs&xid=«xid»&_NavLevel=«_NavLevel»-1&_MerchantId=«idMerchant»&customFilter=" + n;
+    }
+  </script>
+«ENDIF»
+«INCLUDE «#SQLLIBRARY#»:ProcPageTheme.phs#ViewPageOpen»
+«* User allowed to do this ? *»
+«IF _b_status <> 1»
+    «INCLUDE MessageAccessDenied.phs#MessageSystemError»
+«ELSE»
+    «INCLUDE «#SQLLIBRARY#»:OSSThemePageView.phs;»
+«ENDIF»
+
+«INCLUDE «#SQLLIBRARY#»:ProcPageTheme.phs#ViewPageClose»
+
+«INCLUDE «#SQLLIBRARY#»:Footer.phs;»

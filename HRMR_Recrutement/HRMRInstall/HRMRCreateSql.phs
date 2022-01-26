@@ -1,0 +1,102 @@
+«IF @sql_table_exists("HRMR_CANDIDATES") == 0»
+  «SQL CREATE TABLE HRMR_CANDIDATES (
+              idCandidate INT(11) DEFAULT NULL,
+              azFirstName VARCHAR(80) DEFAULT NULL,
+              azName VARCHAR(255) DEFAULT NULL,
+              azEMail VARCHAR(80) DEFAULT NULL,
+              azTel VARCHAR(24) DEFAULT NULL,
+              azAddress VARCHAR(255) DEFAULT NULL,
+              iCTimeCreate INT(11) DEFAULT NULL,
+              iCTimeModify INT(11) DEFAULT NULL,
+              iStatus INT(11) DEFAULT NULL,
+              idRemark INT(11) DEFAULT NULL,
+              idTicket INT(11) DEFAULT NULL,
+              UNIQUE KEY IHRMR_CANDIDATES (idCandidate))»
+«ENDIF»
+
+«IF @sql_table_exists("HRMR_JOBS") == 0»
+  «SQL CREATE TABLE HRMR_JOBS (
+              idJob INT(11) DEFAULT NULL,
+              azJobName VARCHAR(255) DEFAULT NULL,
+              iStatus INT(11) DEFAULT NULL,
+              iType INT(11) DEFAULT NULL,
+              UNIQUE KEY IHRMR_JOBS (idJob))»
+«ENDIF»
+
+«IF @sql_table_exists("HRMR_CANDIDATES_JOBS") == 0»
+  «SQL CREATE TABLE HRMR_CANDIDATES_JOBS (
+              id INT(11) DEFAULT NULL,
+              idCandidate INT(11) DEFAULT NULL,
+              idJob INT(11) DEFAULT NULL,
+              UNIQUE KEY IHRMR_CANDIDATES_JOBS (id),
+              FOREIGN KEY (idCandidate) REFERENCES HRMR_CANDIDATES (idCandidate),
+              FOREIGN KEY (idJob) REFERENCES HRMR_JOBS (idJob))»
+«ENDIF»
+
+«IF @sql_table_exists("HRMR_SUPPLIERS") == 0»
+  «SQL CREATE TABLE HRMR_SUPPLIERS (
+              idSupplier INT(11) DEFAULT NULL,
+              idSupplierLibrary INT(11) DEFAULT NULL,
+              idSupplierLibraryObjectType INT(11) DEFAULT NULL,
+              azUsername VARCHAR(255) DEFAULT NULL,
+              azPassword VARCHAR(255) DEFAULT NULL,
+              azLink VARCHAR(255) DEFAULT NULL,
+              UNIQUE KEY IHRMR_SUPPLIERS (idSupplier))»
+«ENDIF»
+
+«IF @sql_table_exists("HRMR_ADS") == 0»
+  «SQL CREATE TABLE HRMR_ADS (
+              idAd INT(11) DEFAULT NULL,
+              idJob INT(11) DEFAULT NULL,
+              iCTimeCreate INT(11) DEFAULT NULL,
+              iCTimeExpire INT(11) DEFAULT NULL,
+              idSupplier INT(11) DEFAULT NULL,
+              UNIQUE KEY IHRMR_PUBLICATIONS (idAd),
+              FOREIGN KEY (idJob) REFERENCES HRMR_JOBS (idJob),
+              FOREIGN KEY (idSupplier) REFERENCES HRMR_SUPPLIERS (idSupplier))»
+«ENDIF»
+
+«IF @sql_table_exists("HRMR_EVENTS") == 0»
+  «SQL CREATE TABLE HRMR_EVENTS (
+              idEvent INT(11) DEFAULT NULL,
+              idCandidate INT(11) DEFAULT NULL,
+              idUser INT(11) DEFAULT NULL,
+              iGrade INT(11) DEFAULT NULL,
+              iStatus INT(11) DEFAULT NULL,
+              iCTimeInterview INT(11) DEFAULT NULL,
+              iCTimeGrade INT(11) DEFAULT NULL,
+              UNIQUE KEY IHRMR_EVENTS (idEvent),
+              FOREIGN KEY (idCandidate) REFERENCES HRMR_CANDIDATES (idCandidate))»
+«ENDIF»
+
+«SQLEXEC INT _count = select count(*) from OSLIDENTIFIER where azOSLTable='HRMR_CANDIDATES'»
+«IF _count == 0»
+  «SQL INSERT INTO OSLIDENTIFIER(azOSLTable, iOSLMax) VALUES ('HRMR_CANDIDATES', 0)»
+«ENDIF»
+
+«SQLEXEC INT _count = select count(*) from OSLIDENTIFIER where azOSLTable='HRMR_JOBS'»
+«IF _count == 0»
+  «SQL INSERT INTO OSLIDENTIFIER(azOSLTable, iOSLMax) VALUES ('HRMR_JOBS', 0)»
+«ENDIF»
+
+«SQLEXEC INT _count = select count(*) from OSLIDENTIFIER where azOSLTable='HRMR_CANDIDATES_JOBS'»
+«IF _count == 0»
+  «SQL INSERT INTO OSLIDENTIFIER(azOSLTable, iOSLMax) VALUES ('HRMR_CANDIDATES_JOBS', 0)»
+«ENDIF»
+
+«SQLEXEC INT _count = select count(*) from OSLIDENTIFIER where azOSLTable='HRMR_EVENTS'»
+«IF _count == 0»
+  «SQL INSERT INTO OSLIDENTIFIER(azOSLTable, iOSLMax) VALUES ('HRMR_EVENTS', 0)»
+«ENDIF»
+
+«SQLEXEC INT _count = select count(*) from OSLIDENTIFIER where azOSLTable='HRMR_ADS'»
+«IF _count == 0»
+  «SQL INSERT INTO OSLIDENTIFIER(azOSLTable, iOSLMax) VALUES ('HRMR_ADS', 0)»
+«ENDIF»
+
+«SQLEXEC INT _count = select count(*) from OSLIDENTIFIER where azOSLTable='HRMR_SUPPLIERS'»
+«IF _count == 0»
+  «SQL INSERT INTO OSLIDENTIFIER(azOSLTable, iOSLMax) VALUES ('HRMR_SUPPLIERS', 0)»
+«ENDIF»
+
+«RETURN 1»

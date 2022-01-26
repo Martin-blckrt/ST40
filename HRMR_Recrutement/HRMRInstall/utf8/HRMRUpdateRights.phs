@@ -1,0 +1,27 @@
+﻿«SQLSTATUS TRANSACTION BEGIN»
+	«VAR NEW  _OwnerUserRights="00000000000000000000000000000000"»
+	«VAR NEW _GroupUserRights="00000000000000000000000000000000"»
+	«VAR NEW _OtherGroupUserRights="00000000000000000000000000000000"»
+	«VAR NEW _OtherUserRights="00000000000000000000000000000000"»
+
+	«VAR NEW _LibraryId=HRMR_LIBRARY_ID»
+	«SQLOUTPUT»
+
+		«LET  _OwnerUserRights="00000000000000000000000000000000"»
+		«LET _GroupUserRights="00000000000000000000000000000000"»
+		«LET _OtherGroupUserRights="00000000000000000000000000000000"»
+		«LET _OtherUserRights="00000000000000000000000000000000"»
+
+		«IF _OwnerUserRights<>"" && _OtherUserRights<>""»
+			«SQLEXEC INT bExist = select count(*) from OSSCUSTOMLIBRARYUSERRIGHTS where idLibrary=HRMR_LIBRARY_ID and idUser=«XKEY»»
+			«IF bExist==0»
+				«SQL insert into OSSCUSTOMLIBRARYUSERRIGHTS(idMerchant,idLibrary,idUser,azOwnerUserRights,azUserRights,azMainGroupUserRights,azOtherGroupUserRights) values(1,1,«XKEY»,'«_OwnerUserRights»','«_OtherUserRights»','«_GroupUserRights»','«_OtherGroupUserRights»')»
+			«ELSE»
+				«SQL update OSSCUSTOMLIBRARYUSERRIGHTS set azOwnerUserRights='«_OwnerUserRights»', azUserRights='«_OtherUserRights»' where idMerchant=1 and idLibrary=HRMR_LIBRARY_ID and idUser=«XKEY»»
+			«ENDIF»
+		«ENDIF»
+
+	«/SQLOUTPUT select * from OSSUSER»
+«SQLSTATUS TRANSACTION END»
+
+«RETURN 1»

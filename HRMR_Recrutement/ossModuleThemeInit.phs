@@ -1,0 +1,15 @@
+«VAR NEW _Visible=0»
+
+«IF _PageId == HRMR_DEFAULT_PAGE_ID»
+  «INCLUDE _Visible = HRMR:HRMR_DEFAULT_model.phs#RegisterDefaultThemes»
+«ELSEIF _PageId == HRMR_CANDIDATE_PAGE_ID»
+  «INCLUDE _Visible = HRMR:HRMR_CANDIDATE_model.phs#RegisterDefaultThemes»
+«ELSEIF _PageId == HRMR_JOB_PAGE_ID»
+  «INCLUDE _Visible = HRMR:HRMR_JOB_model.phs#RegisterDefaultThemes»
+«ELSEIF _PageId == HRMR_PDF_PAGE_ID»
+  «INCLUDE _Visible = HRMR:HRMR_PDF_model.phs#RegisterDefaultThemes»
+«ELSEIF _PageId == HRMR_AD_PAGE_ID»
+  «INCLUDE _Visible = HRMR:HRMR_AD_model.phs#RegisterDefaultThemes»
+«ENDIF»
+
+«RETURN _Visible»

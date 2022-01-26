@@ -1,0 +1,50 @@
+﻿«SYSTEM ECHOLOG ++++++++++++++++++++++++++»
+«SYSTEM ECHOLOG + HRMRInstall - OslInstall - Start             +»
+«SYSTEM ECHOLOG ++++++++++++++++++++++++++»
+
+«VAR NEW _Status=1»
+
+«IF _Status==1»
+	«INCLUDE _Status=HRMRInstall:HRMRCreateSql.phs»
+«ENDIF»
+
+«SYSTEM ECHOLOG + HRMRInstall - _Status after HRMRCreateSql : «_Status»»
+
+«IF _Status==1»
+	«INCLUDE _Status=HRMRInstall:HRMRRegister.phs»
+«ENDIF»
+
+«SYSTEM ECHOLOG + HRMRInstall - _Status after HRMRRegister : «_Status»»
+
+«IF _Status=1»
+	«INCLUDE _Status=HRMRInstall:HRMRUpdateRights.phs»
+«ENDIF»
+
+«SYSTEM ECHOLOG + HRMRInstall - _Status after HRMRUpdateRights : «_Status»»
+
+«IF _Status == 1»
+	«INCLUDE _iVersionShopcore=«#SQLLIBRARY#»:OSSGetLibraryVersion.phs;_LibraryId=0»
+	«SYSTEM ECHOLOG INCLUDE «_iVersionShopcore»=«#SQLLIBRARY#»:OSSGetLibraryVersion.phs;_LibraryId=0»
+	«IF _iVersionShopcore >= 11 »
+		«INCLUDE _Status = HRMRModuleInit.phs»
+		«SYSTEM ECHOLOG INCLUDE «_Status» = HRMRModuleInit.phs»
+	«ELSE»
+		«LET _Status = 0 »
+	«ENDIF»
+«ENDIF»
+
+«SYSTEM ECHOLOG + HRMRInstall - _Status last : «_Status»»
+
+«SYSTEM ECHOLOG ++++++++++++++++++++++++++»
+«SYSTEM ECHOLOG + HRMRInstall - OslInstall - Stop          +»
+«SYSTEM ECHOLOG ++++++++++++++++++++++++++»
+
+
+
+«IF _Status==1»
+	«SYSTEM ECHOLOG + HDInstall - SYSTEM EXIT 0»
+	«SYSTEM EXIT 0»
+«ELSE»
+	«SYSTEM ECHOLOG + HDInstall - SYSTEM EXIT 1»
+	«SYSTEM EXIT 1»
+«ENDIF»

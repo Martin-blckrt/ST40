@@ -1,0 +1,16 @@
+«VAR NEW _b_status = 1»
+«INCLUDE _iVersion=«#SQLLIBRARY#»:OSSGetLibraryVersion.phs;_LibraryId=HRMR_LIBRARY_ID»
+«INCLUDE _iVersionShopcore=«#SQLLIBRARY#»:OSSGetLibraryVersion.phs;_LibraryId=0»
+
+«IF _iVersion < 0 && _iVersionShopcore>=0 »
+	«IF _b_status	== 1»
+		«INCLUDE _b_status=«#SQLLIBRARY#»:OSSRegisterLibrary.phs;_LibraryName="HRMR";_LibraryLabel="«WRITEKEY HRMR_DEFAULT_Title»"»
+		«IF _b_status == 0»
+				«INCLUDE «#SQLLIBRARY#»:ProcDebug.phs#ErrorLog;_err_message="OSSRegisterLibrary HRMR";_err_file="HRMR:register";_err_number="0x0001";_bForce=1»
+		«ENDIF»
+	«ENDIF»
+«ELSEIF _iVersionShopcore<0 »
+	«LET _b_status = 0»
+«ENDIF»
+
+«RETURN _b_status»
